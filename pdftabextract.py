@@ -7,6 +7,7 @@ Created on Wed Jun  1 16:40:39 2016
 
 import xml.etree.ElementTree as ET
 import math
+import re
 from copy import copy
 from logging import info, warning, error
 
@@ -18,13 +19,30 @@ from geom import pt, vecangle, vecdist, vecrotate, pointintersect
 
 HEADER_RATIO = 0.1
 FOOTER_RATIO = 0.1
-#DIVIDE_RATIO = 0.5
-DIVIDE_RATIO = None
+DIVIDE_RATIO = 0.5
+# DIVIDE_RATIO = None
 
 LEFTMOST_COL_ALIGN = 'topleft'     # topleft, topright or center
 RIGHTMOST_COL_ALIGN = 'topleft'    # topleft, topright or center
 
-MAX_PAGE_ROTATION_RANGE = math.radians(1.0)     # 1 degree
+MIN_PAGE_ROTATION_APPLY = math.radians(0.5)     # do not fix page rotation if rotation is below this value
+MAX_PAGE_ROTATION_RANGE = math.radians(1.0)     # issue warning when range is too big
+
+#%%
+def cond_topleft_text(t):
+    return t['value'].strip() == 'G'
+cond_bottomleft_text = cond_topleft_text
+
+#def cond_topright_text(t):
+#    m = re.search(r'^\d{2}$', t['value'].strip())
+#    w = t['width']
+#    h = t['height']
+#    return m and abs(15 - w) <= 3 and abs(12 - h) <= 2
+
+def cond_topright_text(t):
+    return False
+cond_bottomright_text = cond_topright_text
+
 
 
 #%%
@@ -126,6 +144,16 @@ def get_bodytexts(page):
 
 
 def divide_texts_horizontally(page, texts=None):
+    """
+    Divide a page into two subpages by assigning all texts left of a vertical line specified by
+    page['width'] * DIVIDE_RATIO to a "left" subpage and all texts right of it to a "right" subpage.
+    The positions of the texts in the subpages will stay unmodified and retain their absolute position
+    in relation to the page. However, the right subpage has an "offset_x" attribute to later calculate
+    the text positions in relation to the right subpage.
+    :param page single page dict as returned from parse_pages()
+    """
+    assert DIVIDE_RATIO    
+    
     if texts is None:
         texts = page['texts']
     
@@ -155,45 +183,63 @@ def divide_texts_horizontally(page, texts=None):
     return subpage_left, subpage_right
 
 
-def mindist_text(texts, origin, pos_attr):
+def mindist_text(texts, origin, pos_attr, cond_fn=None):
+    """
+    Get the text that minimizes the distance from its position (defined in pos_attr) to <origin> and satisifies
+    the condition function <cond_fn> (if not None).
+    """
     texts_by_dist = sorted(texts, key=lambda t: vecdist(origin, t[pos_attr]))
-    return texts_by_dist[0]
+    
+    if not cond_fn:
+        return texts_by_dist[0]
+    else:
+        for t in texts_by_dist:
+            if cond_fn(t):
+                return t
+    
+    return None
 
 
-def texts_at_page_corners(p):
+def texts_at_page_corners(p, x_offset, cond_fns):
     """
     :param p page or subpage
     """
-    # TODO: offset beachten für sub_right!
-    
-    text_topleft = mindist_text(p['texts'], (0, 0), 'topleft')
-    text_bottomleft = mindist_text(p['texts'], (0, p['height']), 'bottomleft')
-    text_topright = mindist_text(p['texts'], (p['width'], 0), 'topright')
-    text_bottomright = mindist_text(p['texts'], (p['width'], p['height']), 'bottomright')
+    text_topleft = mindist_text(p['texts'], (x_offset, 0), 'topleft', cond_fns[0])
+    text_topright = mindist_text(p['texts'], (x_offset + p['width'], 0), 'topright', cond_fns[1])
+    text_bottomright = mindist_text(p['texts'], (x_offset + p['width'], p['height']), 'bottomright', cond_fns[2])
+    text_bottomleft = mindist_text(p['texts'], (x_offset, p['height']), 'bottomleft', cond_fns[3])
     
     return text_topleft, text_topright, text_bottomright, text_bottomleft
 
 
-def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft):
-    # TODO: offset beachten für sub_right!
-    vec_left = text_bottomleft[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
-    vec_right = text_bottomright[LEFTMOST_COL_ALIGN] - text_topright[LEFTMOST_COL_ALIGN]
-    vec_top = text_topright[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
-    vec_bottom = text_bottomright[LEFTMOST_COL_ALIGN] - text_bottomleft[LEFTMOST_COL_ALIGN]
-    
+def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft, x_offset=0):
     up = pt(0, 1)
     right = pt(1, 0)
+
+    angles_list = []    
     
-    left_angle = vecangle(vec_left, up)
-    right_angle = vecangle(vec_right, up)
-    top_angle = vecangle(vec_top, right)
-    bottom_angle = vecangle(vec_bottom, right)
+    if text_bottomleft and text_topleft:  # left side
+        vec_left = text_bottomleft[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
+        angles_list.append(vecangle(vec_left, up))
     
-    angles = np.array((left_angle, right_angle, top_angle, bottom_angle))
+    if text_bottomright and text_topright: # right side
+        vec_right = text_bottomright[LEFTMOST_COL_ALIGN] - text_topright[LEFTMOST_COL_ALIGN]
+        angles_list.append(vecangle(vec_right, up))
+        
+    if text_topright and text_topleft:     # top side
+        vec_top = text_topright[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
+        angles_list.append(vecangle(vec_top, right))
+
+    if text_bottomright and text_bottomleft:  # bottom side
+        vec_bottom = text_bottomright[LEFTMOST_COL_ALIGN] - text_bottomleft[LEFTMOST_COL_ALIGN]
+        angles_list.append(vecangle(vec_bottom, right))
+    
+    angles = np.array(angles_list)
     rng = np.max(angles) - np.min(angles)
     
     if rng > MAX_PAGE_ROTATION_RANGE:
         warning('big range of values for page rotation estimation: %f degrees' % math.degrees(rng))
+        warning([math.degrees(a) for a in angles])
     
     return np.median(angles)
 
@@ -202,22 +248,46 @@ def fix_rotation(p):
     """
     :param p page or subpage
     """
-    # TODO: offset beachten für sub_right!
+    x_offset = p['x_offset'] if 'x_offset' in p else 0
     
-    page_corners_texts = texts_at_page_corners(p)
+    cond_fns = (cond_topleft_text, cond_topright_text, cond_bottomright_text, cond_bottomleft_text)
+    page_corners_texts = texts_at_page_corners(p, x_offset, cond_fns)
+    
+    p_name = str(p['number'])
+    if 'subpage' in p:
+        p_name += '/' + p['subpage']    
+
+    
+    if (sum(t is None for t in page_corners_texts) < 2):
+        error("page %s: not enough valid corner texts found - did not fix rotation" % p_name)
+        return False
+    
+    corners = ('topleft', 'topright', 'bottomright', 'bottomleft')
+    for i, t in enumerate(page_corners_texts):
+        if t:
+            infostr = "at %f, %f with value '%s'" % (t['left'], t['top'], t['value'])
+        else:
+            infostr = "is None"
+        print("page %s: corner %s %s" % (p_name, corners[i], infostr))
+    
     page_rot = page_rotation_angle(*page_corners_texts)
+    print("page %s: rotation %f" % (p_name, math.degrees(page_rot)))
     
-    print("page rotation for page %d is %f" % (p['number'], math.degrees(page_rot)))
+    if page_rot < MIN_PAGE_ROTATION_APPLY:
+        print("page %s: will not fix marginal rotation" % p_name)
+        return True
     
     text_topleft, text_bottomleft = page_corners_texts[0], page_corners_texts[3]
     bottomline_pts = (
         pt(0, p['height']),
-        pt(p['width'], p['height'])
+        pt(x_offset + p['width'], p['height'])
     )
     
     rot_about = pointintersect(text_topleft['topleft'], text_bottomleft['bottomleft'], *bottomline_pts,
                                check_in_segm=False)
-                               
+    
+    print("page %s: rotate about %f, %f" % (p_name, rot_about[0], rot_about[1]))
+    
     for t in p['texts']:
         t_pt = pt(t['left'], t['top'])
         
@@ -226,6 +296,8 @@ def fix_rotation(p):
         
         # update text dict
         update_text_dict_pos(t, t_pt_rot, update_node=True)
+    
+    return True
 
 
 def sorted_by_attr(texts, attr):
