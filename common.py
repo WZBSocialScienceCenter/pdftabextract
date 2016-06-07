@@ -30,8 +30,8 @@ def parse_pages(root):
         p_num = int(p.attrib['number'])
         page = {
             'number': p_num,
-            'width': int(p.attrib['width']),
-            'height': int(p.attrib['height']),
+            'width': int(float(p.attrib['width'])),
+            'height': int(float(p.attrib['height'])),
             'texts': [],
             'xmlnode': p
         }
@@ -48,8 +48,8 @@ def parse_pages(root):
 
 
 def create_text_dict(t):
-    t_width = int(t.attrib['width'])
-    t_height = int(t.attrib['height'])
+    t_width = int(float(t.attrib['width']))
+    t_height = int(float(t.attrib['height']))
 
     text = {
         'width': t_width,
@@ -58,7 +58,7 @@ def create_text_dict(t):
         'xmlnode': t
     }
     
-    update_text_dict_pos(text, pt(int(t.attrib['left']), int(t.attrib['top'])))
+    update_text_dict_pos(text, pt(int(float(t.attrib['left'])), int(float(t.attrib['top']))))
     
     return text
 
@@ -81,8 +81,8 @@ def update_text_dict_pos(t, pos, update_node=False):
     })
 
     if update_node:    
-        t['xmlnode'].attrib['left'] = str(round(pos[0]))
-        t['xmlnode'].attrib['top'] = str(round(pos[1]))
+        t['xmlnode'].attrib['left'] = str(int(round(pos[0])))
+        t['xmlnode'].attrib['top'] = str(int(round(pos[1])))
 
 
 def get_bodytexts(page, header_ratio=0.0, footer_ratio=1.0):
