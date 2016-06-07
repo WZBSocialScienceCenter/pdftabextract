@@ -5,15 +5,14 @@ Created on Wed Jun  1 16:40:39 2016
 @author: mkonrad
 """
 
-import xml.etree.ElementTree as ET
 import math
-import re
-from copy import copy
-from logging import info, warning, error
+from logging import warning, error
 
 import numpy as np
 
 from geom import pt, vecangle, vecdist, vecrotate, pointintersect
+
+from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, update_text_dict_pos
 
 #%%
 
@@ -43,10 +42,10 @@ def fix_rotation(input_xml, output_xml, corner_box_cond_fns=None):
     subpages = {}
     for p_num, page in pages.items():
         # strip off footer and header
-        bodytexts = get_bodytexts(page)
+        bodytexts = get_bodytexts(page, HEADER_RATIO, FOOTER_RATIO)
         
         if DIVIDE_RATIO:
-            page_subpages = divide_texts_horizontally(page, bodytexts)
+            page_subpages = divide_texts_horizontally(page, DIVIDE_RATIO, bodytexts)
         else:
             page_subpages = (page, )
         
@@ -78,125 +77,7 @@ def fix_rotation(input_xml, output_xml, corner_box_cond_fns=None):
         
     tree.write(output_xml)
 
-
 #%%
-
-def read_xml(fname):
-    tree = ET.parse(fname)
-    root = tree.getroot()
-    
-    return tree, root
-
-#%%
-
-def parse_pages(root):
-    pages = {}
-        
-    for p in root.findall('page'):
-        p_num = int(p.attrib['number'])
-        page = {
-            'number': p_num,
-            'width': int(p.attrib['width']),
-            'height': int(p.attrib['height']),
-            'texts': [],
-            'xmlnode': p
-        }
-        
-        for t in p.findall('text'):
-            if not t.text:  # filter out text elements without content
-                continue
-            
-            page['texts'].append(create_text_dict(t))
-
-        pages[p_num] = page
-
-    return pages
-
-
-def create_text_dict(t):
-    t_width = int(t.attrib['width'])
-    t_height = int(t.attrib['height'])
-
-    text = {
-        'width': t_width,
-        'height': t_height,
-        'value': t.text,  # only for easy identification during debugging. TODO: delete
-        'xmlnode': t
-    }
-    
-    update_text_dict_pos(text, pt(int(t.attrib['left']), int(t.attrib['top'])))
-    
-    return text
-
-
-def update_text_dict_pos(t, pos, update_node=False):
-    t_top = pos[1]
-    t_left = pos[0]
-    t_bottom = t_top + t['height']
-    t_right = t_left + t['width']
-    
-    t.update({
-        'top': t_top,
-        'left': t_left,
-        'bottom': t_bottom,
-        'right': t_right,
-        'topleft': np.array((t_left, t_top)),
-        'bottomleft': np.array((t_left, t_bottom)),
-        'topright': np.array((t_right, t_top)),
-        'bottomright': np.array((t_right, t_bottom)),
-    })
-
-    if update_node:    
-        t['xmlnode'].attrib['left'] = str(round(pos[0]))
-        t['xmlnode'].attrib['top'] = str(round(pos[1]))
-
-
-def get_bodytexts(page):
-    miny = page['height'] * HEADER_RATIO
-    maxy = page['height'] * (1 - FOOTER_RATIO)
-    
-    return list(filter(lambda t: t['top'] >= miny and t['bottom'] <= maxy, page['texts']))    
-
-
-def divide_texts_horizontally(page, texts=None):
-    """
-    Divide a page into two subpages by assigning all texts left of a vertical line specified by
-    page['width'] * DIVIDE_RATIO to a "left" subpage and all texts right of it to a "right" subpage.
-    The positions of the texts in the subpages will stay unmodified and retain their absolute position
-    in relation to the page. However, the right subpage has an "offset_x" attribute to later calculate
-    the text positions in relation to the right subpage.
-    :param page single page dict as returned from parse_pages()
-    """
-    assert DIVIDE_RATIO    
-    
-    if texts is None:
-        texts = page['texts']
-    
-    divide_x = page['width'] * DIVIDE_RATIO
-    lefttexts = list(filter(lambda t: t['right'] <= divide_x, texts))
-    righttexts = list(filter(lambda t: t['right'] > divide_x, texts))
-    
-    assert len(lefttexts) + len(righttexts) == len(texts)
-    
-    subpage_tpl = {
-        'number': page['number'],
-        'width': divide_x,
-        'height': page['height'],
-        'parentpage': page
-    }
-    
-    subpage_left = copy(subpage_tpl)
-    subpage_left['subpage'] = 'left'
-    subpage_left['x_offset'] = 0
-    subpage_left['texts'] = lefttexts
-    
-    subpage_right = copy(subpage_tpl)
-    subpage_right['subpage'] = 'right'
-    subpage_right['x_offset'] = divide_x
-    subpage_right['texts'] = righttexts
-    
-    return subpage_left, subpage_right
-
 
 def mindist_text(texts, origin, pos_attr, cond_fn=None):
     """
@@ -320,7 +201,3 @@ def fix_rotation_for_page(p, corner_box_cond_fns):
         update_text_dict_pos(t, t_pt_rot, update_node=True)
     
     return True
-
-
-def sorted_by_attr(texts, attr):
-    return sorted(texts, key=lambda x: x[attr])
