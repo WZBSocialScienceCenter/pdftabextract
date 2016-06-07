@@ -25,6 +25,8 @@ DIVIDE_RATIO = 0.5
 LEFTMOST_COL_ALIGN = 'topleft'     # topleft, topright or center
 RIGHTMOST_COL_ALIGN = 'topleft'    # topleft, topright or center
 
+MIN_CONTENTLENGTH_MEAN_DEV_RATIO = 0.2
+
 MIN_PAGE_ROTATION_APPLY = math.radians(0.5)     # do not fix page rotation if rotation is below this value
 MAX_PAGE_ROTATION_RANGE = math.radians(1.0)     # issue warning when range is too big
 
@@ -49,18 +51,47 @@ cond_bottomright_text = cond_topright_text
 def main():
     tree, root = read_xml('testxmls/1992_93.pdf.xml')
     
+    # get pages objects    
     pages = parse_pages(root)
-    page = pages[35]
-
-    bodytexts = get_bodytexts(page)  # strip off footer and header
-    if DIVIDE_RATIO:
-        subpages = divide_texts_horizontally(page, bodytexts)
-    else:
-        subpages = (page, )
-
-    for sub_p in subpages:
-        fix_rotation(sub_p)
-    
+        
+    pages_bodytexts = {}
+    pages_contentlengths = {}
+    subpages = {}
+    for p_num, page in pages.items():
+        # strip off footer and header
+        bodytexts = get_bodytexts(page)
+        
+        if DIVIDE_RATIO:
+            page_subpages = divide_texts_horizontally(page, bodytexts)
+        else:
+            page_subpages = (page, )
+        
+        for sub_p in page_subpages:
+            if 'subpage' in sub_p:
+                p_id = (sub_p['number'], sub_p['subpage'])
+            else:
+                p_id = (sub_p['number'], )
+            pages_bodytexts[p_id] = sub_p['texts']
+            contentlength = sum([len(t['value']) for t in sub_p['texts']])
+            pages_contentlengths[p_id] = contentlength
+        
+            subpages[p_id] = sub_p
+    mean_contentlength = sum([length for length in pages_contentlengths.values()]) / len(pages_contentlengths)
+        
+    # fix rotation
+    for sub_p in subpages.values():
+        contentlength = pages_contentlengths[p_id]
+        contentlength_mean_dev_ratio = contentlength / mean_contentlength
+        print(contentlength_mean_dev_ratio)
+        if contentlength_mean_dev_ratio >= MIN_CONTENTLENGTH_MEAN_DEV_RATIO:
+            fix_rotation(sub_p)
+        else:
+            p_name = str(sub_p['number'])
+            if 'subpage' in sub_p:
+                p_name += '/' + sub_p['subpage']
+            print("skipping page '%s': not enough content (%f% of the mean %d)"
+                  % (p_name, contentlength_mean_dev_ratio * 100, mean_contentlength))
+        
     tree.write('1992_93_rotback.pdf.xml')
 
 
@@ -235,6 +266,7 @@ def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bott
         angles_list.append(vecangle(vec_bottom, right))
     
     angles = np.array(angles_list)
+    angles = angles[~np.isnan(angles)]
     rng = np.max(angles) - np.min(angles)
     
     if rng > MAX_PAGE_ROTATION_RANGE:
@@ -258,7 +290,7 @@ def fix_rotation(p):
         p_name += '/' + p['subpage']    
 
     
-    if (sum(t is None for t in page_corners_texts) < 2):
+    if (sum(t is not None for t in page_corners_texts) < 2):
         error("page %s: not enough valid corner texts found - did not fix rotation" % p_name)
         return False
     

@@ -21,7 +21,10 @@ def vecdist(p1, p2):
 
 
 def vecangle(v1, v2):
-    return math.acos(np.vdot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
+    denom = (np.linalg.norm(v1) * np.linalg.norm(v2))
+    if denom == 0:
+        return np.nan
+    return math.acos(np.vdot(v1, v2) / denom)
 
 
 def vecrotate(v, theta, about=np.array((0,0))):
