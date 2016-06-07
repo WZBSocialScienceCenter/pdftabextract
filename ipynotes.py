@@ -5,193 +5,25 @@ Created on Wed Jun  1 09:11:33 2016
 @author: mkonrad
 """
 
-import xml.etree.ElementTree as ET
-import math
-from copy import copy
-from logging import warn
-
-import numpy as np
-
-#%%
-
-HEADER_RATIO = 0.1
-FOOTER_RATIO = 0.1
-DIVIDE_RATIO = 0.5
-
-LEFTMOST_COL_ALIGN = 'topleft'     # topleft, topright or center
-RIGHTMOST_COL_ALIGN = 'topleft'    # topleft, topright or center
-
-MAX_PAGE_ROTATION_RANGE = math.radians(1.0)     # 1 degree
-
-#%%
-
-tree = ET.parse('testxmls/1992_93.pdf.xml')
-root = tree.getroot()
-
-#%%
-def sorted_by_attr(texts, attr):
-    return sorted(texts, key=lambda x: x[attr])
-
-def parse_pages(root):
-    pages = {}
-        
-    for p in root.findall('page'):
-        p_num = int(p.attrib['number'])
-        page = {
-            'number': p_num,
-            'width': int(p.attrib['width']),
-            'height': int(p.attrib['height']),
-            'texts': [],
-            'xmlnode': p
-        }
-        
-        for t in p.findall('text'):
-            if not t.text:  # filter out text elements without content
-                continue
-            
-            t_top = int(t.attrib['top'])
-            t_left = int(t.attrib['left'])
-            t_width = int(t.attrib['width'])
-            t_height = int(t.attrib['height'])
-            
-            t_bottom = t_top + t_height
-            t_right = t_left + t_width
-    
-            text = {
-                'top': t_top,
-                'left': t_left,
-                'bottom': t_bottom,
-                'right': t_right,
-                'width': t_width,
-                'height': t_height,
-                'center': np.array((t_left + t_width / 2, t_top + t_height / 2)),
-                'topleft': np.array((t_left, t_top)),
-                'bottomleft': np.array((t_left, t_bottom)),
-                'topright': np.array((t_right, t_top)),
-                'bottomright': np.array((t_right, t_bottom)),
-                'value': t.text,  # only for easy identification during debugging. TODO: delete
-                'xmlnode': t
-            }
-            
-            page['texts'].append(text)
-            
-        # page['texts_leftright'] = sorted_by_attr(page['texts'], 'center_x')
-        # page['texts_topdown'] = sorted_by_attr(page['texts'], 'center_y')
-        pages[p_num] = page
-
-    return pages
-
-
-def get_bodytexts(page):
-    miny = page['height'] * HEADER_RATIO
-    maxy = page['height'] * (1 - FOOTER_RATIO)
-    
-    return list(filter(lambda t: t['top'] >= miny and t['bottom'] <= maxy, page['texts']))    
-
-
-def divide_texts_horizontally(page, texts=None):
-    if texts is None:
-        texts = page['texts']
-    
-    divide_x = page['width'] * DIVIDE_RATIO
-    lefttexts = list(filter(lambda t: t['right'] <= divide_x, texts))
-    righttexts = list(filter(lambda t: t['right'] > divide_x, texts))
-    
-    assert len(lefttexts) + len(righttexts) == len(texts)
-    
-    subpage_tpl = {
-        'number': page['number'],
-        'width': divide_x,
-        'height': page['height'],
-        'parentpage': page
-    }
-    
-    subpage_left = copy(subpage_tpl)
-    subpage_left['subpage'] = 'left'
-    subpage_left['x_offset'] = 0
-    subpage_left['texts'] = lefttexts
-    
-    subpage_right = copy(subpage_tpl)
-    subpage_right['subpage'] = 'right'
-    subpage_right['x_offset'] = divide_x
-    subpage_right['texts'] = righttexts
-    
-    return subpage_left, subpage_right
-
-
-def mindist_text(texts, origin, pos_attr):
-    texts_by_dist = sorted(texts, key=lambda t: vecdist(origin, t[pos_attr]))
-    return texts_by_dist[0]
-
-
-def texts_at_page_corners(p):
-    """
-    :param p page or subpage
-    """
-    # TODO: offset beachten für sub_right!
-    
-    text_topleft = mindist_text(p['texts'], (0, 0), 'topleft')
-    text_bottomleft = mindist_text(p['texts'], (0, p['height']), 'bottomleft')
-    text_topright = mindist_text(p['texts'], (p['width'], 0), 'topright')
-    text_bottomright = mindist_text(p['texts'], (p['width'], p['height']), 'bottomright')
-    
-    return text_topleft, text_topright, text_bottomright, text_bottomleft
-
-
-
-def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft):
-    vec_left = text_bottomleft[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
-    vec_right = text_bottomright[LEFTMOST_COL_ALIGN] - text_topright[LEFTMOST_COL_ALIGN]
-    vec_top = text_topright[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
-    vec_bottom = text_bottomright[LEFTMOST_COL_ALIGN] - text_bottomleft[LEFTMOST_COL_ALIGN]
-    
-    up = np.array((0, 1))
-    right = np.array((1, 0))
-    
-    left_angle = vecangle(vec_left, up)
-    right_angle = vecangle(vec_right, up)
-    top_angle = vecangle(vec_top, right)
-    bottom_angle = vecangle(vec_bottom, right)
-    
-    angles = np.array((left_angle, right_angle, top_angle, bottom_angle))
-    rng = np.max(angles) - np.min(angles)
-    
-    if rng > MAX_PAGE_ROTATION_RANGE:
-        warn('big range of values for page rotation estimation: %f degrees' % math.degrees(rng))
-    
-    return np.median(angles)    
+import fixrotation
 
 
 #%%
-pages = parse_pages(root)
 
-page = pages[35]
+def cond_topleft_text(t):
+    return t['value'].strip() == 'G'
+cond_bottomleft_text = cond_topleft_text
 
-bodytexts = get_bodytexts(page)
-subpages = divide_texts_horizontally(page, bodytexts)
+#def cond_topright_text(t):
+#    m = re.search(r'^\d{2}$', t['value'].strip())
+#    w = t['width']
+#    h = t['height']
+#    return m and abs(15 - w) <= 3 and abs(12 - h) <= 2
 
-#%%
+def cond_topright_text(t):
+    return False
+cond_bottomright_text = cond_topright_text
 
-sub_left = subpages[0]
-page_corners_texts = texts_at_page_corners(sub_left)
-page_rot = page_rotation_angle(*page_corners_texts)
+corner_box_cond_fns = (cond_topleft_text, cond_topright_text, cond_bottomright_text, cond_bottomleft_text)
+fixrotation.fix_rotation('testxmls/1992_93.pdf.xml', 'testxmls/1992_93_rotback.pdf.xml', corner_box_cond_fns)
 
-text_topleft, text_bottomleft = page_corners_texts[0], page_corners_texts[3]
-bottomline_pts = (
-    pt(0, sub_left['height']),
-    pt(sub_left['width'], sub_left['height'])
-)
-rot_about = pointintersect(text_topleft['topleft'], text_bottomleft['bottomleft'], *bottomline_pts, check_in_segm=False)
-rot_about
-
-#%%
-
-for t in sub_left['texts']:
-    t_pt = pt(t['left'], t['top'])
-    t_pt_rot = vecrotate(t_pt, -page_rot, rot_about)
-    t['xmlnode'].attrib['left'] = str(round(t_pt_rot[0]))
-    t['xmlnode'].attrib['top'] = str(round(t_pt_rot[1]))
-
-#%%
-
-tree.write('1992_93_rotback.pdf.xml')
