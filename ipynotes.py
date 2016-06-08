@@ -89,7 +89,7 @@ sorted(xs)
 sorted(ys)
 
 #%%
-from scipy.cluster.vq import kmeans, whiten, vq
+from scipy.cluster.vq import kmeans
 xs_arr = np.array(xs)
 xs_sd = np.std(xs_arr)
 xs_wh = xs_arr / xs_sd
@@ -133,6 +133,52 @@ plot_hist_with_peaks(ys_arr, ys_peaks)
 
 
 #%%
+from scipy.cluster.hierarchy import fclusterdata
+
+len(ys_arr)
+ys_arr.sort()
+clust_ind = fclusterdata(ys_arr.reshape((len(ys_arr), 1)), 12,
+                         criterion='maxclust',
+                         metric='cityblock',
+                         method='average')
+print(len(np.unique(clust_ind)))
+print(clust_ind)
+
+plt.figure(figsize=(8, 6))
+plt.scatter(range(0, len(ys)), ys_arr, c=clust_ind)
+#plt.legend()
+
+
+#%%
+def best_y_clusters_num_clusters_range(ys, num_clust_range, max_dist_thresh=0.1):
+    """
+    Assumptions:
+    - y clusters should be equal spaced
+    - number of items in y clusters should be equal distributed
+    """
+    clusters = []
+    for n in num_clust_range:
+        clust, dist = find_clusters(ys, n)
+        
+        if dist > max_dist_thresh:
+            continue
+        
+        # [abs(c_a - c_b) for a, c_a in enumerate(clust) for b, c_b in enumerate(clust) if a != b]
+        sorted_clust = list(sorted(clust))
+        clust_dist = [c - sorted_clust[i-1] for i, c in enumerate(sorted_clust) if i > 0]
+        
+        clusters.append(clust)        
+        print(n, dist)
+    
+    
+
+
+
+def find_clusters(arr, n_clust):
+    sd = np.std(arr)
+    codebook, dist = kmeans(arr / sd, n_clust)     # divide by SD to normalize
+    return codebook * sd, dist
+
 
 def plot_hist_with_peaks(v, peak_vals):
     plt.figure(figsize=(8, 6))
