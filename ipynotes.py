@@ -82,5 +82,62 @@ for t in subpage['texts']:
     xs.append(t['left'])
     ys.append(t['top'])
 
-plt.hist(xs, 100)
-plt.hist(ys, 100)
+plt.hist(xs, max(xs))
+plt.hist(ys, max(ys))
+
+sorted(xs)
+sorted(ys)
+
+#%%
+from scipy.cluster.vq import kmeans, whiten, vq
+xs_arr = np.array(xs)
+xs_sd = np.std(xs_arr)
+xs_wh = xs_arr / xs_sd
+xs_codebook, xs_dist = kmeans(xs_wh, 5)
+xs_peaks = xs_codebook * xs_sd
+print(xs_dist)
+print(xs_peaks)
+plot_hist_with_peaks(xs_arr, xs_peaks)
+
+ys_arr = np.array(ys)
+ys_sd = np.std(ys_arr)
+ys_wh = ys_arr / ys_sd
+ys_codebook, ys_dist = kmeans(ys_wh, 12)
+ys_peaks = ys_codebook * ys_sd
+print(ys_dist)
+print(ys_peaks)
+plot_hist_with_peaks(ys_arr, ys_peaks)
+
+
+
+#%%
+
+import numpy as np
+from scipy.signal import find_peaks_cwt
+
+xs_arr = np.array(xs)
+ys_arr = np.array(ys)
+
+xs_peaks_ind = find_peaks_cwt(xs_arr, np.arange(5, 10), noise_perc=90)
+xs_peaks = xs_arr[xs_peaks_ind]
+print(xs_peaks)
+
+plot_hist_with_peaks(xs_arr, xs_peaks)
+
+
+ys_peaks_ind = find_peaks_cwt(ys_arr, np.arange(30, 50))
+ys_peaks = ys_arr[ys_peaks_ind]
+print(ys_peaks)
+
+plot_hist_with_peaks(ys_arr, ys_peaks)
+
+
+#%%
+
+def plot_hist_with_peaks(v, peak_vals):
+    plt.figure(figsize=(8, 6))
+    ax = plt.axes()
+    ax.hist(v, np.max(v))
+    ax.set_xticks(peak_vals)
+    plt.show()
+    
