@@ -104,7 +104,7 @@ def plot_hist_with_peaks(v, peak_vals):
 import matplotlib.pyplot as plt
 import numpy as np
 
-subpage = subpages[(17, 'right')]
+subpage = subpages[(17, 'left')]
 
 xs = []
 ys = []

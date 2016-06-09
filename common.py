@@ -32,8 +32,9 @@ def parse_pages(root):
             'number': p_num,
             'width': int(float(p.attrib['width'])),
             'height': int(float(p.attrib['height'])),
+            'x_offset': 0,
             'texts': [],
-            'xmlnode': p
+            'xmlnode': p,
         }
         
         for t in p.findall('text'):
