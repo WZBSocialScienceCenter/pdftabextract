@@ -88,8 +88,11 @@ plt.hist(ys, max(ys))
 sorted(xs)
 sorted(ys)
 
-#%%
+#%% Try to find clusters with kmeans
+# Sometimes okay, sometimes not
 from scipy.cluster.vq import kmeans
+import numpy as np
+
 xs_arr = np.array(xs)
 xs_sd = np.std(xs_arr)
 xs_wh = xs_arr / xs_sd
@@ -110,8 +113,8 @@ plot_hist_with_peaks(ys_arr, ys_peaks)
 
 
 
-#%%
-
+#%% Try to find peaks with wavelet transform
+# Mostly not correct (parameters issue?)
 import numpy as np
 from scipy.signal import find_peaks_cwt
 
@@ -132,8 +135,13 @@ print(ys_peaks)
 plot_hist_with_peaks(ys_arr, ys_peaks)
 
 
-#%%
+#%% Try to find clusters with hierarchical clustering
 from scipy.cluster.hierarchy import fclusterdata
+
+from collections import defaultdict
+
+xs_arr = np.array(xs)
+ys_arr = np.array(ys)
 
 len(ys_arr)
 ys_arr.sort()
@@ -144,8 +152,24 @@ clust_ind = fclusterdata(ys_arr.reshape((len(ys_arr), 1)), 12,
 print(len(np.unique(clust_ind)))
 print(clust_ind)
 
+clusters_w_vals = defaultdict(list)
+clusters_w_inds = defaultdict(list)
+for i, (v, c) in enumerate(zip(ys_arr, clust_ind)):
+    clusters_w_vals[c].append(v)
+    clusters_w_inds[c].append(i)
+cluster_means = {c: np.mean(vals) for c, vals in clusters_w_vals.items()}
+cluster_ind_means = {c: np.mean(inds) for c, inds in clusters_w_inds.items()}
+
 plt.figure(figsize=(8, 6))
-plt.scatter(range(0, len(ys)), ys_arr, c=clust_ind)
+ax = plt.axes()
+ax.scatter(range(0, len(ys)), ys_arr, c=clust_ind)
+ax.set_xlabel('index in sorted position list')
+ax.set_ylabel('y position in pixels')
+
+for c, v_mean in cluster_means.items():
+    ax.annotate(str(c), xy=(cluster_ind_means[c], v_mean + 30))
+plt.show()
+
 #plt.legend()
 
 
