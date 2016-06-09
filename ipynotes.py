@@ -72,6 +72,7 @@ mean_contentlength = sum([length for length in pages_contentlengths.values()]) /
 
 #%%
 import matplotlib.pyplot as plt
+import numpy as np
 
 subpage = subpages[(17, 'left')]
 
@@ -87,6 +88,32 @@ plt.hist(ys, max(ys))
 
 sorted(xs)
 sorted(ys)
+
+xs_arr = np.array(xs)
+ys_arr = np.array(ys)
+
+#%%
+def plot_positions_cluster_scatter(ys, clust_ind, clusters_w_vals, clusters_w_inds, label, label_y_offset):
+    cluster_ind_means = {c: np.mean(inds) for c, inds in clusters_w_inds.items()}
+    
+    plt.figure(figsize=(8, 6))
+    ax = plt.axes()
+    ax.scatter(range(0, len(ys)), ys, c=clust_ind)
+    ax.set_xlabel('index in sorted position list')
+    ax.set_ylabel(label + ' position in pixels')
+    
+    for c, v_mean in cluster_means.items():
+        ax.annotate(str(c), xy=(cluster_ind_means[c], v_mean + label_y_offset))
+    plt.show()
+
+
+def plot_hist_with_peaks(v, peak_vals):
+    plt.figure(figsize=(8, 6))
+    ax = plt.axes()
+    ax.hist(v, np.max(v))
+    ax.set_xticks(peak_vals)
+    plt.show()
+
 
 #%% Try to find clusters with kmeans
 # Sometimes okay, sometimes not
@@ -115,11 +142,7 @@ plot_hist_with_peaks(ys_arr, ys_peaks)
 
 #%% Try to find peaks with wavelet transform
 # Mostly not correct (parameters issue?)
-import numpy as np
 from scipy.signal import find_peaks_cwt
-
-xs_arr = np.array(xs)
-ys_arr = np.array(ys)
 
 xs_peaks_ind = find_peaks_cwt(xs_arr, np.arange(5, 10), noise_perc=90)
 xs_peaks = xs_arr[xs_peaks_ind]
@@ -140,9 +163,6 @@ from scipy.cluster.hierarchy import fclusterdata
 
 from collections import defaultdict
 
-xs_arr = np.array(xs)
-ys_arr = np.array(ys)
-
 len(ys_arr)
 ys_arr.sort()
 clust_ind = fclusterdata(ys_arr.reshape((len(ys_arr), 1)), 12,
@@ -158,20 +178,17 @@ for i, (v, c) in enumerate(zip(ys_arr, clust_ind)):
     clusters_w_vals[c].append(v)
     clusters_w_inds[c].append(i)
 cluster_means = {c: np.mean(vals) for c, vals in clusters_w_vals.items()}
-cluster_ind_means = {c: np.mean(inds) for c, inds in clusters_w_inds.items()}
 
-plt.figure(figsize=(8, 6))
-ax = plt.axes()
-ax.scatter(range(0, len(ys)), ys_arr, c=clust_ind)
-ax.set_xlabel('index in sorted position list')
-ax.set_ylabel('y position in pixels')
+plot_positions_cluster_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, 'y', 30)
 
-for c, v_mean in cluster_means.items():
-    ax.annotate(str(c), xy=(cluster_ind_means[c], v_mean + 30))
-plt.show()
 
-#plt.legend()
-
+#%%
+sorted_clust_means = list(sorted(cluster_means.values()))
+clust_mean_dists = [c - sorted_clust_means[i-1] for i, c in enumerate(sorted_clust_means) if i > 0]
+#mean_dists_sd = np.std(clust_mean_dists)
+mean_dists_range = max(clust_mean_dists) - min(clust_mean_dists)
+num_vals_per_clust = [len(vals) for vals in clusters_w_vals.values()]
+vals_per_clust_range = max(num_vals_per_clust) - min(num_vals_per_clust)
 
 #%%
 def best_y_clusters_num_clusters_range(ys, num_clust_range, max_dist_thresh=0.1):
@@ -195,19 +212,8 @@ def best_y_clusters_num_clusters_range(ys, num_clust_range, max_dist_thresh=0.1)
         print(n, dist)
     
     
-
-
-
 def find_clusters(arr, n_clust):
     sd = np.std(arr)
     codebook, dist = kmeans(arr / sd, n_clust)     # divide by SD to normalize
     return codebook * sd, dist
-
-
-def plot_hist_with_peaks(v, peak_vals):
-    plt.figure(figsize=(8, 6))
-    ax = plt.axes()
-    ax.hist(v, np.max(v))
-    ax.set_xticks(peak_vals)
-    plt.show()
     
