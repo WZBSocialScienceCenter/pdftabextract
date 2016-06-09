@@ -104,7 +104,7 @@ def plot_hist_with_peaks(v, peak_vals):
 import matplotlib.pyplot as plt
 import numpy as np
 
-subpage = subpages[(17, 'left')]
+subpage = subpages[(17, 'right')]
 
 xs = []
 ys = []
@@ -117,10 +117,7 @@ for t in subpage['texts']:
 #plt.hist(ys, max(ys))
 
 
-plt.scatter(range(0, len(xs)), sorted(xs))
-plt.scatter(range(0, len(ys)), sorted(ys))
-
-plot_positions_scatter(xs, label='x', ylim=(0, subpage['width']))
+plot_positions_scatter(xs, label='x', ylim=(subpage['x_offset'], subpage['x_offset'] + subpage['width']))
 plot_positions_scatter(ys, label='y', ylim=(0, subpage['height']))
 
 xs_arr = np.array(xs)
@@ -176,22 +173,47 @@ from scipy.cluster.hierarchy import fclusterdata
 from collections import defaultdict
 
 
-def find_best_y_clusters(ys_arr, num_clust_range,
-                         mean_dists_range_thresh=float('infinity'),
-                         num_vals_per_clust_thresh=float('infinity')):
+def create_cluster_dicts(vals, clust_ind):
+    # build dicts with ...        
+    clusters_w_vals = defaultdict(list)     # ... cluster -> [values] mapping
+    clusters_w_inds = defaultdict(list)     # ... cluster -> [indices] mapping
+    for i, (v, c) in enumerate(zip(vals, clust_ind)):
+        clusters_w_vals[c].append(v)
+        clusters_w_inds[c].append(i)
+    
+    return clusters_w_vals, clusters_w_inds
+
+
+def calc_cluster_means(clusters_w_vals):
+    # calculate mean position value per cluster
+    return {c: np.mean(vals) for c, vals in clusters_w_vals.items()}
+
+def calc_cluster_sds(clusters_w_vals):
+    return {c: np.std(vals) for c, vals in clusters_w_vals.items()}
+
+
+def find_best_pos_clusters(pos, num_clust_range, direction,
+                           property_weights=(1, 1),
+                           sds_range_thresh=float('infinity'),
+                           mean_dists_range_thresh=float('infinity'),
+                           num_vals_per_clust_thresh=float('infinity')):
     """
     Assumptions:
     - y clusters should be equal spaced
     - number of items in y clusters should be equal distributed
-    """
-    ys_arr.sort()
-    RETURN_VALS_ENDIDX = 4
-    DIDX = RETURN_VALS_ENDIDX
-    NIDX = DIDX + 1
     
+    - items in x clusters should have low standard deviation
+    """
+    assert direction in ('x', 'y')
+    assert len(property_weights) == 2
+    
+    # sort input positions first
+    pos.sort()
+    
+    # generate different number of clusters
     fcluster_runs = []
     for n in num_clust_range:
-        clust_ind = fclusterdata(ys_arr.reshape((len(ys_arr), 1)),  # reshape from vector to Nx1 matrix
+        clust_ind = fclusterdata(pos.reshape((len(pos), 1)),  # reshape from vector to Nx1 matrix
                                  n,                     # number of clusters to find
                                  criterion='maxclust',  # stop when above n is reached
                                  metric='cityblock',    # 1D distance
@@ -200,65 +222,88 @@ def find_best_y_clusters(ys_arr, num_clust_range,
         assert n_found_clust <= n
         
         if n_found_clust != n:  # it could be that we find less clusters than requested
-            continue            # this is a clear sign that there're not enough elements in ys_arr
+            continue            # this is a clear sign that there're not enough elements in pos
         
-        # build dicts with ...        
-        clusters_w_vals = defaultdict(list)     # ... cluster -> [values] mapping
-        clusters_w_inds = defaultdict(list)     # ... cluster -> [indices] mapping
-        for i, (v, c) in enumerate(zip(ys_arr, clust_ind)):
-            clusters_w_vals[c].append(v)
-            clusters_w_inds[c].append(i)
+        # build dicts with cluster -> vals / indices mapping
+        clusters_w_vals, clusters_w_inds = create_cluster_dicts(pos, clust_ind)
         
         # calculate mean position value per cluster
-        cluster_means = {c: np.mean(vals) for c, vals in clusters_w_vals.items()}
+        cluster_means = calc_cluster_means(clusters_w_vals)
         
-        # calculate some properties for minimizing on them later
-        sorted_clust_means = list(sorted(cluster_means.values()))
-        clust_mean_dists = [c - sorted_clust_means[i-1] for i, c in enumerate(sorted_clust_means) if i > 0]
-        if len(clust_mean_dists) == 1:
-            # mean_dists_sd = clust_mean_dists[0]
-            mean_dists_range = clust_mean_dists[0]
-        else:
-            # mean_dists_sd = np.std(clust_mean_dists)
-            mean_dists_range = max(clust_mean_dists) - min(clust_mean_dists)
-        
-        if mean_dists_range > mean_dists_range_thresh:
-            continue
+        # calculate position values SD per cluster
+        cluster_sds = calc_cluster_sds(clusters_w_vals)     
         
         num_vals_per_clust = [len(vals) for vals in clusters_w_vals.values()]
         # vals_per_clust_sd = np.std(num_vals_per_clust)
         vals_per_clust_range = max(num_vals_per_clust) - min(num_vals_per_clust)
         
-        if vals_per_clust_range > num_vals_per_clust_thresh:
-            continue
+        # calculate some properties for minimizing on them later
+        if direction == 'x':
+            cluster_sds_range = max(cluster_sds.values()) - min(cluster_sds.values())
+            properties = (cluster_sds_range, vals_per_clust_range)
+            
+            print('N=', n, 'cluster_sds_range=', cluster_sds_range, 'vals_per_clust_range=', vals_per_clust_range)
+        else:            
+            sorted_clust_means = list(sorted(cluster_means.values()))
+            clust_mean_dists = [c - sorted_clust_means[i-1] for i, c in enumerate(sorted_clust_means) if i > 0]
+            if len(clust_mean_dists) == 1:
+                # mean_dists_sd = clust_mean_dists[0]
+                mean_dists_range = clust_mean_dists[0]
+            else:
+                # mean_dists_sd = np.std(clust_mean_dists)
+                mean_dists_range = max(clust_mean_dists) - min(clust_mean_dists)
+            
+            if mean_dists_range > mean_dists_range_thresh:
+                continue
+                        
+            if vals_per_clust_range > num_vals_per_clust_thresh:
+                continue
+            
+            properties = (mean_dists_range, vals_per_clust_range)
         
-        print('N=', n,
-              # 'dists SD=', mean_dists_sd,
-              'dists range=', mean_dists_range,
-              # 'num. values SD=', vals_per_clust_sd,
-              'num. values range=', vals_per_clust_range)
+            print('N=', n,
+                  # 'dists SD=', mean_dists_sd,
+                  'dists range=', mean_dists_range,
+                  # 'num. values SD=', vals_per_clust_sd,
+                  'num. values range=', vals_per_clust_range)
         
-        fcluster_runs.append((clust_ind, clusters_w_vals, clusters_w_inds, cluster_means,
-                              mean_dists_range, vals_per_clust_range))
+        fcluster_runs.append((clust_ind, properties))
     
     if not len(fcluster_runs):  # no clusters found at all that met the threshold criteria
         return None
     
-    # minimize for mean distance range and number of values per cluster range
-    max_dist_range = max(x[DIDX] for x in fcluster_runs)
-    #print(max_dist_range)
-    max_vals_per_clust_range = max(x[NIDX] for x in fcluster_runs)
-    #print(max_vals_per_clust_range)
-    best_cluster_runs = sorted(fcluster_runs, key=lambda x: x[DIDX] / max_dist_range + x[NIDX] / max_vals_per_clust_range)
-    #best_ns = [len(x[0]) for x in best_cluster_runs]
-    #print(best_ns)
+    n_properties = len(property_weights)
+    properties_maxima = [max(x[1][p] for x in fcluster_runs) for p in range(0, n_properties)]
     
-    return best_cluster_runs[0][0:RETURN_VALS_ENDIDX]
+    def key_sorter(x):
+        sortval = 0
+        for p in range(0, n_properties):
+            sortval += property_weights[p] * x[1][p] / properties_maxima[p]
+        return sortval
+    
+    best_cluster_runs = sorted(fcluster_runs, key=key_sorter)
+    
+    return pos, best_cluster_runs[0][0]
 
+#%%
 
-clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals = find_best_y_clusters(ys_arr, range(2, 15), mean_dists_range_thresh=30)
+ys_arr, clust_ind = find_best_pos_clusters(ys_arr, range(2, 15), 'y', mean_dists_range_thresh=30)
+clusters_w_vals, clusters_w_inds = create_cluster_dicts(ys_arr, clust_ind)
+cluster_means = calc_cluster_means(clusters_w_vals)
 
-plot_positions_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals, 'y', 30)
+print('found clusters with N=', len(clusters_w_vals))
+plot_positions_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_means, 'y', 30)
+
+#%%
+xs_arr, clust_ind = find_best_pos_clusters(xs_arr, range(3, 9), 'x', property_weights=(1, 5))
+
+clusters_w_vals, clusters_w_inds = create_cluster_dicts(xs_arr, clust_ind)
+cluster_means = calc_cluster_means(clusters_w_vals)
+
+print('found clusters with N=', len(clusters_w_vals))
+plot_positions_scatter(xs_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_means, 'x', 30)
+
+filtered_clust = {c: vals for c, vals in clusters_w_vals.items() if len(vals) > 3}
 
 #%%
 def find_clusters(arr, n_clust):
