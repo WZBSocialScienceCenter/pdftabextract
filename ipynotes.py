@@ -72,7 +72,7 @@ mean_contentlength = sum([length for length in pages_contentlengths.values()]) /
 
 #%%
 def plot_positions_scatter(pos, clust_ind=None, clusters_w_vals=None, clusters_w_inds=None, cluster_means=None,
-                                   label='', label_y_offset=None):
+                                   label='', label_y_offset=None, ylim=None):
     if clust_ind is not None:
         cluster_ind_means = {c: np.mean(inds) for c, inds in clusters_w_inds.items()}
     
@@ -82,6 +82,8 @@ def plot_positions_scatter(pos, clust_ind=None, clusters_w_vals=None, clusters_w
     ax.scatter(range(0, len(pos)), sorted(pos), c=cols)
     ax.set_xlabel('index in sorted position list')
     ax.set_ylabel(label + ' position in pixels')
+    if ylim:
+        ax.set_ylim(ylim)
     
     if clust_ind is not None:
         for c, v_mean in cluster_means.items():
@@ -118,8 +120,8 @@ for t in subpage['texts']:
 plt.scatter(range(0, len(xs)), sorted(xs))
 plt.scatter(range(0, len(ys)), sorted(ys))
 
-plot_positions_scatter(xs, label='x')
-plot_positions_scatter(ys, label='y')
+plot_positions_scatter(xs, label='x', ylim=(0, subpage['width']))
+plot_positions_scatter(ys, label='y', ylim=(0, subpage['height']))
 
 xs_arr = np.array(xs)
 ys_arr = np.array(ys)
