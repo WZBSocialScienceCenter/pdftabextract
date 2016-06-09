@@ -71,40 +71,22 @@ for p_num, page in pages.items():
 mean_contentlength = sum([length for length in pages_contentlengths.values()]) / len(pages_contentlengths)
 
 #%%
-import matplotlib.pyplot as plt
-import numpy as np
-
-subpage = subpages[(18, 'left')]
-
-xs = []
-ys = []
-
-for t in subpage['texts']:
-    xs.append(t['left'])
-    ys.append(t['top'])
-
-plt.hist(xs, max(xs))
-plt.hist(ys, max(ys))
-
-sorted(xs)
-sorted(ys)
-
-xs_arr = np.array(xs)
-ys_arr = np.array(ys)
-
-#%%
-def plot_positions_cluster_scatter(ys, clust_ind, clusters_w_vals, clusters_w_inds, cluster_means,
-                                   label, label_y_offset):
-    cluster_ind_means = {c: np.mean(inds) for c, inds in clusters_w_inds.items()}
+def plot_positions_scatter(pos, clust_ind=None, clusters_w_vals=None, clusters_w_inds=None, cluster_means=None,
+                                   label='', label_y_offset=None):
+    if clust_ind is not None:
+        cluster_ind_means = {c: np.mean(inds) for c, inds in clusters_w_inds.items()}
     
     plt.figure(figsize=(8, 6))
     ax = plt.axes()
-    ax.scatter(range(0, len(ys)), ys, c=clust_ind)
+    cols = clust_ind if clust_ind is not None else None
+    ax.scatter(range(0, len(pos)), sorted(pos), c=cols)
     ax.set_xlabel('index in sorted position list')
     ax.set_ylabel(label + ' position in pixels')
     
-    for c, v_mean in cluster_means.items():
-        ax.annotate(str(c), xy=(cluster_ind_means[c], v_mean + label_y_offset))
+    if clust_ind is not None:
+        for c, v_mean in cluster_means.items():
+            ax.annotate(str(c), xy=(cluster_ind_means[c], v_mean + label_y_offset))
+    
     plt.show()
 
 
@@ -114,6 +96,33 @@ def plot_hist_with_peaks(v, peak_vals):
     ax.hist(v, np.max(v))
     ax.set_xticks(peak_vals)
     plt.show()
+
+
+#%%
+import matplotlib.pyplot as plt
+import numpy as np
+
+subpage = subpages[(17, 'left')]
+
+xs = []
+ys = []
+
+for t in subpage['texts']:
+    xs.append(t['left'])
+    ys.append(t['top'])
+
+#plt.hist(xs, max(xs))
+#plt.hist(ys, max(ys))
+
+
+plt.scatter(range(0, len(xs)), sorted(xs))
+plt.scatter(range(0, len(ys)), sorted(ys))
+
+plot_positions_scatter(xs, label='x')
+plot_positions_scatter(ys, label='y')
+
+xs_arr = np.array(xs)
+ys_arr = np.array(ys)
 
 
 #%% Try to find clusters with kmeans
@@ -247,7 +256,7 @@ def find_best_y_clusters(ys_arr, num_clust_range,
 
 clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals = find_best_y_clusters(ys_arr, range(2, 15), mean_dists_range_thresh=30)
 
-plot_positions_cluster_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals, 'y', 30)
+plot_positions_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals, 'y', 30)
 
 #%%
 def find_clusters(arr, n_clust):
