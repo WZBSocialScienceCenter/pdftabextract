@@ -74,7 +74,7 @@ mean_contentlength = sum([length for length in pages_contentlengths.values()]) /
 import matplotlib.pyplot as plt
 import numpy as np
 
-subpage = subpages[(17, 'left')]
+subpage = subpages[(18, 'left')]
 
 xs = []
 ys = []
@@ -164,27 +164,7 @@ from scipy.cluster.hierarchy import fclusterdata
 
 from collections import defaultdict
 
-len(ys_arr)
-ys_arr.sort()
-clust_ind = fclusterdata(ys_arr.reshape((len(ys_arr), 1)), 12,
-                         criterion='maxclust',
-                         metric='cityblock',
-                         method='average')
-print(len(np.unique(clust_ind)))
-print(clust_ind)
 
-clusters_w_vals = defaultdict(list)
-clusters_w_inds = defaultdict(list)
-for i, (v, c) in enumerate(zip(ys_arr, clust_ind)):
-    clusters_w_vals[c].append(v)
-    clusters_w_inds[c].append(i)
-cluster_means = {c: np.mean(vals) for c, vals in clusters_w_vals.items()}
-
-clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals = find_best_y_clusters(ys_arr, range(2, 15), mean_dists_range_thresh=30)
-
-plot_positions_cluster_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals, 'y', 30)
-
-#%%
 def find_best_y_clusters(ys_arr, num_clust_range,
                          mean_dists_range_thresh=float('infinity'),
                          num_vals_per_clust_thresh=float('infinity')):
@@ -205,7 +185,11 @@ def find_best_y_clusters(ys_arr, num_clust_range,
                                  criterion='maxclust',  # stop when above n is reached
                                  metric='cityblock',    # 1D distance
                                  method='average')      # average linkage
-        assert len(np.unique(clust_ind)) == n
+        n_found_clust = len(np.unique(clust_ind))
+        assert n_found_clust <= n
+        
+        if n_found_clust != n:  # it could be that we find less clusters than requested
+            continue            # this is a clear sign that there're not enough elements in ys_arr
         
         # build dicts with ...        
         clusters_w_vals = defaultdict(list)     # ... cluster -> [values] mapping
@@ -246,6 +230,9 @@ def find_best_y_clusters(ys_arr, num_clust_range,
         fcluster_runs.append((clust_ind, clusters_w_vals, clusters_w_inds, cluster_means,
                               mean_dists_range, vals_per_clust_range))
     
+    if not len(fcluster_runs):  # no clusters found at all that met the threshold criteria
+        return None
+    
     # minimize for mean distance range and number of values per cluster range
     max_dist_range = max(x[DIDX] for x in fcluster_runs)
     #print(max_dist_range)
@@ -256,6 +243,11 @@ def find_best_y_clusters(ys_arr, num_clust_range,
     #print(best_ns)
     
     return best_cluster_runs[0][0:RETURN_VALS_ENDIDX]
+
+
+clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals = find_best_y_clusters(ys_arr, range(2, 15), mean_dists_range_thresh=30)
+
+plot_positions_cluster_scatter(ys_arr, clust_ind, clusters_w_vals, clusters_w_inds, cluster_mean_vals, 'y', 30)
 
 #%%
 def find_clusters(arr, n_clust):
