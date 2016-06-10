@@ -6,9 +6,13 @@ Created on Wed Jun  1 16:40:39 2016
 """
 
 from collections import defaultdict
+from logging import warning
 
 from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
+
+
+from geom import pt, rect, rectintersect
 
 
 # TODO: test with right subpages
@@ -19,55 +23,73 @@ import numpy as np
 #%%
 
 
-def matrix_of_text_data_from_subpage(subpage):
-    text_objs, (n_rows, n_cols) = organize_textobjs_in_table_cells(subpage)
+def table_debugprint(table):
+    textmat = np.empty(table.shape, dtype='object')
     
-    textmat = np.empty((n_rows, n_cols), dtype='object')
-    
-    for row in range(n_rows):
-        for col in range(n_cols):
-            texts = [t['value'] for t in text_objs[row][col]]
-            textmat[row, col] = ', '.join(texts)
-    
-    return textmat
+    for j in range(table.shape[0]):
+        for k in range(table.shape[1]):
+            texts = [t['value'] for t in table[j, k]]
+            textmat[j, k] = ', '.join(texts)
+
+    print(textmat)
 
 
-def organize_textobjs_in_table_cells(subpage):
+def create_datatable_from_subpage(subpage):
+    # find the column and row borders
     col_positions, row_positions = find_col_and_row_positions_in_subpage(subpage)
+    
     n_rows = len(row_positions)
     n_cols = len(col_positions)
+    
     print("subpage %d/%s layout: %d cols, %d rows" % (subpage['number'], subpage['subpage'], n_cols, n_rows))
-
+    
     row_ranges = position_ranges(row_positions, subpage['height'])
-    texts_in_rows = []
-    print('create rows')
-    for row_rng in row_ranges:
-        texts = []
-        for t in subpage['texts']:
-            if row_rng[0] <= t['top'] < row_rng[1]:
-                texts.append(t)
-        texts_in_rows.append(texts)
-    n_texts_in_rows = sum(len(texts) for texts in texts_in_rows)
-    
-    assert len(row_ranges) == n_rows
-    assert len(subpage['texts']) == n_texts_in_rows
-    
     col_ranges = position_ranges(col_positions, subpage['x_offset'] + subpage['width'])
-    text_data = []
-    for row_texts in texts_in_rows:
-        row_texts_ordered = []
-        for col_rng in col_ranges:
-            cell_texts = []
-            for t in row_texts:
-                if col_rng[0] - 30 <= t['left'] < col_rng[1]:
-                    cell_texts.append(t)
-            row_texts_ordered.append(cell_texts)
-        text_data.append(row_texts_ordered)
     
-    n_texts_in_cells = sum((sum(len(texts) for texts in r) for r in text_data))
-    assert len(subpage['texts']) == n_texts_in_cells
+    # create a grid with rectangles of table cells
+    grid = {(r_i, c_i): rect(pt(l, t), pt(r, b)) for r_i, (t, b) in enumerate(row_ranges)
+                                                 for c_i, (l, r) in enumerate(col_ranges)}
     
-    return text_data, (n_rows, n_cols)
+    # create an empty table with the found dimensions
+    # each cell will have a list with textblocks inside
+    table = np.empty((n_rows, n_cols), dtype='object')
+    # np.full does not work with with list as fill value so we have to do it like this:
+    for j in range(n_rows):
+        for k in range(n_cols):
+            table[j, k] = []
+    
+    # iterate through the textblocks of this page
+    textblocks = subpage['texts'][:]
+    for t in textblocks[:]:
+        t_rect = rect(t['topleft'], t['bottomright'])   # rectangle of the textbox
+        
+        # find out the cells with which this textbox rectangle intersects
+        cell_isects = []
+        for idx, cell_rect in grid.items():
+            isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+            if isect is not None and isect > 0:
+                cell_isects.append((idx, isect))
+        
+        if len(cell_isects) > 0:
+            # find out the cell with most overlap
+            max_isect_val = max([x[1] for x in cell_isects])
+            if max_isect_val < 0.5:
+                warning("low best cell intersection value: %f" % (subpage['number'], subpage['subpage'], max_isect_val))
+            best_isects = [x for x in cell_isects if x[1] == max_isect_val]
+            if len(best_isects) > 1:
+                warning("multiple (%d) best cell intersections" % (subpage['number'], subpage['subpage'], len(best_isects)))
+            best_idx = best_isects[0][0]
+            
+            # add this textblock to the table at the found cell index
+            table[best_idx].append(t)
+            textblocks.remove(t)    # remove it from the textblocks list
+    
+    # now all textblocks that are left could not be fitted into a cell
+    # report that here
+    for t in textblocks:
+        warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'], t))
+    
+    return table
     
 
 def find_col_and_row_positions_in_subpage(subpage):
