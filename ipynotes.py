@@ -311,3 +311,61 @@ def find_clusters(arr, n_clust):
     codebook, dist = kmeans(arr / sd, n_clust)     # divide by SD to normalize
     return codebook * sd, dist
     
+
+#%%
+from random import shuffle
+
+from geom import pt, rect, rectintersect
+
+from logging import warning
+
+col_positions, row_positions = find_col_and_row_positions_in_subpage(subpage)
+
+n_rows = len(row_positions)
+n_cols = len(col_positions)
+
+row_ranges = position_ranges(row_positions, subpage['height'])
+col_ranges = position_ranges(col_positions, subpage['x_offset'] + subpage['width'])
+
+#%%
+grid = {(r_i, c_i): rect(pt(l, t), pt(r, b)) for r_i, (t, b) in enumerate(row_ranges)
+                                             for c_i, (l, r) in enumerate(col_ranges)}
+
+table = np.empty((n_rows, n_cols), dtype='object')
+# np.full does not with with list as fill value so we have to do it like this:
+for j in range(n_rows):
+    for k in range(n_cols):
+        table[j, k] = []
+        
+textblocks = subpage['texts'][:]
+for t in textblocks[:]:
+    t_rect = rect(t['topleft'], t['bottomright'])
+    cell_isects = []
+    for idx, cell_rect in grid.items():
+        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+        if isect is not None and isect > 0:
+            cell_isects.append((idx, isect))
+    
+    if len(cell_isects) > 0:
+        max_isect_val = max([x[1] for x in cell_isects])
+        if max_isect_val < 0.5:
+            warning("low best cell intersection value: %f" % max_isect_val)
+        best_isects = [x for x in cell_isects if x[1] == max_isect_val]
+        if len(best_isects) > 1:
+            warning("multiple (%d) best cell intersections" % len(best_isects))
+        best_idx = best_isects[0][0]
+        table[best_idx].append(t)
+        textblocks.remove(t)
+
+for t in textblocks:
+    warning("no cell found for textblock '%s'" % t)
+
+#%%
+
+textmat = np.empty((n_rows, n_cols), dtype='object')
+
+for j in range(n_rows):
+    for k in range(n_cols):
+        texts = [t['value'] for t in table[j, k]]
+        textmat[j, k] = ', '.join(texts)
+
