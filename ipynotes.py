@@ -362,6 +362,32 @@ for t in textblocks:
 
 #%%
 
+cell = table[1, 1]
+
+def find_text_gap_px(texts, direction='vertical'):
+    assert direction in ('vertical', 'horizontal')
+    
+    if direction == 'vertical':
+        sort_attr = 'top'
+        this_attr = 'top'
+        prev_attr = 'bottom'
+    else:
+        sort_attr = 'left'
+        this_attr = 'left'
+        prev_attr = 'right'        
+    
+    sorted_ts = list(sorted(texts, key=lambda x: x[sort_attr]))
+    text_gaps = [t[this_attr] - sorted_ts[i - 1][prev_attr] for i, t in enumerate(sorted_ts) if i > 0]
+    text_gaps = [v for v in text_gaps if v > 0]  # overlaps might occur, so filter out negative gaps
+    
+    if len(text_gaps) > 0:
+        return min(text_gaps)
+    else:
+        return None
+
+
+#%%
+
 textmat = np.empty((n_rows, n_cols), dtype='object')
 
 for j in range(n_rows):
