@@ -418,3 +418,28 @@ for j in range(n_rows):
         texts = [t['value'] for t in table[j, k]]
         textmat[j, k] = ', '.join(texts)
 
+#%%
+
+layouts = analyze_subpage_layouts(subpages)
+
+#%%
+
+all_row_pos, all_col_pos = zip(*[(np.array(layout[0]), np.array(layout[1]) - subpages[p_id]['x_offset']) for p_id, layout in layouts.items()
+                                 if layout is not None])
+
+nrows = [len(row_pos) for row_pos in all_row_pos]
+ncols = [len(col_pos) for col_pos in all_col_pos]
+
+nrows_median = np.median(nrows)
+ncols_median = np.median(ncols)
+
+invalid_subpages = [p_id for p_id, layout in layouts.items() if layout is None]
+sorted(invalid_subpages, key=lambda x: x[0])
+
+col_pos_w_median_len = [col_pos for col_pos in all_col_pos if len(col_pos) == ncols_median]
+best_col_pos = [list() for _ in range(int(ncols_median))]
+for col_positions in col_pos_w_median_len:
+    for i, pos in enumerate(col_positions):
+        best_col_pos[i].append(pos)
+
+best_col_pos_medians = [np.median(best_col_pos[i]) for i in range(int(ncols_median))]

@@ -33,6 +33,7 @@ def parse_pages(root):
             'width': int(float(p.attrib['width'])),
             'height': int(float(p.attrib['height'])),
             'x_offset': 0,
+            'subpage': None,
             'texts': [],
             'xmlnode': p,
         }

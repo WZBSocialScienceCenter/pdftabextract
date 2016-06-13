@@ -23,6 +23,35 @@ from geom import pt, rect, rectintersect
 #%%
 
 
+def analyze_subpage_layouts(subpages):
+    layouts = {}
+    for p_id, sub_p in subpages.items():
+        print(sub_p['number'], sub_p['subpage'])
+        
+        # find the column and row borders
+        try:
+            col_positions, row_positions = find_col_and_row_positions_in_subpage(sub_p)
+        except ValueError as e:
+            print("subpage %d/%s layout: skipped ('%s')" % (sub_p['number'], sub_p['subpage'], str(e)))
+            col_positions, row_positions = None, None
+        
+        if col_positions and row_positions:
+            n_rows = len(row_positions)
+            n_cols = len(col_positions)
+            
+            print("subpage %d/%s layout: %d cols, %d rows" % (sub_p['number'], sub_p['subpage'], n_cols, n_rows))
+            
+            layout = (row_positions, col_positions)
+        else:
+            print("subpage %d/%s layout: invalid column/row positions: %s/%s"
+                  % (sub_p['number'], sub_p['subpage'], col_positions, row_positions))
+            layout = None
+        
+        layouts[p_id] = layout
+    
+    return layouts
+
+
 def table_debugprint(table):
     textmat = np.empty(table.shape, dtype='object')
     
@@ -74,10 +103,10 @@ def create_datatable_from_subpage(subpage):
             # find out the cell with most overlap
             max_isect_val = max([x[1] for x in cell_isects])
             if max_isect_val < 0.5:
-                warning("low best cell intersection value: %f" % (subpage['number'], subpage['subpage'], max_isect_val))
+                warning("subpage %d/%s: low best cell intersection value: %f" % (subpage['number'], subpage['subpage'], max_isect_val))
             best_isects = [x for x in cell_isects if x[1] == max_isect_val]
             if len(best_isects) > 1:
-                warning("multiple (%d) best cell intersections" % (subpage['number'], subpage['subpage'], len(best_isects)))
+                warning("subpage %d/%s: multiple (%d) best cell intersections" % (subpage['number'], subpage['subpage'], len(best_isects)))
             best_idx = best_isects[0][0]
             
             # add this textblock to the table at the found cell index
@@ -93,6 +122,9 @@ def create_datatable_from_subpage(subpage):
     
 
 def find_col_and_row_positions_in_subpage(subpage):
+    if len(subpage['texts']) < 3:
+        raise ValueError('insufficient number of texts on subpage %d/%s' % (subpage['number'], subpage['subpage']))
+    
     xs = []
     ys = []
     
@@ -104,15 +136,19 @@ def find_col_and_row_positions_in_subpage(subpage):
     ys_arr = np.array(ys)
     
     xs_arr, x_clust_ind = find_best_pos_clusters(xs_arr, range(3, 9), 'x', property_weights=(1, 5))
-    x_clust_w_vals, _ = create_cluster_dicts(xs_arr, x_clust_ind)
-    x_clust_w_vals = {c: vals for c, vals in x_clust_w_vals.items() if len(vals) > 3}
-    
-    col_positions = positions_list_from_clustervalues(x_clust_w_vals.values())
+    if xs_arr is None or x_clust_ind is None:
+        col_positions = None
+    else:
+        x_clust_w_vals, _ = create_cluster_dicts(xs_arr, x_clust_ind)
+        x_clust_w_vals = {c: vals for c, vals in x_clust_w_vals.items() if len(vals) > 3}
+        col_positions = positions_list_from_clustervalues(x_clust_w_vals.values())
     
     ys_arr, y_clust_ind = find_best_pos_clusters(ys_arr, range(2, 15), 'y', mean_dists_range_thresh=30)
-    y_clust_w_vals, _ = create_cluster_dicts(ys_arr, y_clust_ind)
-    
-    row_positions = positions_list_from_clustervalues(y_clust_w_vals.values())
+    if ys_arr is None or y_clust_ind is None:
+        row_positions = None
+    else:
+        y_clust_w_vals, _ = create_cluster_dicts(ys_arr, y_clust_ind)
+        row_positions = positions_list_from_clustervalues(y_clust_w_vals.values())
     
     return col_positions, row_positions
 
@@ -227,7 +263,7 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
         fcluster_runs.append((clust_ind, properties))
     
     if not len(fcluster_runs):  # no clusters found at all that met the threshold criteria
-        return None
+        return None, None
     
     n_properties = len(property_weights)
     properties_maxima = [max(x[1][p] for x in fcluster_runs) for p in range(0, n_properties)]
@@ -241,4 +277,38 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
     best_cluster_runs = sorted(fcluster_runs, key=key_sorter)
     
     return pos, best_cluster_runs[0][0]
+
     
+def put_texts_in_lines(texts):    
+    sorted_ts = list(sorted(texts, key=lambda x: x['top']))
+    text_spacings = [t['top'] - sorted_ts[i - 1]['bottom'] for i, t in enumerate(sorted_ts) if i > 0]
+    text_spacings.append(0.0)   # last line
+    
+    pos_text_spacings = [v for v in text_spacings if v > 0]    
+    line_vspace = min(pos_text_spacings)
+    
+    lines = []
+    cur_line = []
+    for t, spacing in zip(sorted_ts, text_spacings):
+        cur_line.append(t)
+        
+        if spacing >= 0:    # this is a line break            
+            # add all texts to this line sorted by x-position
+            lines.append(list(sorted(cur_line, key=lambda x: x['left'])))
+            
+            # add some empty line breaks if necessary
+            lines.extend([] * int(spacing / line_vspace))
+            cur_line = []            
+
+    assert len(cur_line) == 0    # because last line gets a zero-spacing appended
+    assert len(texts) == sum([len(l) for l in lines if len(l) > 0])     # check if all texts were put into lines
+    
+    return lines
+    
+
+def create_text_from_lines(lines, linebreak='\n', linejoin=' '):
+    text = ''
+    for l in lines:
+        text += linejoin.join([t['value'] for t in l]) + linebreak
+    
+    return text
