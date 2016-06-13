@@ -104,7 +104,7 @@ def plot_hist_with_peaks(v, peak_vals):
 import matplotlib.pyplot as plt
 import numpy as np
 
-subpage = subpages[(17, 'left')]
+subpage = subpages[(5, 'right')]
 
 xs = []
 ys = []
@@ -362,29 +362,52 @@ for t in textblocks:
 
 #%%
 
-cell = table[1, 1]
+def put_texts_in_lines(texts):    
+    sorted_ts = list(sorted(texts, key=lambda x: x['top']))
+    text_spacings = [t['top'] - sorted_ts[i - 1]['bottom'] for i, t in enumerate(sorted_ts) if i > 0]
+    text_spacings.append(0.0)   # last line
+    
+    pos_text_spacings = [v for v in text_spacings if v > 0]    
+    line_vspace = min(pos_text_spacings)
+    
+    lines = []
+    cur_line = []
+    for t, spacing in zip(sorted_ts, text_spacings):
+        cur_line.append(t)
+        
+        if spacing >= 0:    # this is a line break            
+            # add all texts to this line sorted by x-position
+            lines.append(list(sorted(cur_line, key=lambda x: x['left'])))
+            
+            # add some empty line breaks if necessary
+            lines.extend([] * int(spacing / line_vspace))
+            cur_line = []            
 
-def find_text_gap_px(texts, direction='vertical'):
-    assert direction in ('vertical', 'horizontal')
+    assert len(cur_line) == 0    # because last line gets a zero-spacing appended
+    assert len(texts) == sum([len(l) for l in lines if len(l) > 0])     # check if all texts were put into lines
     
-    if direction == 'vertical':
-        sort_attr = 'top'
-        this_attr = 'top'
-        prev_attr = 'bottom'
-    else:
-        sort_attr = 'left'
-        this_attr = 'left'
-        prev_attr = 'right'        
+    return lines
     
-    sorted_ts = list(sorted(texts, key=lambda x: x[sort_attr]))
-    text_gaps = [t[this_attr] - sorted_ts[i - 1][prev_attr] for i, t in enumerate(sorted_ts) if i > 0]
-    text_gaps = [v for v in text_gaps if v > 0]  # overlaps might occur, so filter out negative gaps
-    
-    if len(text_gaps) > 0:
-        return min(text_gaps)
-    else:
-        return None
 
+def create_text_from_lines(lines, linebreak='\n', linejoin=' '):
+    text = ''
+    for l in lines:
+        text += linejoin.join([t['value'] for t in l]) + linebreak
+    
+    return text
+
+
+
+#%%
+
+cell = table[2, 1]
+
+lines = put_texts_in_lines(cell)
+text = create_text_from_lines(lines)
+
+
+#y_sorted_ts, vspacings = zip(*calc_text_spacings(cell, direction='vertical'))
+#x_sorted_ts, hspacings = zip(*calc_text_spacings(cell, direction='horizontal'))
 
 #%%
 
