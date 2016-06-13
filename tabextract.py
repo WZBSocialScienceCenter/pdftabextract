@@ -5,14 +5,22 @@ Created on Wed Jun  1 16:40:39 2016
 @author: mkonrad
 """
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from logging import warning
+
+import json
+import csv
 
 from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
 
-
 from geom import pt, rect, rectintersect
+from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally
+
+
+HEADER_RATIO = 0.1
+FOOTER_RATIO = 0.1
+DIVIDE_RATIO = 0.5
 
 
 # TODO: test with right subpages
@@ -22,13 +30,69 @@ from geom import pt, rect, rectintersect
 
 #%%
 
+def extract_tabular_data_from_pdf2xml_file(xmlfile):
+    subpages = get_subpages_from_xml(xmlfile)
+    
+    layouts, invalid_subpages, col_positions = analyze_subpage_layouts(subpages)
+    
+    output = OrderedDict()
+    for p_id, sub_p in subpages.items():
+        if p_id in invalid_subpages:
+            print("subpage %d/%s layout: skipped" % (sub_p['number'], sub_p['subpage']))
+            continue
+        
+        pagenum, pageside = p_id
+        
+        if pagenum not in output:
+            output[pagenum] = OrderedDict()
+        
+        row_positions = layouts[p_id][0]
+        table = create_datatable_from_subpage(sub_p, row_positions=row_positions, col_positions=col_positions)
+        table_texts = []
+        for row in table:
+            row_texts = []
+            for cell in row:
+                cell_lines = put_texts_in_lines(cell)
+                row_texts.append(create_text_from_lines(cell_lines))
+            table_texts.append(row_texts)
+        
+        output[pagenum][pageside] = table_texts
+
+    return output
+
+
+def save_tabular_data_dict_as_json(data, jsonfile):
+    with open(jsonfile, 'w') as f:
+        json.dump(data, f, indent=2)
+
+
+def get_subpages_from_xml(xmlfile):
+    tree, root = read_xml(xmlfile)
+    
+    pages = parse_pages(root)
+
+    subpages = {}
+    
+    for p_num, page in pages.items():
+        # strip off footer and header
+        bodytexts = get_bodytexts(page, HEADER_RATIO, FOOTER_RATIO)
+        
+        if DIVIDE_RATIO:
+            page_subpages = divide_texts_horizontally(page, DIVIDE_RATIO, bodytexts)
+        else:
+            page_subpages = (page, )
+            
+        for sub_p in page_subpages:
+            p_id = (sub_p['number'], sub_p['subpage'])        
+            subpages[p_id] = sub_p
+    
+    return subpages
+
 
 def analyze_subpage_layouts(subpages):
+    # find the column and row borders for each subpage
     layouts = {}
-    for p_id, sub_p in subpages.items():
-        print(sub_p['number'], sub_p['subpage'])
-        
-        # find the column and row borders
+    for p_id, sub_p in subpages.items():        
         try:
             col_positions, row_positions = find_col_and_row_positions_in_subpage(sub_p)
         except ValueError as e:
@@ -49,7 +113,34 @@ def analyze_subpage_layouts(subpages):
         
         layouts[p_id] = layout
     
-    return layouts
+    # get the row and column positions of all valid subpages
+    all_row_pos, all_col_pos = zip(*[(np.array(layout[0]), np.array(layout[1]) - subpages[p_id]['x_offset'])
+                               for p_id, layout in layouts.items()
+                               if layout is not None])
+    
+    # get all numbers of rows and columns across the subpages
+    nrows = [len(row_pos) for row_pos in all_row_pos]   # we don't actually need this
+    ncols = [len(col_pos) for col_pos in all_col_pos]
+    
+    nrows_median = np.median(nrows)     # we don't actually need this
+    ncols_median = np.median(ncols)
+    
+    print("median number of rows:", nrows_median)
+    print("median number of columns:", ncols_median)
+    
+    # find the "best" (median) column positions for the median number of columns
+    col_pos_w_median_len = [col_pos for col_pos in all_col_pos if len(col_pos) == ncols_median]
+    best_col_pos = [list() for _ in range(int(ncols_median))]
+    for col_positions in col_pos_w_median_len:
+        for i, pos in enumerate(col_positions):
+            best_col_pos[i].append(pos)
+    
+    best_col_pos_medians = [np.median(best_col_pos[i]) for i in range(int(ncols_median))]
+
+    # get list of "invalid" subpages / subpages without proper layout    
+    invalid_subpages = [p_id for p_id, layout in layouts.items() if layout is None]
+    
+    return layouts, invalid_subpages, best_col_pos_medians
 
 
 def table_debugprint(table):
@@ -63,10 +154,7 @@ def table_debugprint(table):
     print(textmat)
 
 
-def create_datatable_from_subpage(subpage):
-    # find the column and row borders
-    col_positions, row_positions = find_col_and_row_positions_in_subpage(subpage)
-    
+def create_datatable_from_subpage(subpage, row_positions, col_positions):    
     n_rows = len(row_positions)
     n_cols = len(col_positions)
     
@@ -280,13 +368,16 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
 
     
 def put_texts_in_lines(texts):    
-    sorted_ts = list(sorted(texts, key=lambda x: x['top']))
+    sorted_ts = list(sorted(texts, key=lambda x: x['top']))     # sort texts vertically
+    # create list of vertical spacings between sorted texts
     text_spacings = [t['top'] - sorted_ts[i - 1]['bottom'] for i, t in enumerate(sorted_ts) if i > 0]
     text_spacings.append(0.0)   # last line
     
-    pos_text_spacings = [v for v in text_spacings if v > 0]    
-    line_vspace = min(pos_text_spacings)
+    # minimum positive spacing is considered to be the general vertical line spacing
+    pos_sp = [v for v in text_spacings if v > 0]
+    line_vspace = min(pos_sp) if pos_sp else None
     
+    # go through all vertically sorted texts
     lines = []
     cur_line = []
     for t, spacing in zip(sorted_ts, text_spacings):
@@ -297,7 +388,10 @@ def put_texts_in_lines(texts):
             lines.append(list(sorted(cur_line, key=lambda x: x['left'])))
             
             # add some empty line breaks if necessary
-            lines.extend([] * int(spacing / line_vspace))
+            if line_vspace:
+                lines.extend([] * int(spacing / line_vspace))
+            
+            # reset
             cur_line = []            
 
     assert len(cur_line) == 0    # because last line gets a zero-spacing appended

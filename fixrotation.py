@@ -50,10 +50,8 @@ def fix_rotation(input_xml, output_xml, corner_box_cond_fns=None):
             page_subpages = (page, )
         
         for sub_p in page_subpages:
-            if 'subpage' in sub_p:
-                p_id = (sub_p['number'], sub_p['subpage'])
-            else:
-                p_id = (sub_p['number'], )
+            p_id = (sub_p['number'], sub_p['subpage'])
+            
             pages_bodytexts[p_id] = sub_p['texts']
             contentlength = sum([len(t['value']) for t in sub_p['texts']])
             pages_contentlengths[p_id] = contentlength
