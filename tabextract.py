@@ -400,4 +400,4 @@ def create_text_from_lines(lines, linebreak='\n', linejoin=' '):
     for l in lines:
         text += linejoin.join([t['value'] for t in l]) + linebreak
     
-    return text
+    return text[:-1]
