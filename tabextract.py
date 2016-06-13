@@ -36,7 +36,8 @@ def extract_tabular_data_from_pdf2xml_file(xmlfile):
     layouts, invalid_subpages, col_positions = analyze_subpage_layouts(subpages)
     
     output = OrderedDict()
-    for p_id, sub_p in subpages.items():
+    for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
+        sub_p = subpages[p_id]
         if p_id in invalid_subpages:
             print("subpage %d/%s layout: skipped" % (sub_p['number'], sub_p['subpage']))
             continue
@@ -47,7 +48,8 @@ def extract_tabular_data_from_pdf2xml_file(xmlfile):
             output[pagenum] = OrderedDict()
         
         row_positions = layouts[p_id][0]
-        table = create_datatable_from_subpage(sub_p, row_positions=row_positions, col_positions=col_positions)
+        subp_col_positions = list(np.array(col_positions) + sub_p['x_offset'])
+        table = create_datatable_from_subpage(sub_p, row_positions=row_positions, col_positions=subp_col_positions)
         table_texts = []
         for row in table:
             row_texts = []
@@ -157,9 +159,7 @@ def table_debugprint(table):
 def create_datatable_from_subpage(subpage, row_positions, col_positions):    
     n_rows = len(row_positions)
     n_cols = len(col_positions)
-    
-    print("subpage %d/%s layout: %d cols, %d rows" % (subpage['number'], subpage['subpage'], n_cols, n_rows))
-    
+
     row_ranges = position_ranges(row_positions, subpage['height'])
     col_ranges = position_ranges(col_positions, subpage['x_offset'] + subpage['width'])
     
@@ -176,8 +176,7 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
             table[j, k] = []
     
     # iterate through the textblocks of this page
-    textblocks = subpage['texts'][:]
-    for t in textblocks[:]:
+    for t in subpage['texts']:
         t_rect = rect(t['topleft'], t['bottomright'])   # rectangle of the textbox
         
         # find out the cells with which this textbox rectangle intersects
@@ -199,12 +198,8 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
             
             # add this textblock to the table at the found cell index
             table[best_idx].append(t)
-            textblocks.remove(t)    # remove it from the textblocks list
-    
-    # now all textblocks that are left could not be fitted into a cell
-    # report that here
-    for t in textblocks:
-        warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'], t))
+        else:
+            warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'], t))
     
     return table
     
