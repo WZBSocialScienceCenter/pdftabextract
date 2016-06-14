@@ -49,7 +49,7 @@ RIGHTMOST_COL_ALIGN = 'topleft'    # topleft, topright or center
 
 MIN_CONTENTLENGTH_MEAN_DEV_RATIO = 0.2
 
-tree, root = read_xml('testxmls/1992_93_rotback.pdf.xml')
+tree, root = read_xml('testxmls/1992_93_neu_rotfixed.pdf.xml')
 
 # get pages objects    
 pages = parse_pages(root)

@@ -23,19 +23,24 @@ FOOTER_RATIO = 0.1
 DIVIDE_RATIO = 0.5
 
 
-# TODO: test with right subpages
 # TODO: test with subpages that are not really subpages
 # TODO: do not hardcode configuration settings
+# TODO: real logging instead of print()
 
 
 #%%
 
 def extract_tabular_data_from_pdf2xml_file(xmlfile):
+    # get subpages (if there're two pages on a single scanned page)
     subpages = get_subpages_from_xml(xmlfile)
     
+    # analyze the row/column layout of each page and return these layouts,
+    # a list of invalid subpages (no tabular layout could be recognized),
+    # and a list of common column positions
     layouts, invalid_subpages, col_positions = analyze_subpage_layouts(subpages)
     
     output = OrderedDict()
+    # go through all subpages
     for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
         sub_p = subpages[p_id]
         if p_id in invalid_subpages:
@@ -47,17 +52,29 @@ def extract_tabular_data_from_pdf2xml_file(xmlfile):
         if pagenum not in output:
             output[pagenum] = OrderedDict()
         
+        # get the row positions
         row_positions = layouts[p_id][0]
+        
+        # get the column positions
         subp_col_positions = list(np.array(col_positions) + sub_p['x_offset'])
-        table = create_datatable_from_subpage(sub_p, row_positions=row_positions, col_positions=subp_col_positions)
+        
+        # fit the textboxes from this subpage into the tabular grid defined by the
+        # row and column positions
+        table = create_datatable_from_subpage(sub_p,
+                                              row_positions=row_positions,
+                                              col_positions=subp_col_positions)
+
+        # create a table of texts from the textboxes inside the table cells
         table_texts = []
         for row in table:
             row_texts = []
             for cell in row:
+                # form lines from the textboxes in this cell
                 cell_lines = put_texts_in_lines(cell)
                 row_texts.append(create_text_from_lines(cell_lines))
             table_texts.append(row_texts)
         
+        # add this table to the output
         output[pagenum][pageside] = table_texts
 
     return output
@@ -66,6 +83,21 @@ def extract_tabular_data_from_pdf2xml_file(xmlfile):
 def save_tabular_data_dict_as_json(data, jsonfile):
     with open(jsonfile, 'w') as f:
         json.dump(data, f, indent=2)
+
+
+def save_tabular_data_dict_as_csv(data, csvfile):
+    with open(csvfile, 'w') as f:
+        csvwriter = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+        csv_rows = []
+        for p_num, subpages in data.items():
+            for p_side, table_texts in subpages.items():
+                for table_row in table_texts:
+                    csv_rows.append([p_num, p_side] + table_row)
+        
+        n_addcols = len(csv_rows[0]) - 2
+        csv_header = ['page_num', 'page_side'] + ['col' + str(i+1) for i in range(n_addcols)]
+        
+        csvwriter.writerows([csv_header] + csv_rows)
 
 
 def get_subpages_from_xml(xmlfile):
