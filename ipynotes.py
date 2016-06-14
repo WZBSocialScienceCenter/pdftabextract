@@ -25,7 +25,15 @@ def cond_topright_text(t):
 cond_bottomright_text = cond_topright_text
 
 corner_box_cond_fns = (cond_topleft_text, cond_topright_text, cond_bottomright_text, cond_bottomleft_text)
-fixrotation.fix_rotation('testxmls/1992_93.pdf.xml', 'testxmls/1992_93_rotback.pdf.xml', corner_box_cond_fns)
+
+override_angles = {
+    (32, 'right'): -1
+}
+
+xmltree, xmlroot, rot_results = fixrotation.fix_rotation('testxmls/1992_93_neu.pdf.xml',
+                                                         corner_box_cond_fns,
+                                                         override_angles=override_angles)
+xmltree.write('testxmls/1992_93_neu_rotfixed.pdf.xml')
 
 #%%
 

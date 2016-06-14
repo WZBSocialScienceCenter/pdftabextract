@@ -26,12 +26,13 @@ RIGHTMOST_COL_ALIGN = 'topleft'    # topleft, topright or center
 
 MIN_CONTENTLENGTH_MEAN_DEV_RATIO = 0.2
 
-MIN_PAGE_ROTATION_APPLY = math.radians(0.5)     # do not fix page rotation if rotation is below this value
+MIN_PAGE_ROTATION_APPLY = math.radians(0.25)     # do not fix page rotation if rotation is below this value
 MAX_PAGE_ROTATION_RANGE = math.radians(1.0)     # issue warning when range is too big
 
 
 #%%
-def fix_rotation(input_xml, output_xml, corner_box_cond_fns=None):
+def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None):
+    override_angles = override_angles or {}
     tree, root = read_xml(input_xml)
     
     # get pages objects    
@@ -60,20 +61,25 @@ def fix_rotation(input_xml, output_xml, corner_box_cond_fns=None):
     mean_contentlength = sum([length for length in pages_contentlengths.values()]) / len(pages_contentlengths)
         
     # fix rotation
-    for sub_p in subpages.values():
+    rotation_results = {}
+    for p_id, sub_p in subpages.items():
+        manual_rot_angle = override_angles.get(p_id, None)
+        if manual_rot_angle is not None:
+            manual_rot_angle = math.radians(manual_rot_angle)
+        
         contentlength = pages_contentlengths[p_id]
         contentlength_mean_dev_ratio = contentlength / mean_contentlength
         
         if contentlength_mean_dev_ratio >= MIN_CONTENTLENGTH_MEAN_DEV_RATIO:
-            fix_rotation_for_page(sub_p, corner_box_cond_fns)
+            rotation_results[p_id] = fix_rotation_for_page(sub_p, corner_box_cond_fns,
+                                                           manual_rot_angle=manual_rot_angle)
         else:
-            p_name = str(sub_p['number'])
-            if 'subpage' in sub_p:
-                p_name += '/' + sub_p['subpage']
-            print("skipping page '%s': not enough content (%f% of the mean %d)"
-                  % (p_name, contentlength_mean_dev_ratio * 100, mean_contentlength))
-        
-    tree.write(output_xml)
+            print("skipping page '%d/%s': not enough content (%f perc. of the mean %f)"
+                  % (p_id[0], p_id[1], contentlength_mean_dev_ratio * 100, mean_contentlength))
+
+            rotation_results[p_id] = False, 'not_enough_content'
+    
+    return tree, root, rotation_results
 
 #%%
 
@@ -142,41 +148,44 @@ def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bott
     return np.median(angles)
 
 
-def fix_rotation_for_page(p, corner_box_cond_fns):
+def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
     """
     :param p page or subpage
     """
     x_offset = p['x_offset'] if 'x_offset' in p else 0
     
-    page_corners_texts = texts_at_page_corners(p, x_offset, corner_box_cond_fns)
-    
     p_name = str(p['number'])
     if 'subpage' in p:
         p_name += '/' + p['subpage']    
-
     
+
+    page_corners_texts = texts_at_page_corners(p, x_offset, corner_box_cond_fns)
+                
     if (sum(t is not None for t in page_corners_texts) < 2):
         error("page %s: not enough valid corner texts found - did not fix rotation" % p_name)
-        return False
-    
-    corners = ('topleft', 'topright', 'bottomright', 'bottomleft')
-    for i, t in enumerate(page_corners_texts):
-        if t:
-            infostr = "at %f, %f with value '%s'" % (t['left'], t['top'], t['value'])
-        else:
-            infostr = "is None"
-        print("page %s: corner %s %s" % (p_name, corners[i], infostr))
-    
-    page_rot = page_rotation_angle(*page_corners_texts)
-    print("page %s: rotation %f" % (p_name, math.degrees(page_rot)))
+        return False, 'not_enough_corners'
+        
+#    corners = ('topleft', 'topright', 'bottomright', 'bottomleft')
+#    for i, t in enumerate(page_corners_texts):
+#        if t:
+#            infostr = "at %f, %f with value '%s'" % (t['left'], t['top'], t['value'])
+#        else:
+#            infostr = "is None"
+#        print("page %s: corner %s %s" % (p_name, corners[i], infostr))
+
+    if manual_rot_angle is None:        
+        page_rot = page_rotation_angle(*page_corners_texts)
+        print("page %s: rotation %f" % (p_name, math.degrees(page_rot)))
+    else:
+        page_rot = manual_rot_angle
     
     if np.isnan(page_rot):
         print("page %s: rotation could not be identified" % p_name)
-        return False
+        return False, 'rotation_not_identified'
     
-    if page_rot < MIN_PAGE_ROTATION_APPLY:
+    if abs(page_rot) < MIN_PAGE_ROTATION_APPLY:
         print("page %s: will not fix marginal rotation" % p_name)
-        return True
+        return False, 'marginal_rotation'
     
     text_topleft, text_bottomleft = page_corners_texts[0], page_corners_texts[3]
     bottomline_pts = (
@@ -198,4 +207,4 @@ def fix_rotation_for_page(p, corner_box_cond_fns):
         # update text dict
         update_text_dict_pos(t, t_pt_rot, update_node=True)
     
-    return True
+    return True, str(-math.degrees(page_rot))

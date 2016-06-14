@@ -39,24 +39,31 @@ def parse_pages(root):
         }
         
         for t in p.findall('text'):
-            if not t.text:  # filter out text elements without content
-                continue
+            if not t.text:  # if there's not text in this element, then there's
+                            # probably text in the children tags (mostly <b> or <i> tags)
+                t_children = t.findall('.//')
+                if not t_children:
+                    continue
+                
+                value = ' '.join([c.text for c in t_children if c and c.text])
+            else:    
+                value = t.text
             
-            page['texts'].append(create_text_dict(t))
+            page['texts'].append(create_text_dict(t, value))
 
         pages[p_num] = page
 
     return pages
 
 
-def create_text_dict(t):
+def create_text_dict(t, value):
     t_width = int(float(t.attrib['width']))
     t_height = int(float(t.attrib['height']))
 
     text = {
         'width': t_width,
         'height': t_height,
-        'value': t.text,  # only for easy identification during debugging. TODO: delete
+        'value': value,
         'xmlnode': t
     }
     
