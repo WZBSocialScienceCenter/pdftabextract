@@ -15,7 +15,7 @@ from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
 
 from geom import pt, rect, rectintersect
-from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally
+from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr
 
 
 HEADER_RATIO = 0.1
@@ -29,6 +29,59 @@ DIVIDE_RATIO = 0.5
 
 
 #%%
+def guess_row_positions(subpage, mean_row_height, col_positions):
+    if not len(col_positions) > 1:
+        raise ValueError('number of detected columns must be at least 2')
+    
+    texts_by_y = sorted_by_attr(subpage['texts'], 'top')
+    
+    # borders of the first column
+    first_col_left, first_col_right = col_positions[0:2]
+    
+    # find the first (top-most) text that completely fits in a possible table cell in the first column
+    top_text = None
+    for t in texts_by_y:
+        t_rect = rect_from_text(t)
+        cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))        
+        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+        if isect == 1.0:
+            top_text = t
+            break
+        
+    if not top_text:
+        warning("subpage %d/%s: could not find top text" % (subpage['number'], subpage['subpage']))
+        return None
+    
+    # borders of the last column
+    #last_col_left, last_col_right = col_positions[-2:]
+    
+    # find the last (lowest) text that completely fits in a possible table cell in the first column
+    bottom_text = None
+    for t in reversed(texts_by_y):
+        t_rect = rect_from_text(t)
+        cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))
+        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+        if isect == 1.0:
+            bottom_text = t
+            break
+    
+    if not bottom_text:
+        warning("subpage %d/%s: could not find bottom text" % (subpage['number'], subpage['subpage']))
+        return None
+    
+    top_border = int(np.round(top_text['top']))
+    bottom_border = int(np.round(bottom_text['top'] + mean_row_height))
+    
+    table_height = bottom_border - top_border
+    n_rows, remainder = divmod(table_height, mean_row_height)
+    if remainder / mean_row_height > 0.5:   # seems like the number of rows doesn't really fit
+        warning("subpage %d/%s: the number of rows doesn't really fit the guessed table height"
+                % (subpage['number'], subpage['subpage']))
+        return None                         # we assume this is an invalid table layout
+    else:
+        optimal_row_height = table_height // n_rows
+        return list(range(top_border, bottom_border, optimal_row_height))[:n_rows]
+    
 
 def extract_tabular_data_from_pdf2xml_file(xmlfile):
     # get subpages (if there're two pages on a single scanned page)
@@ -37,26 +90,30 @@ def extract_tabular_data_from_pdf2xml_file(xmlfile):
     # analyze the row/column layout of each page and return these layouts,
     # a list of invalid subpages (no tabular layout could be recognized),
     # and a list of common column positions
-    layouts, invalid_subpages, col_positions = analyze_subpage_layouts(subpages)
+    layouts, invalid_layouts, col_positions, mean_row_height = analyze_subpage_layouts(subpages)
     
     output = OrderedDict()
     # go through all subpages
     for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
-        sub_p = subpages[p_id]
-        if p_id in invalid_subpages:
-            print("subpage %d/%s layout: skipped" % (sub_p['number'], sub_p['subpage']))
-            continue
+        sub_p = subpages[p_id]            
         
         pagenum, pageside = p_id
         
         if pagenum not in output:
             output[pagenum] = OrderedDict()
         
-        # get the row positions
-        row_positions = layouts[p_id][0]
-        
         # get the column positions
         subp_col_positions = list(np.array(col_positions) + sub_p['x_offset'])
+            
+        if p_id in invalid_layouts:
+            row_positions = guess_row_positions(sub_p, mean_row_height, subp_col_positions)
+        else:        
+            # get the row positions
+            row_positions = layouts[p_id][0]
+        
+        if not row_positions:
+            print("subpage %d/%s layout: no row positions identified -- skipped" % (sub_p['number'], sub_p['subpage']))
+            continue
         
         # fit the textboxes from this subpage into the tabular grid defined by the
         # row and column positions
@@ -153,14 +210,21 @@ def analyze_subpage_layouts(subpages):
                                if layout is not None])
     
     # get all numbers of rows and columns across the subpages
-    nrows = [len(row_pos) for row_pos in all_row_pos]   # we don't actually need this
+    nrows = [len(row_pos) for row_pos in all_row_pos]
     ncols = [len(col_pos) for col_pos in all_col_pos]
     
-    nrows_median = np.median(nrows)     # we don't actually need this
+    nrows_median = np.median(nrows)
     ncols_median = np.median(ncols)
     
     print("median number of rows:", nrows_median)
     print("median number of columns:", ncols_median)
+    
+    row_pos_w_median_len = [row_pos for row_pos in all_row_pos if len(row_pos) == nrows_median]
+    selected_row_pos = [row_pos[2:int(nrows_median)-1] for row_pos in row_pos_w_median_len]
+    row_height_means = []
+    for row_pos in selected_row_pos:
+        row_height_means.append(np.mean([pos - row_pos[i-1] for i, pos in enumerate(row_pos[1:])]))
+    overall_row_height_mean = int(np.round(np.mean(row_height_means)))
     
     # find the "best" (median) column positions for the median number of columns
     col_pos_w_median_len = [col_pos for col_pos in all_col_pos if len(col_pos) == ncols_median]
@@ -171,21 +235,10 @@ def analyze_subpage_layouts(subpages):
     
     best_col_pos_medians = [np.median(best_col_pos[i]) for i in range(int(ncols_median))]
 
-    # get list of "invalid" subpages / subpages without proper layout    
-    invalid_subpages = [p_id for p_id, layout in layouts.items() if layout is None]
+    # get list of subpages without proper layout    
+    invalid_layouts = [p_id for p_id, layout in layouts.items() if layout is None]
     
-    return layouts, invalid_subpages, best_col_pos_medians
-
-
-def table_debugprint(table):
-    textmat = np.empty(table.shape, dtype='object')
-    
-    for j in range(table.shape[0]):
-        for k in range(table.shape[1]):
-            texts = [t['value'] for t in table[j, k]]
-            textmat[j, k] = ', '.join(texts)
-
-    print(textmat)
+    return layouts, invalid_layouts, best_col_pos_medians, overall_row_height_mean
 
 
 def create_datatable_from_subpage(subpage, row_positions, col_positions):    
@@ -209,7 +262,7 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
     
     # iterate through the textblocks of this page
     for t in subpage['texts']:
-        t_rect = rect(t['topleft'], t['bottomright'])   # rectangle of the textbox
+        t_rect = rect_from_text(t)   # rectangle of the textbox
         
         # find out the cells with which this textbox rectangle intersects
         cell_isects = []
@@ -240,29 +293,29 @@ def find_col_and_row_positions_in_subpage(subpage):
     if len(subpage['texts']) < 3:
         raise ValueError('insufficient number of texts on subpage %d/%s' % (subpage['number'], subpage['subpage']))
     
-    xs = []
-    ys = []
-    
-    for t in subpage['texts']:
-        xs.append(t['left'])
-        ys.append(t['top'])
-    
-    xs_arr = np.array(xs)
-    ys_arr = np.array(ys)
-    
-    xs_arr, x_clust_ind = find_best_pos_clusters(xs_arr, range(3, 9), 'x', property_weights=(1, 5))
-    if xs_arr is None or x_clust_ind is None:
+    texts_by_x = list(sorted_by_attr(subpage['texts'], 'left'))
+    texts_by_y = list(sorted_by_attr(subpage['texts'], 'top'))
+    xs = np.array([t['left'] for t in texts_by_x])
+    ys = np.array([t['top'] for t in texts_by_y])
+        
+    x_clust_ind = find_best_pos_clusters(xs, range(3, 9), 'x',
+                                         property_weights=(1, 5))
+    if xs is None or x_clust_ind is None:
         col_positions = None
     else:
-        x_clust_w_vals, _ = create_cluster_dicts(xs_arr, x_clust_ind)
+        x_clust_w_vals, _, _ = create_cluster_dicts(xs, x_clust_ind)
         x_clust_w_vals = {c: vals for c, vals in x_clust_w_vals.items() if len(vals) > 3}
         col_positions = positions_list_from_clustervalues(x_clust_w_vals.values())
     
-    ys_arr, y_clust_ind = find_best_pos_clusters(ys_arr, range(2, 15), 'y', mean_dists_range_thresh=30)
-    if ys_arr is None or y_clust_ind is None:
+    y_clust_ind = find_best_pos_clusters(ys, range(2, 15), 'y',
+                                         sorted_texts=texts_by_y,
+                                         property_weights=(1, 1),
+                                         max_cluster_text_height_thresh=70,
+                                         mean_dists_range_thresh=30)
+    if y_clust_ind is None:
         row_positions = None
     else:
-        y_clust_w_vals, _ = create_cluster_dicts(ys_arr, y_clust_ind)
+        y_clust_w_vals, _, _ = create_cluster_dicts(ys, y_clust_ind)
         row_positions = positions_list_from_clustervalues(y_clust_w_vals.values())
     
     return col_positions, row_positions
@@ -279,15 +332,23 @@ def positions_list_from_clustervalues(clust_vals, val_filter=min):
     return list(sorted(positions))
 
 
-def create_cluster_dicts(vals, clust_ind):
+def create_cluster_dicts(vals, clust_ind, sorted_texts=None):
+    assert len(vals) == len(clust_ind)
+    if sorted_texts is not None:
+        assert len(clust_ind) == len(sorted_texts)
+    
     # build dicts with ...        
     clusters_w_vals = defaultdict(list)     # ... cluster -> [values] mapping
     clusters_w_inds = defaultdict(list)     # ... cluster -> [indices] mapping
+    clusters_w_texts = defaultdict(list) if sorted_texts is not None else None   # ... cluster -> [texts] mapping    
+    
     for i, (v, c) in enumerate(zip(vals, clust_ind)):
         clusters_w_vals[c].append(v)
         clusters_w_inds[c].append(i)
+        if sorted_texts is not None:
+            clusters_w_texts[c].append(sorted_texts[i])
     
-    return clusters_w_vals, clusters_w_inds
+    return clusters_w_vals, clusters_w_inds, clusters_w_texts
 
 
 def calc_cluster_means(clusters_w_vals):
@@ -299,24 +360,37 @@ def calc_cluster_sds(clusters_w_vals):
     return {c: np.std(vals) for c, vals in clusters_w_vals.items()}
 
 
+def calc_cluster_text_dimensions(clusters_w_texts):
+    cluster_dims = {}
+    for c, texts in clusters_w_texts.items():
+        c_top = min(t['top'] for t in texts)
+        c_bottom = max(t['bottom'] for t in texts)
+        c_left = min(t['left'] for t in texts)
+        c_right = max(t['right'] for t in texts)
+        
+        cluster_dims[c] = (c_right - c_left, c_bottom - c_top)
+    
+    return cluster_dims
+
+
 def find_best_pos_clusters(pos, num_clust_range, direction,
+                           sorted_texts=None,
                            property_weights=(1, 1),
                            sds_range_thresh=float('infinity'),
                            mean_dists_range_thresh=float('infinity'),
+                           max_cluster_text_height_thresh=float('infinity'),
                            num_vals_per_clust_thresh=float('infinity')):
     """
     Assumptions:
     - y clusters should be equal spaced
-    - number of items in y clusters should be equal distributed
+    - y clusters "height" should have low SD
+    (- number of items in y clusters should have low SD)
     
-    - items in x clusters should have low standard deviation
-    - number of items in x clusters should be equal distributed
+    - item values in x clusters should have low SD
+    - number of items in x clusters should have low SD
     """
     assert direction in ('x', 'y')
     assert len(property_weights) == 2
-    
-    # sort input positions first
-    pos.sort()
     
     # generate different number of clusters
     fcluster_runs = []
@@ -333,7 +407,7 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
             continue            # this is a clear sign that there're not enough elements in pos
         
         # build dicts with cluster -> vals / indices mapping
-        clusters_w_vals, clusters_w_inds = create_cluster_dicts(pos, clust_ind)
+        clusters_w_vals, clusters_w_inds, clusters_w_texts = create_cluster_dicts(pos, clust_ind, sorted_texts)
         
         # calculate mean position value per cluster
         cluster_means = calc_cluster_means(clusters_w_vals)
@@ -350,8 +424,8 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
             cluster_sds_range = max(cluster_sds.values()) - min(cluster_sds.values())
             properties = (cluster_sds_range, vals_per_clust_range)
             
-            print('N=', n, 'cluster_sds_range=', cluster_sds_range, 'vals_per_clust_range=', vals_per_clust_range)
-        else:            
+#            print('N=', n, 'cluster_sds_range=', cluster_sds_range, 'vals_per_clust_range=', vals_per_clust_range)
+        else:  # direction == 'y'          
             sorted_clust_means = list(sorted(cluster_means.values()))
             clust_mean_dists = [c - sorted_clust_means[i-1] for i, c in enumerate(sorted_clust_means) if i > 0]
             if len(clust_mean_dists) == 1:
@@ -363,22 +437,29 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
             
             if mean_dists_range > mean_dists_range_thresh:
                 continue
+            
+            cluster_text_dims = calc_cluster_text_dimensions(clusters_w_texts)
+            cluster_text_heights = [dim[1] for dim in cluster_text_dims.values()]
+            if max(cluster_text_heights) > max_cluster_text_height_thresh:
+                continue
+            #cluster_text_heights_range = max(cluster_text_heights) - min(cluster_text_heights)
+            cluster_text_heights_sd = np.std(cluster_text_heights)
                         
             if vals_per_clust_range > num_vals_per_clust_thresh:
                 continue
             
-            properties = (mean_dists_range, vals_per_clust_range)
+            properties = (mean_dists_range, cluster_text_heights_sd)
         
-            print('N=', n,
-                  # 'dists SD=', mean_dists_sd,
-                  'dists range=', mean_dists_range,
-                  # 'num. values SD=', vals_per_clust_sd,
-                  'num. values range=', vals_per_clust_range)
+#            print('N=', n,
+#                  'mean_dists_range=', mean_dists_range,
+#                  'cluster_text_heights_range=', cluster_text_heights_range,
+#                  'cluster_text_heights_sd=', cluster_text_heights_sd,
+#                  'vals_per_clust_range=', vals_per_clust_range)
         
         fcluster_runs.append((clust_ind, properties))
     
     if not len(fcluster_runs):  # no clusters found at all that met the threshold criteria
-        return None, None
+        return None
     
     n_properties = len(property_weights)
     properties_maxima = [max(x[1][p] for x in fcluster_runs) for p in range(0, n_properties)]
@@ -391,7 +472,7 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
     
     best_cluster_runs = sorted(fcluster_runs, key=key_sorter)
     
-    return pos, best_cluster_runs[0][0]
+    return best_cluster_runs[0][0]
 
     
 def put_texts_in_lines(texts):    
@@ -433,3 +514,7 @@ def create_text_from_lines(lines, linebreak='\n', linejoin=' '):
         text += linejoin.join([t['value'] for t in l]) + linebreak
     
     return text[:-1]
+
+
+def rect_from_text(t):
+    return rect(t['topleft'], t['bottomright'])

@@ -141,5 +141,5 @@ def divide_texts_horizontally(page, divide_ratio, texts=None):
     return subpage_left, subpage_right
 
 
-def sorted_by_attr(texts, attr):
-    return sorted(texts, key=lambda x: x[attr])
+def sorted_by_attr(vals, attr):
+    return sorted(vals, key=lambda x: x[attr])
