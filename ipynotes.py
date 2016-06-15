@@ -26,13 +26,15 @@ cond_bottomright_text = cond_topright_text
 
 corner_box_cond_fns = (cond_topleft_text, cond_topright_text, cond_bottomright_text, cond_bottomleft_text)
 
-override_angles = {
-    (32, 'right'): -1
-}
+#override_angles = {
+#    (32, 'right'): -1
+#}
+override_angles = None
 
 xmltree, xmlroot, rot_results = fixrotation.fix_rotation('testxmls/1992_93_neu.pdf.xml',
                                                          corner_box_cond_fns,
                                                          override_angles=override_angles)
+#%%
 xmltree.write('testxmls/1992_93_neu_rotfixed.pdf.xml')
 
 #%%
@@ -49,7 +51,7 @@ RIGHTMOST_COL_ALIGN = 'topleft'    # topleft, topright or center
 
 MIN_CONTENTLENGTH_MEAN_DEV_RATIO = 0.2
 
-tree, root = read_xml('testxmls/1992_93_neu_rotfixed.pdf.xml')
+tree, root = read_xml('testxmls/1992_93_neu.pdf.xml')
 
 # get pages objects    
 pages = parse_pages(root)

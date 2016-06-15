@@ -85,7 +85,7 @@ def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None):
 #%%
 
 
-def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft, x_offset=0):
+def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft):
     up = pt(0, 1)
     right = pt(1, 0)
 
@@ -93,27 +93,36 @@ def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bott
     
     if text_bottomleft and text_topleft:  # left side
         vec_left = text_bottomleft[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
-        angles_list.append(vecangle(vec_left, up))
+        vec_left[0] *= -1   # because our coordinate system is upside down
+        a = vecangle(vec_left, up)
+        a = -a if vec_left[0] < 0 else a
+        angles_list.append(a)
     
     if text_bottomright and text_topright: # right side
         vec_right = text_bottomright[LEFTMOST_COL_ALIGN] - text_topright[LEFTMOST_COL_ALIGN]
-        angles_list.append(vecangle(vec_right, up))
+        vec_right[0] *= -1  # because our coordinate system is upside down
+        a = vecangle(vec_right, up)
+        a = -a if vec_right[0] < 0 else a
+        angles_list.append(a)
         
     if text_topright and text_topleft:     # top side
         vec_top = text_topright[LEFTMOST_COL_ALIGN] - text_topleft[LEFTMOST_COL_ALIGN]
-        angles_list.append(vecangle(vec_top, right))
+        a = vecangle(vec_top, right)
+        a = -a if vec_top[1] < 0 else a
+        angles_list.append(a)
 
     if text_bottomright and text_bottomleft:  # bottom side
         vec_bottom = text_bottomright[LEFTMOST_COL_ALIGN] - text_bottomleft[LEFTMOST_COL_ALIGN]
-        angles_list.append(vecangle(vec_bottom, right))
+        a = -a if vec_bottom[1] < 0 else a
+        angles_list.append(a)
         
     angles = np.array(angles_list)
-    if np.sum(~np.isnan(angles)) < 1:
+    if np.sum(~np.isnan(angles)) < 1:   # we need at least one valid angle
         return np.nan
         
     angles = angles[~np.isnan(angles)]
     rng = np.max(angles) - np.min(angles)
-    
+        
     if rng > MAX_PAGE_ROTATION_RANGE:
         warning('big range of values for page rotation estimation: %f degrees' % math.degrees(rng))
         warning([math.degrees(a) for a in angles])
@@ -155,13 +164,13 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
         return False, 'rotation_not_identified'
     
     if abs(page_rot) < MIN_PAGE_ROTATION_APPLY:
-        print("page %s: will not fix marginal rotation" % p_name)
+        print("page %s: will not fix marginal rotation %f°" % (p_name, math.degrees(page_rot)))
         return False, 'marginal_rotation'
     
     text_topleft, text_bottomleft = page_corners_texts[0], page_corners_texts[3]
     bottomline_pts = (
         pt(0, p['height']),
-        pt(x_offset + p['width'], p['height'])
+        pt(p['x_offset'] + p['width'], p['height'])
     )
     
     rot_about = pointintersect(text_topleft['topleft'], text_bottomleft['bottomleft'], *bottomline_pts,
