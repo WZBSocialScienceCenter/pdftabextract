@@ -493,7 +493,6 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
             
             cluster_text_dims = calc_cluster_text_dimensions(clusters_w_texts)
             cluster_text_heights = [dim[1] for dim in cluster_text_dims.values()]
-            print('min cluster_text_heights=', min(cluster_text_heights))
             if min(cluster_text_heights) < min_cluster_text_height_thresh \
                     or max(cluster_text_heights) > max_cluster_text_height_thresh:
                 continue
