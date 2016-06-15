@@ -42,60 +42,6 @@ def cond_bottomleft_text(t):
 corner_box_condition_fns = (cond_topleft_text, None, None, cond_bottomleft_text)
 
 #%%
-def guess_row_positions(subpage, mean_row_height, col_positions):
-    if not len(col_positions) > 1:
-        raise ValueError('number of detected columns must be at least 2')
-    
-    texts_by_y = sorted_by_attr(subpage['texts'], 'top')
-    
-    # borders of the first column
-    first_col_left, first_col_right = col_positions[0:2]
-    
-    # find the first (top-most) text that completely fits in a possible table cell in the first column
-    top_text = None
-    for t in texts_by_y:
-        t_rect = rect_from_text(t)
-        cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))        
-        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
-        if isect == 1.0:
-            top_text = t
-            break
-        
-    if not top_text:
-        warning("subpage %d/%s: could not find top text" % (subpage['number'], subpage['subpage']))
-        return None
-    
-    # borders of the last column
-    #last_col_left, last_col_right = col_positions[-2:]
-    
-    # find the last (lowest) text that completely fits in a possible table cell in the first column
-    bottom_text = None
-    for t in reversed(texts_by_y):
-        t_rect = rect_from_text(t)
-        cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))
-        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
-        if isect == 1.0:
-            bottom_text = t
-            break
-    
-    if not bottom_text:
-        warning("subpage %d/%s: could not find bottom text" % (subpage['number'], subpage['subpage']))
-        return None
-    
-    top_border = int(np.round(top_text['top']))
-    bottom_border = int(np.round(bottom_text['top'] + mean_row_height))
-    
-    table_height = bottom_border - top_border
-    n_rows, remainder = divmod(table_height, mean_row_height)
-    if remainder / mean_row_height > 0.5:   # seems like the number of rows doesn't really fit
-        warning("subpage %d/%s: the number of rows doesn't really fit the guessed table height"
-                % (subpage['number'], subpage['subpage']))
-        return None                         # we assume this is an invalid table layout
-    else:
-        optimal_row_height = table_height // n_rows
-        return list(range(top_border, bottom_border, optimal_row_height))[:n_rows]
-    
-
 def extract_tabular_data_from_pdf2xml_file(xmlfile, corner_box_cond_fns=None):
     # get subpages (if there're two pages on a single scanned page)
     subpages = get_subpages_from_xml(xmlfile)
@@ -120,6 +66,9 @@ def extract_tabular_data_from_pdf2xml_file(xmlfile, corner_box_cond_fns=None):
             
         if p_id in invalid_layouts:
             row_positions = guess_row_positions(sub_p, mean_row_height, subp_col_positions)
+            if row_positions:
+                print("subpage %d/%s layout: guessed %d rows (mean row height %f)"
+                      % (sub_p['number'], sub_p['subpage'], len(row_positions), mean_row_height))
         else:        
             # get the row positions
             row_positions = layouts[p_id][0]
@@ -191,6 +140,60 @@ def get_subpages_from_xml(xmlfile):
             subpages[p_id] = sub_p
     
     return subpages
+
+
+def guess_row_positions(subpage, mean_row_height, col_positions):
+    if not len(col_positions) > 1:
+        raise ValueError('number of detected columns must be at least 2')
+    
+    texts_by_y = sorted_by_attr(subpage['texts'], 'top')
+    
+    # borders of the first column
+    first_col_left, first_col_right = col_positions[0:2]
+    
+    # find the first (top-most) text that completely fits in a possible table cell in the first column
+    top_text = None
+    for t in texts_by_y:
+        t_rect = rect_from_text(t)
+        cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))        
+        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+        if isect == 1.0:
+            top_text = t
+            break
+        
+    if not top_text:
+        warning("subpage %d/%s: could not find top text" % (subpage['number'], subpage['subpage']))
+        return None
+    
+    # borders of the last column
+    #last_col_left, last_col_right = col_positions[-2:]
+    
+    # find the last (lowest) text that completely fits in a possible table cell in the first column
+    bottom_text = None
+    for t in reversed(texts_by_y):
+        t_rect = rect_from_text(t)
+        cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))
+        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+        if isect == 1.0:
+            bottom_text = t
+            break
+    
+    if not bottom_text:
+        warning("subpage %d/%s: could not find bottom text" % (subpage['number'], subpage['subpage']))
+        return None
+    
+    top_border = int(np.round(top_text['top']))
+    bottom_border = int(np.round(bottom_text['top'] + mean_row_height))
+    
+    table_height = bottom_border - top_border
+    n_rows, remainder = divmod(table_height, mean_row_height)
+    if remainder / mean_row_height > 0.5:   # seems like the number of rows doesn't really fit
+        warning("subpage %d/%s: the number of rows doesn't really fit the guessed table height"
+                % (subpage['number'], subpage['subpage']))
+        return None                         # we assume this is an invalid table layout
+    else:
+        optimal_row_height = table_height // n_rows
+        return list(range(top_border, bottom_border, optimal_row_height))[:n_rows]
 
 
 def analyze_subpage_layouts(subpages, corner_box_cond_fns=None):
@@ -358,6 +361,7 @@ def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
     y_clust_ind = find_best_pos_clusters(ys, range(2, 15), 'y',
                                          sorted_texts=texts_by_y,
                                          property_weights=(1, 1),
+                                         min_cluster_text_height_thresh=25,
                                          max_cluster_text_height_thresh=70,
                                          mean_dists_range_thresh=30)
     if y_clust_ind is None:
@@ -426,6 +430,7 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
                            property_weights=(1, 1),
                            sds_range_thresh=float('infinity'),
                            mean_dists_range_thresh=float('infinity'),
+                           min_cluster_text_height_thresh=float('-infinity'),
                            max_cluster_text_height_thresh=float('infinity'),
                            num_vals_per_clust_thresh=float('infinity')):
     """
@@ -488,7 +493,9 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
             
             cluster_text_dims = calc_cluster_text_dimensions(clusters_w_texts)
             cluster_text_heights = [dim[1] for dim in cluster_text_dims.values()]
-            if max(cluster_text_heights) > max_cluster_text_height_thresh:
+            print('min cluster_text_heights=', min(cluster_text_heights))
+            if min(cluster_text_heights) < min_cluster_text_height_thresh \
+                    or max(cluster_text_heights) > max_cluster_text_height_thresh:
                 continue
             #cluster_text_heights_range = max(cluster_text_heights) - min(cluster_text_heights)
             cluster_text_heights_sd = np.std(cluster_text_heights)
