@@ -8,6 +8,8 @@ Created on Wed Jun  1 16:40:39 2016
 from collections import defaultdict, OrderedDict
 from logging import warning
 
+import re
+
 import json
 import csv
 
@@ -15,7 +17,8 @@ from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
 
 from geom import pt, rect, rectintersect
-from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr
+from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr, \
+                   texts_at_page_corners
 
 
 HEADER_RATIO = 0.1
@@ -27,6 +30,16 @@ DIVIDE_RATIO = 0.5
 # TODO: do not hardcode configuration settings
 # TODO: real logging instead of print()
 
+#%%
+def cond_topleft_text(t):
+    text = t['value'].strip()
+    return re.match(r'^\d+', text) is not None
+    
+def cond_bottomleft_text(t):
+    text = t['value'].strip()
+    return re.search(r'^(G|WS)$', text) is not None
+
+corner_box_condition_fns = (cond_topleft_text, None, None, cond_bottomleft_text)
 
 #%%
 def guess_row_positions(subpage, mean_row_height, col_positions):
@@ -83,14 +96,14 @@ def guess_row_positions(subpage, mean_row_height, col_positions):
         return list(range(top_border, bottom_border, optimal_row_height))[:n_rows]
     
 
-def extract_tabular_data_from_pdf2xml_file(xmlfile):
+def extract_tabular_data_from_pdf2xml_file(xmlfile, corner_box_cond_fns=None):
     # get subpages (if there're two pages on a single scanned page)
     subpages = get_subpages_from_xml(xmlfile)
     
     # analyze the row/column layout of each page and return these layouts,
     # a list of invalid subpages (no tabular layout could be recognized),
     # and a list of common column positions
-    layouts, invalid_layouts, col_positions, mean_row_height = analyze_subpage_layouts(subpages)
+    layouts, invalid_layouts, col_positions, mean_row_height = analyze_subpage_layouts(subpages, corner_box_cond_fns)
     
     output = OrderedDict()
     # go through all subpages
@@ -180,12 +193,12 @@ def get_subpages_from_xml(xmlfile):
     return subpages
 
 
-def analyze_subpage_layouts(subpages):
+def analyze_subpage_layouts(subpages, corner_box_cond_fns=None):
     # find the column and row borders for each subpage
     layouts = {}
     for p_id, sub_p in subpages.items():        
         try:
-            col_positions, row_positions = find_col_and_row_positions_in_subpage(sub_p)
+            col_positions, row_positions = find_col_and_row_positions_in_subpage(sub_p, corner_box_cond_fns)
         except ValueError as e:
             print("subpage %d/%s layout: skipped ('%s')" % (sub_p['number'], sub_p['subpage'], str(e)))
             col_positions, row_positions = None, None
@@ -289,12 +302,47 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
     return table
     
 
-def find_col_and_row_positions_in_subpage(subpage):
+def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
+    if corner_box_cond_fns is None:
+        corner_box_cond_fns = (None, ) * 4    
+    
     if len(subpage['texts']) < 3:
         raise ValueError('insufficient number of texts on subpage %d/%s' % (subpage['number'], subpage['subpage']))
     
-    texts_by_x = list(sorted_by_attr(subpage['texts'], 'left'))
-    texts_by_y = list(sorted_by_attr(subpage['texts'], 'top'))
+    corner_texts = texts_at_page_corners(subpage, corner_box_cond_fns)
+    corner_texts = [None if corner_box_cond_fns[i] is None else t for i, t in enumerate(corner_texts)]
+    
+    left_x1 = corner_texts[0]['left'] if corner_texts[0] else float('infinity')   # top left
+    left_x2 = corner_texts[3]['left'] if corner_texts[3] else float('infinity')   # bottom left
+    min_x = min(left_x1, left_x2)
+    min_x = subpage['x_offset'] if min_x == float('infinity') else min_x
+    
+    right_x1 = corner_texts[1]['right'] if corner_texts[1] else float('-infinity')   # top right
+    right_x2 = corner_texts[2]['right'] if corner_texts[2] else float('-infinity')   # bottom right
+    max_x = max(right_x1, right_x2)
+    max_x = subpage['x_offset'] + subpage['width'] if max_x == float('-infinity') else max_x
+    
+    top_y1 = corner_texts[0]['top'] if corner_texts[0] else float('infinity')   # top left
+    top_y2 = corner_texts[1]['top'] if corner_texts[1] else float('infinity')   # top right
+    min_y = min(top_y1, top_y2)
+    min_y = 0 if min_y == float('infinity') else min_y
+    
+    bottom_y1 = corner_texts[2]['bottom'] if corner_texts[2] else float('-infinity')   # bottom right
+    bottom_y2 = corner_texts[3]['bottom'] if corner_texts[3] else float('-infinity')   # bottom left
+    max_y = max(bottom_y1, bottom_y2)
+    max_y = subpage['height'] if max_y == float('-infinity') else max_y
+    
+    filtered_texts = [t for t in subpage['texts']
+                      if t['left'] >= min_x and t['right'] <= max_x
+                      and t['top'] >= min_y and t['bottom'] <= max_y]
+                      
+    if len(filtered_texts) < 3:
+        raise ValueError('subpage %d/%s: insufficient number of texts after filtering by %f <= x <= %f,  %f <= y <= %f]'
+                         % (subpage['number'], subpage['subpage'], min_x, max_x, min_y, max_y))
+    
+    texts_by_x = list(sorted_by_attr(filtered_texts, 'left'))
+    texts_by_y = list(sorted_by_attr(filtered_texts, 'top'))
+    
     xs = np.array([t['left'] for t in texts_by_x])
     ys = np.array([t['top'] for t in texts_by_y])
         

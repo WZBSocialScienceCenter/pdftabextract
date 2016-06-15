@@ -13,7 +13,7 @@ from copy import copy
 
 import numpy as np
 
-from geom import pt
+from geom import pt, vecdist
 
 #%%
 
@@ -139,6 +139,40 @@ def divide_texts_horizontally(page, divide_ratio, texts=None):
     subpage_right['texts'] = righttexts
     
     return subpage_left, subpage_right
+
+
+def mindist_text(texts, origin, pos_attr, cond_fn=None):
+    """
+    Get the text that minimizes the distance from its position (defined in pos_attr) to <origin> and satisifies
+    the condition function <cond_fn> (if not None).
+    """
+    texts_by_dist = sorted(texts, key=lambda t: vecdist(origin, t[pos_attr]))
+    
+    if not cond_fn:
+        return texts_by_dist[0]
+    else:
+        for t in texts_by_dist:
+            if cond_fn(t):
+                return t
+    
+    return None
+
+
+def texts_at_page_corners(p, cond_fns):
+    """
+    :param p page or subpage
+    """
+    if cond_fns is None:
+        cond_fns = (None, ) * 4
+    
+    x_offset = p['x_offset']
+    
+    text_topleft = mindist_text(p['texts'], (x_offset, 0), 'topleft', cond_fns[0])
+    text_topright = mindist_text(p['texts'], (x_offset + p['width'], 0), 'topright', cond_fns[1])
+    text_bottomright = mindist_text(p['texts'], (x_offset + p['width'], p['height']), 'bottomright', cond_fns[2])
+    text_bottomleft = mindist_text(p['texts'], (x_offset, p['height']), 'bottomleft', cond_fns[3])
+    
+    return text_topleft, text_topright, text_bottomright, text_bottomleft
 
 
 def sorted_by_attr(vals, attr):

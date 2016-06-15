@@ -10,9 +10,10 @@ from logging import warning, error
 
 import numpy as np
 
-from geom import pt, vecangle, vecdist, vecrotate, pointintersect
+from geom import pt, vecangle, vecrotate, pointintersect
 
-from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, update_text_dict_pos
+from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, update_text_dict_pos, \
+                   texts_at_page_corners
 
 #%%
 
@@ -83,34 +84,6 @@ def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None):
 
 #%%
 
-def mindist_text(texts, origin, pos_attr, cond_fn=None):
-    """
-    Get the text that minimizes the distance from its position (defined in pos_attr) to <origin> and satisifies
-    the condition function <cond_fn> (if not None).
-    """
-    texts_by_dist = sorted(texts, key=lambda t: vecdist(origin, t[pos_attr]))
-    
-    if not cond_fn:
-        return texts_by_dist[0]
-    else:
-        for t in texts_by_dist:
-            if cond_fn(t):
-                return t
-    
-    return None
-
-
-def texts_at_page_corners(p, x_offset, cond_fns):
-    """
-    :param p page or subpage
-    """
-    text_topleft = mindist_text(p['texts'], (x_offset, 0), 'topleft', cond_fns[0])
-    text_topright = mindist_text(p['texts'], (x_offset + p['width'], 0), 'topright', cond_fns[1])
-    text_bottomright = mindist_text(p['texts'], (x_offset + p['width'], p['height']), 'bottomright', cond_fns[2])
-    text_bottomleft = mindist_text(p['texts'], (x_offset, p['height']), 'bottomleft', cond_fns[3])
-    
-    return text_topleft, text_topright, text_bottomright, text_bottomleft
-
 
 def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft, x_offset=0):
     up = pt(0, 1)
@@ -151,15 +124,13 @@ def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bott
 def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
     """
     :param p page or subpage
-    """
-    x_offset = p['x_offset'] if 'x_offset' in p else 0
-    
+    """    
     p_name = str(p['number'])
     if 'subpage' in p:
         p_name += '/' + p['subpage']    
     
 
-    page_corners_texts = texts_at_page_corners(p, x_offset, corner_box_cond_fns)
+    page_corners_texts = texts_at_page_corners(p, corner_box_cond_fns)
                 
     if (sum(t is not None for t in page_corners_texts) < 2):
         error("page %s: not enough valid corner texts found - did not fix rotation" % p_name)
