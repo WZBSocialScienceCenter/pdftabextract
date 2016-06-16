@@ -44,7 +44,11 @@ def cond_bottomleft_text(t):
 corner_box_cond_fns = (cond_topleft_text, cond_disabled, cond_disabled, cond_bottomleft_text)
 
 # Extract tabular data
-tabdata = tabextract.extract_tabular_data_from_xmlroot(xmlroot, corner_box_cond_fns)
+tabdata, skipped_pages = tabextract.extract_tabular_data_from_xmlroot(xmlroot, corner_box_cond_fns)
+
+print('SKIPPED PAGES DURING DATA EXTRACTION:')
+for p_id in sorted(skipped_pages, key=lambda x: x[0]):
+    print("Skipped page %d/%s" % (p_id[0], p_id[1]))
 
 # Save as JSON and as CSV
 tabextract.save_tabular_data_dict_as_json(tabdata, 'examples/ocr-output-example-tabdata.json')

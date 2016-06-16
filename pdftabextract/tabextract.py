@@ -47,8 +47,9 @@ def extract_tabular_data_from_subpages(subpages, corner_box_cond_fns=None):
     # and a list of common column positions
     layouts, invalid_layouts, col_positions, mean_row_height = analyze_subpage_layouts(subpages, corner_box_cond_fns)
     
-    output = OrderedDict()
     # go through all subpages
+    output = OrderedDict()
+    skipped_pages = []
     for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
         sub_p = subpages[p_id]            
         
@@ -71,6 +72,7 @@ def extract_tabular_data_from_subpages(subpages, corner_box_cond_fns=None):
         
         if not row_positions:
             print("subpage %d/%s layout: no row positions identified -- skipped" % (sub_p['number'], sub_p['subpage']))
+            skipped_pages.append(p_id)
             continue
         
         # fit the textboxes from this subpage into the tabular grid defined by the
@@ -92,7 +94,7 @@ def extract_tabular_data_from_subpages(subpages, corner_box_cond_fns=None):
         # add this table to the output
         output[pagenum][pageside] = table_texts
 
-    return output
+    return output, skipped_pages
 
 
 def save_tabular_data_dict_as_json(data, jsonfile):
@@ -103,16 +105,22 @@ def save_tabular_data_dict_as_json(data, jsonfile):
 def save_tabular_data_dict_as_csv(data, csvfile):
     with open(csvfile, 'w') as f:
         csvwriter = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-        csv_rows = []
-        for p_num, subpages in data.items():
-            for p_side, table_texts in subpages.items():
-                for table_row in table_texts:
-                    csv_rows.append([p_num, p_side] + table_row)
+        csv_rows = convert_tabular_data_dict_to_matrix(data)
         
         n_addcols = len(csv_rows[0]) - 2
         csv_header = ['page_num', 'page_side'] + ['col' + str(i+1) for i in range(n_addcols)]
         
         csvwriter.writerows([csv_header] + csv_rows)
+
+
+def convert_tabular_data_dict_to_matrix(data):
+    rows = []
+    for p_num, subpages in data.items():
+        for p_side, table_texts in subpages.items():
+            for table_row in table_texts:
+                rows.append([p_num, p_side] + table_row)
+    
+    return rows
 
 
 def get_subpages_from_xmlfile(xmlfile):
