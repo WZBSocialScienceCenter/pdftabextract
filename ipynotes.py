@@ -5,7 +5,7 @@ Created on Wed Jun  1 09:11:33 2016
 @author: mkonrad
 """
 
-import fixrotation
+from pdftabextract import fixrotation
 
 
 #%%

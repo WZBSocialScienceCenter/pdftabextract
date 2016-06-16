@@ -70,7 +70,6 @@ def pointintersect(p1, p2, p3, p4, check_in_segm=True):
     else:
         return None
 
-#%%
 
 def rect(lefttop, rightbottom):
     """

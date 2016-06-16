@@ -10,10 +10,10 @@ from logging import warning, error
 
 import numpy as np
 
-from geom import pt, vecangle, vecrotate, pointintersect
+from .geom import pt, vecangle, vecrotate, pointintersect
 
-from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, update_text_dict_pos, \
-                   texts_at_page_corners
+from .common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, update_text_dict_pos, \
+                    texts_at_page_corners
 
 #%%
 

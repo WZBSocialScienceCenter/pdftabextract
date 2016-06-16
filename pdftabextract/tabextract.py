@@ -8,17 +8,15 @@ Created on Wed Jun  1 16:40:39 2016
 from collections import defaultdict, OrderedDict
 from logging import warning
 
-import re
-
 import json
 import csv
 
 from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
 
-from geom import pt, rect, rectintersect
-from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr, \
-                   texts_at_page_corners
+from .geom import pt, rect, rectintersect
+from .common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr, \
+                    texts_at_page_corners
 
 
 HEADER_RATIO = 0.1
@@ -31,21 +29,19 @@ DIVIDE_RATIO = 0.5
 # TODO: real logging instead of print()
 
 #%%
-def cond_topleft_text(t):
-    text = t['value'].strip()
-    return re.match(r'^\d+', text) is not None
+def extract_tabular_data_from_xmlfile(xmlfile, corner_box_cond_fns=None):
+    subpages = get_subpages_from_xmlfile(xmlfile)
     
-def cond_bottomleft_text(t):
-    text = t['value'].strip()
-    return re.search(r'^(G|WS)$', text) is not None
+    return extract_tabular_data_from_subpages(subpages, corner_box_cond_fns)
 
-corner_box_condition_fns = (cond_topleft_text, None, None, cond_bottomleft_text)
 
-#%%
-def extract_tabular_data_from_pdf2xml_file(xmlfile, corner_box_cond_fns=None):
-    # get subpages (if there're two pages on a single scanned page)
-    subpages = get_subpages_from_xml(xmlfile)
+def extract_tabular_data_from_xmlroot(xmlroot, corner_box_cond_fns=None):
+    subpages = get_subpages_from_xmlroot(xmlroot)
     
+    return extract_tabular_data_from_subpages(subpages, corner_box_cond_fns)
+
+
+def extract_tabular_data_from_subpages(subpages, corner_box_cond_fns=None):   
     # analyze the row/column layout of each page and return these layouts,
     # a list of invalid subpages (no tabular layout could be recognized),
     # and a list of common column positions
@@ -119,10 +115,14 @@ def save_tabular_data_dict_as_csv(data, csvfile):
         csvwriter.writerows([csv_header] + csv_rows)
 
 
-def get_subpages_from_xml(xmlfile):
-    tree, root = read_xml(xmlfile)
+def get_subpages_from_xmlfile(xmlfile):
+    _, root = read_xml(xmlfile)
     
-    pages = parse_pages(root)
+    return get_subpages_from_xmlroot(root)
+
+
+def get_subpages_from_xmlroot(xmlroot):
+    pages = parse_pages(xmlroot)
 
     subpages = {}
     
@@ -140,6 +140,7 @@ def get_subpages_from_xml(xmlfile):
             subpages[p_id] = sub_p
     
     return subpages
+
 
 
 def guess_row_positions(subpage, mean_row_height, col_positions):

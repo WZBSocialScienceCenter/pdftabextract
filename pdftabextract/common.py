@@ -13,7 +13,7 @@ from copy import copy
 
 import numpy as np
 
-from geom import pt, vecdist
+from .geom import pt, vecdist
 
 #%%
 
