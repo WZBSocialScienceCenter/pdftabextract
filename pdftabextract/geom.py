@@ -82,6 +82,17 @@ def rect(lefttop, rightbottom):
     return np.array((lefttop, rightbottom), dtype=lefttop.dtype)
 
 
+def rectcenter(r):
+    w = r[1][0] - r[0][0]
+    h = r[1][1] - r[0][1]
+    
+    return pt(r[0][0] + w / 2, r[0][1] + h / 2)
+
+
+def rectcenter_dist(r1, r2):
+    return vecdist(rectcenter(r1), rectcenter(r2))
+
+
 def rectarea(r):
     return (r[1][0] - r[0][0]) * (r[1][1] - r[0][1])
 

@@ -13,7 +13,7 @@ from copy import copy
 
 import numpy as np
 
-from .geom import pt, vecdist
+from .geom import pt, vecdist, rect, rectarea
 
 #%%
 
@@ -39,24 +39,30 @@ def parse_pages(root):
         }
         
         for t in p.findall('text'):
+            tdict = create_text_dict(t)
+            trect = rect(tdict['topleft'], tdict['bottomright'])
+            
+            if rectarea(trect) <= 0:    # seems like there are rectangles with zero area
+                continue                # -> skip them
+            
             if not t.text:  # if there's not text in this element, then there's
                             # probably text in the children tags (mostly <b> or <i> tags)
                 t_children = t.findall('.//')
                 if not t_children:
                     continue
                 
-                value = ' '.join([c.text for c in t_children if c and c.text])
+                tdict['value'] = ' '.join([c.text for c in t_children if c and c.text])
             else:    
-                value = t.text
+                tdict['value'] = t.text
             
-            page['texts'].append(create_text_dict(t, value))
+            page['texts'].append(tdict)
 
         pages[p_num] = page
 
     return pages
 
 
-def create_text_dict(t, value):
+def create_text_dict(t, value=None):
     t_width = int(float(t.attrib['width']))
     t_height = int(float(t.attrib['height']))
 
@@ -173,6 +179,11 @@ def texts_at_page_corners(p, cond_fns):
     text_bottomleft = mindist_text(p['texts'], (x_offset, p['height']), 'bottomleft', cond_fns[3])
     
     return text_topleft, text_topright, text_bottomright, text_bottomleft
+
+
+def mode(arr):
+    uniques, counts = np.unique(arr, return_counts=True)
+    return uniques[np.argmax(counts)]
 
 
 def sorted_by_attr(vals, attr):

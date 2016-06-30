@@ -14,61 +14,75 @@ import csv
 from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
 
-from .geom import pt, rect, rectintersect
-from .common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr, \
-                    texts_at_page_corners
+from pdftabextract.geom import pt, rect, rectintersect, rectcenter_dist
+from pdftabextract.common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr, \
+                                 texts_at_page_corners, mode
 
 
-HEADER_RATIO = 0.1
-FOOTER_RATIO = 0.1
-DIVIDE_RATIO = 0.5
+_conf = {}  # global configuration settings
 
 
 # TODO: test with subpages that are not really subpages
-# TODO: do not hardcode configuration settings
 # TODO: real logging instead of print()
 
 #%%
-def extract_tabular_data_from_xmlfile(xmlfile, corner_box_cond_fns=None):
+def set_config(c):
+    global _conf
+    _conf = c
+
+
+def set_config_option(o, v):
+    _conf[o] = v
+
+
+def extract_tabular_data_from_xmlfile(xmlfile):
     subpages = get_subpages_from_xmlfile(xmlfile)
     
-    return extract_tabular_data_from_subpages(subpages, corner_box_cond_fns)
+    return extract_tabular_data_from_subpages(subpages)
 
 
-def extract_tabular_data_from_xmlroot(xmlroot, corner_box_cond_fns=None):
+def extract_tabular_data_from_xmlroot(xmlroot):
     subpages = get_subpages_from_xmlroot(xmlroot)
     
-    return extract_tabular_data_from_subpages(subpages, corner_box_cond_fns)
+    return extract_tabular_data_from_subpages(subpages)
 
 
-def extract_tabular_data_from_subpages(subpages, corner_box_cond_fns=None):   
+def extract_tabular_data_from_subpages(subpages):
+    skip_pages = _conf.get('skip_pages', [])
+    
     # analyze the row/column layout of each page and return these layouts,
     # a list of invalid subpages (no tabular layout could be recognized),
     # and a list of common column positions
-    layouts, invalid_layouts, col_positions, mean_row_height = analyze_subpage_layouts(subpages, corner_box_cond_fns)
-    
+    layouts, col_positions, mean_row_height, page_column_offsets = analyze_subpage_layouts(subpages)
+        
     # go through all subpages
     output = OrderedDict()
     skipped_pages = []
     for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
-        sub_p = subpages[p_id]            
+        if p_id in skip_pages:
+            continue
+        
+        sub_p = subpages[p_id] 
+        page_col_offset = page_column_offsets[p_id]
+        
+        if abs(page_col_offset) > _conf.get('max_page_col_offset_thresh', 0):
+            page_col_offset = 0
         
         pagenum, pageside = p_id
         
         if pagenum not in output:
             output[pagenum] = OrderedDict()
-        
+                
         # get the column positions
-        subp_col_positions = list(np.array(col_positions) + sub_p['x_offset'])
-            
-        if p_id in invalid_layouts:
-            row_positions = guess_row_positions(sub_p, mean_row_height, subp_col_positions)
+        subp_col_positions = list(np.array(col_positions[pageside]) + sub_p['x_offset'] + page_col_offset)
+        
+        # get the row positions        
+        row_positions = layouts[p_id][0]
+        if not row_positions:
+            row_positions, guessed_row_height = guess_row_positions(sub_p, mean_row_height, subp_col_positions)
             if row_positions:
-                print("subpage %d/%s layout: guessed %d rows (mean row height %f)"
-                      % (sub_p['number'], sub_p['subpage'], len(row_positions), mean_row_height))
-        else:        
-            # get the row positions
-            row_positions = layouts[p_id][0]
+                print("subpage %d/%s layout: guessed %d rows (mean row height %f, guessed row height %f)"
+                      % (sub_p['number'], sub_p['subpage'], len(row_positions), mean_row_height, guessed_row_height))
         
         if not row_positions:
             print("subpage %d/%s layout: no row positions identified -- skipped" % (sub_p['number'], sub_p['subpage']))
@@ -94,7 +108,7 @@ def extract_tabular_data_from_subpages(subpages, corner_box_cond_fns=None):
         # add this table to the output
         output[pagenum][pageside] = table_texts
 
-    return output, skipped_pages
+    return output, skip_pages + skipped_pages
 
 
 def save_tabular_data_dict_as_json(data, jsonfile):
@@ -136,10 +150,10 @@ def get_subpages_from_xmlroot(xmlroot):
     
     for p_num, page in pages.items():
         # strip off footer and header
-        bodytexts = get_bodytexts(page, HEADER_RATIO, FOOTER_RATIO)
+        bodytexts = get_bodytexts(page, _conf.get('header_skip', 0), _conf.get('footer_skip', 0))
         
-        if DIVIDE_RATIO:
-            page_subpages = divide_texts_horizontally(page, DIVIDE_RATIO, bodytexts)
+        if _conf.get('divide', 0) != 0:
+            page_subpages = divide_texts_horizontally(page, _conf.get('divide'), bodytexts)
         else:
             page_subpages = (page, )
             
@@ -150,120 +164,193 @@ def get_subpages_from_xmlroot(xmlroot):
     return subpages
 
 
-
 def guess_row_positions(subpage, mean_row_height, col_positions):
     if not len(col_positions) > 1:
         raise ValueError('number of detected columns must be at least 2')
+    
+    guess_rows_cond_fns = _conf.get('guess_rows_cond_fns', None)
     
     texts_by_y = sorted_by_attr(subpage['texts'], 'top')
     
     # borders of the first column
     first_col_left, first_col_right = col_positions[0:2]
     
-    # find the first (top-most) text that completely fits in a possible table cell in the first column
-    top_text = None
+    # additional condition functions
+    if guess_rows_cond_fns:
+        cond_fn_top, cond_fn_bottom = guess_rows_cond_fns
+    else:
+        cond_fn_top, cond_fn_bottom = None, None
+    
+    # find the first (top-most) text that fits in a possible table cell in the first column
+    top_text = None        
     for t in texts_by_y:
         t_rect = rect_from_text(t)
         cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))        
         isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
-        if isect == 1.0:
+        if isect is not None and isect >= 0.5 and (cond_fn_top is None or cond_fn_top(t)):
             top_text = t
             break
-        
-    if not top_text:
-        warning("subpage %d/%s: could not find top text" % (subpage['number'], subpage['subpage']))
-        return None
     
     # borders of the last column
     #last_col_left, last_col_right = col_positions[-2:]
     
-    # find the last (lowest) text that completely fits in a possible table cell in the first column
+    # find the last (lowest) text that fits in a possible table cell in the first column
     bottom_text = None
     for t in reversed(texts_by_y):
         t_rect = rect_from_text(t)
         cell_rect = rect(pt(first_col_left, t['top']), pt(first_col_right, t['top'] + mean_row_height))
         isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
-        if isect == 1.0:
+        if isect is not None and isect >= 0.5 and (cond_fn_bottom is None or cond_fn_bottom(t)):
             bottom_text = t
             break
     
+    if not top_text:
+        warning("subpage %d/%s: could not find top text" % (subpage['number'], subpage['subpage']))
+        return None, None
+    
     if not bottom_text:
         warning("subpage %d/%s: could not find bottom text" % (subpage['number'], subpage['subpage']))
-        return None
-    
+        return None, None
+
     top_border = int(np.round(top_text['top']))
-    bottom_border = int(np.round(bottom_text['top'] + mean_row_height))
+
+    fixed_row_num = _conf.get('fixed_row_num', 0)    
+    if fixed_row_num:
+        bottom_border = min(top_border + mean_row_height * fixed_row_num, subpage['height'])
+    else:        
+        bottom_border = int(np.round(bottom_text['top'] + mean_row_height))
+        
     
     table_height = bottom_border - top_border
-    n_rows, remainder = divmod(table_height, mean_row_height)
-    if remainder / mean_row_height > 0.5:   # seems like the number of rows doesn't really fit
-        warning("subpage %d/%s: the number of rows doesn't really fit the guessed table height"
-                % (subpage['number'], subpage['subpage']))
-        return None                         # we assume this is an invalid table layout
-    else:
-        optimal_row_height = table_height // n_rows
-        return list(range(top_border, bottom_border, optimal_row_height))[:n_rows]
+
+    n_rows = round(table_height / mean_row_height)
+    
+#    n_rows, remainder = divmod(table_height, mean_row_height)
+#    
+#    if remainder / mean_row_height > 0.5:   # seems like the number of rows doesn't really fit
+#        warning("subpage %d/%s: the number of rows doesn't really fit the guessed table height"
+#                % (subpage['number'], subpage['subpage']))
+#        return None                         # we assume this is an invalid table layout
+    
+    optimal_row_height = table_height // n_rows
+    return list(range(top_border, bottom_border, optimal_row_height))[:n_rows], optimal_row_height
 
 
-def analyze_subpage_layouts(subpages, corner_box_cond_fns=None):
+def analyze_subpage_layouts(subpages):
+    skip_pages = _conf.get('skip_pages', [])
+    pages_divided = _conf.get('divide', 0) > 0
+    corner_box_cond_fns = _conf.get('corner_box_cond_fns', None)
+    
     # find the column and row borders for each subpage
     layouts = {}
-    for p_id, sub_p in subpages.items():        
-        try:
-            col_positions, row_positions = find_col_and_row_positions_in_subpage(sub_p, corner_box_cond_fns)
-        except ValueError as e:
-            print("subpage %d/%s layout: skipped ('%s')" % (sub_p['number'], sub_p['subpage'], str(e)))
-            col_positions, row_positions = None, None
+    pages_dims = {}
+    for p_id, sub_p in subpages.items():      
+        layout = [None, None]
         
-        if col_positions and row_positions:
-            n_rows = len(row_positions)
-            n_cols = len(col_positions)
+        if p_id not in skip_pages:
+            try:
+                col_positions, row_positions, page_dims = find_col_and_row_positions_in_subpage(sub_p,
+                                                                                                corner_box_cond_fns)
+            except ValueError as e:
+                print("subpage %d/%s layout: skipped ('%s')" % (sub_p['number'], sub_p['subpage'], str(e)))
+                col_positions, row_positions = None, None
+                page_dims = None
             
-            print("subpage %d/%s layout: %d cols, %d rows" % (sub_p['number'], sub_p['subpage'], n_cols, n_rows))
+            if row_positions:
+                layout[0] = row_positions
             
-            layout = (row_positions, col_positions)
-        else:
-            print("subpage %d/%s layout: invalid column/row positions: %s/%s"
-                  % (sub_p['number'], sub_p['subpage'], col_positions, row_positions))
-            layout = None
+            if col_positions:
+                layout[1] = col_positions
+                        
+            if layout == (None, None):
+                print("subpage %d/%s layout: invalid column/row positions: %s/%s"
+                      % (sub_p['number'], sub_p['subpage'], col_positions, row_positions))
+                layout = None
         
         layouts[p_id] = layout
+        pages_dims[p_id] = page_dims
     
     # get the row and column positions of all valid subpages
-    all_row_pos, all_col_pos = zip(*[(np.array(layout[0]), np.array(layout[1]) - subpages[p_id]['x_offset'])
-                               for p_id, layout in layouts.items()
-                               if layout is not None])
-    
+    all_row_pos = [np.array(layout[0]) for layout in layouts.values() if layout[0]]
+    all_col_pos = [(p_id, np.array(layout[1]) - subpages[p_id]['x_offset']) for p_id, layout in layouts.items()
+                   if layout[1]]
+        
     # get all numbers of rows and columns across the subpages
-    nrows = [len(row_pos) for row_pos in all_row_pos]
-    ncols = [len(col_pos) for col_pos in all_col_pos]
+    nrows = [len(row_pos) for row_pos in all_row_pos if len(row_pos) > _conf.get('best_rows_selection_min_rows_thresh')]
+    ncols = [len(col_pos) for _, col_pos in all_col_pos if len(col_pos) > _conf.get('best_cols_selection_min_cols_thresh')]
     
-    nrows_median = np.median(nrows)
-    ncols_median = np.median(ncols)
+    print("row numbers:", nrows)
+    print("col numbers:", ncols)
     
-    print("median number of rows:", nrows_median)
-    print("median number of columns:", ncols_median)
+    nrows_best = _conf.get('best_rows_selection_fn', mode)(nrows) if nrows else None
+    ncols_best = _conf.get('best_cols_selection_fn', mode)(ncols)
     
-    row_pos_w_median_len = [row_pos for row_pos in all_row_pos if len(row_pos) == nrows_median]
-    selected_row_pos = [row_pos[2:int(nrows_median)-1] for row_pos in row_pos_w_median_len]
-    row_height_means = []
-    for row_pos in selected_row_pos:
-        row_height_means.append(np.mean([pos - row_pos[i-1] for i, pos in enumerate(row_pos[1:])]))
-    overall_row_height_mean = int(np.round(np.mean(row_height_means)))
+    print("best number of rows:", nrows_best)
+    print("best number of columns:", ncols_best)
     
-    # find the "best" (median) column positions for the median number of columns
-    col_pos_w_median_len = [col_pos for col_pos in all_col_pos if len(col_pos) == ncols_median]
-    best_col_pos = [list() for _ in range(int(ncols_median))]
-    for col_positions in col_pos_w_median_len:
-        for i, pos in enumerate(col_positions):
-            best_col_pos[i].append(pos)
+    # find the best row height
+    overall_row_height_mean = _conf.get('fixed_row_height', None)
+    if not overall_row_height_mean:
+        assert nrows_best is not None
+        
+        row_pos_w_best_len = [row_pos for row_pos in all_row_pos if len(row_pos) == nrows_best]
+        selected_row_pos = [row_pos[2:nrows_best-1] for row_pos in row_pos_w_best_len]
+        assert len(selected_row_pos) > 1
+        row_height_means = []
+        for row_pos in selected_row_pos:
+            row_height_means.append(np.mean([pos - row_pos[i-1] for i, pos in enumerate(row_pos[1:])]))
+        overall_row_height_mean = int(np.round(np.mean(row_height_means)))
     
-    best_col_pos_medians = [np.median(best_col_pos[i]) for i in range(int(ncols_median))]
+    # find the "best" (median) column positions per subpage side
+    subpage_sides = ('left', 'right') if pages_divided else (None, )
+    best_col_pos_medians = {}
+    for side in subpage_sides:
+        col_pos_w_best_len = [col_pos for p_id, col_pos in all_col_pos
+                              if len(col_pos) == ncols_best and p_id[1] == side]
+
+        best_col_pos = [list() for _ in range(ncols_best)]
+        for col_positions in col_pos_w_best_len:
+            for i, pos in enumerate(col_positions):
+                best_col_pos[i].append(pos)
+    
+        best_col_pos_medians[side] = [np.median(best_col_pos[i]) for i in range(ncols_best)]
+    
+    merge_cols_opt = _conf.get('merge_columns', None)
+    if merge_cols_opt:
+        for side in subpage_sides:
+            for from_col, to_col in merge_cols_opt:
+                for i in range(from_col, to_col):
+                    best_col_pos_medians[side].pop(i + 1)
+
+    split_cols_opt = _conf.get('split_columns', None)
+
+    if split_cols_opt:
+        for side in subpage_sides:
+            for split_col, split_ratio in split_cols_opt:
+                x1 = best_col_pos_medians[side][split_col]
+                if split_col + 1 < len(best_col_pos_medians[side]):
+                    x2 = best_col_pos_medians[side][split_col + 1]
+                else:
+                    x2 = subpages[(1, side)]['width']
+                    
+                best_col_pos_medians[side].append(x1 + (x2 - x1) * split_ratio)
+                best_col_pos_medians[side] = list(sorted(best_col_pos_medians[side]))
+                    
+    # set offset per page 
+    page_column_offsets = {}
+    for p_id, page_dims in pages_dims.items():
+        if page_dims and abs(page_dims[0][0]) != float('infinity'):
+            page_column_offsets[p_id] = page_dims[0][0] - subpages[p_id]['x_offset'] - best_col_pos_medians[p_id[1]][0]
+        else:
+            page_column_offsets[p_id] = 0
 
     # get list of subpages without proper layout    
-    invalid_layouts = [p_id for p_id, layout in layouts.items() if layout is None]
+    #invalid_layouts = [p_id for p_id, layout in layouts.items() if layout is None]
     
-    return layouts, invalid_layouts, best_col_pos_medians, overall_row_height_mean
+    print("number of skipped pages:", len(skip_pages))
+    #print("number of invalid layouts (including skipped pages):", len(invalid_layouts))
+    
+    return layouts, best_col_pos_medians, overall_row_height_mean, page_column_offsets
 
 
 def create_datatable_from_subpage(subpage, row_positions, col_positions):    
@@ -294,22 +381,22 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
         for idx, cell_rect in grid.items():
             isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
             if isect is not None and isect > 0:
-                cell_isects.append((idx, isect))
+                cell_isects.append((idx, isect, rectcenter_dist(t_rect, cell_rect)))
         
         if len(cell_isects) > 0:
             # find out the cell with most overlap
             max_isect_val = max([x[1] for x in cell_isects])
             if max_isect_val < 0.5:
-                warning("subpage %d/%s: low best cell intersection value: %f" % (subpage['number'], subpage['subpage'], max_isect_val))
-            best_isects = [x for x in cell_isects if x[1] == max_isect_val]
-            if len(best_isects) > 1:
-                warning("subpage %d/%s: multiple (%d) best cell intersections" % (subpage['number'], subpage['subpage'], len(best_isects)))
+                warning("subpage %d/%s: low best cell intersection value: %f" % (subpage['number'], subpage['subpage'],
+                                                                                 max_isect_val))
+            best_isects = list(sorted([x for x in cell_isects if x[1] == max_isect_val], key=lambda x: x[2]))
             best_idx = best_isects[0][0]
             
             # add this textblock to the table at the found cell index
             table[best_idx].append(t)
         else:
-            warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'], t))
+            warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'],
+                                                                         t['value']))
     
     return table
     
@@ -357,9 +444,12 @@ def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
     
     xs = np.array([t['left'] for t in texts_by_x])
     ys = np.array([t['top'] for t in texts_by_y])
-        
-    x_clust_ind = find_best_pos_clusters(xs, range(3, 9), 'x',
-                                         property_weights=(1, 5))
+    
+    default_property_weights = (1, 1)    
+    
+    x_clust_ind = find_best_pos_clusters(xs, _conf['possible_ncol_range'], 'x',
+                                         property_weights=_conf.get('find_col_clust_property_weights',
+                                                                    default_property_weights))
     if xs is None or x_clust_ind is None:
         col_positions = None
     else:
@@ -367,19 +457,28 @@ def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
         x_clust_w_vals = {c: vals for c, vals in x_clust_w_vals.items() if len(vals) > 3}
         col_positions = positions_list_from_clustervalues(x_clust_w_vals.values())
     
-    y_clust_ind = find_best_pos_clusters(ys, range(2, 15), 'y',
-                                         sorted_texts=texts_by_y,
-                                         property_weights=(1, 1),
-                                         min_cluster_text_height_thresh=25,
-                                         max_cluster_text_height_thresh=70,
-                                         mean_dists_range_thresh=30)
+    min_cluster_text_height_thresh = _conf.get('find_row_clust_min_cluster_text_height_thresh', float('-infinity'))
+    max_cluster_text_height_thresh = _conf.get('find_row_clust_max_cluster_text_height_thresh', float('infinity'))
+    mean_dists_range_thresh = _conf.get('find_row_clust_mean_dists_range_thresh', float('infinity'))
+    
+    if _conf.get('possible_nrow_range', None) is not None:    
+        y_clust_ind = find_best_pos_clusters(ys, _conf['possible_nrow_range'], 'y',
+                                             sorted_texts=texts_by_y,
+                                             property_weights=_conf.get('find_row_clust_property_weights',
+                                                                        default_property_weights),
+                                             min_cluster_text_height_thresh=min_cluster_text_height_thresh,
+                                             max_cluster_text_height_thresh=max_cluster_text_height_thresh,
+                                             mean_dists_range_thresh=mean_dists_range_thresh)
+    else:
+        y_clust_ind = None
+        
     if y_clust_ind is None:
         row_positions = None
     else:
         y_clust_w_vals, _, _ = create_cluster_dicts(ys, y_clust_ind)
         row_positions = positions_list_from_clustervalues(y_clust_w_vals.values())
     
-    return col_positions, row_positions
+    return col_positions, row_positions, ((min_x, max_x), (min_y, max_y))
 
 
 def position_ranges(positions, last_val):
@@ -498,24 +597,28 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
                 mean_dists_range = max(clust_mean_dists) - min(clust_mean_dists)
             
             if mean_dists_range > mean_dists_range_thresh:
+                #print('N=', n, 'skip by mean_dists_range', mean_dists_range)
                 continue
             
             cluster_text_dims = calc_cluster_text_dimensions(clusters_w_texts)
             cluster_text_heights = [dim[1] for dim in cluster_text_dims.values()]
             if min(cluster_text_heights) < min_cluster_text_height_thresh \
                     or max(cluster_text_heights) > max_cluster_text_height_thresh:
+                #print('N=', n, 'skip by cluster_text_heights', min(cluster_text_heights), max(cluster_text_heights))
                 continue
             #cluster_text_heights_range = max(cluster_text_heights) - min(cluster_text_heights)
             cluster_text_heights_sd = np.std(cluster_text_heights)
                         
             if vals_per_clust_range > num_vals_per_clust_thresh:
+                #print('N=', n, 'skip by vals_per_clust_range', vals_per_clust_range)
                 continue
             
             properties = (mean_dists_range, cluster_text_heights_sd)
         
 #            print('N=', n,
 #                  'mean_dists_range=', mean_dists_range,
-#                  'cluster_text_heights_range=', cluster_text_heights_range,
+#                  'min cluster_text_heights=', min(cluster_text_heights),
+#                  'max cluster_text_heights=', max(cluster_text_heights),
 #                  'cluster_text_heights_sd=', cluster_text_heights_sd,
 #                  'vals_per_clust_range=', vals_per_clust_range)
         
@@ -538,7 +641,12 @@ def find_best_pos_clusters(pos, num_clust_range, direction,
     return best_cluster_runs[0][0]
 
     
-def put_texts_in_lines(texts):    
+def put_texts_in_lines(texts):
+    if not texts:
+        return []
+    
+    mean_text_height = np.mean([t['bottom'] - t['top'] for t in texts])
+    
     sorted_ts = list(sorted(texts, key=lambda x: x['top']))     # sort texts vertically
     # create list of vertical spacings between sorted texts
     text_spacings = [t['top'] - sorted_ts[i - 1]['bottom'] for i, t in enumerate(sorted_ts) if i > 0]
@@ -551,10 +659,12 @@ def put_texts_in_lines(texts):
     # go through all vertically sorted texts
     lines = []
     cur_line = []
+    min_vspace_for_break = -mean_text_height / 2   # texts might overlap vertically. if the overlap is more than half
+                                                   # the mean text height, it is considered a line break
     for t, spacing in zip(sorted_ts, text_spacings):
         cur_line.append(t)
         
-        if spacing >= 0:    # this is a line break            
+        if spacing >= min_vspace_for_break:    # this is a line break            
             # add all texts to this line sorted by x-position
             lines.append(list(sorted(cur_line, key=lambda x: x['left'])))
             
