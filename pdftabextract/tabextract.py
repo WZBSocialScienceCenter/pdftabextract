@@ -276,8 +276,10 @@ def analyze_subpage_layouts(subpages):
                    if layout[1]]
         
     # get all numbers of rows and columns across the subpages
-    nrows = [len(row_pos) for row_pos in all_row_pos if len(row_pos) > _conf.get('best_rows_selection_min_rows_thresh')]
-    ncols = [len(col_pos) for _, col_pos in all_col_pos if len(col_pos) > _conf.get('best_cols_selection_min_cols_thresh')]
+    nrows = [len(row_pos) for row_pos in all_row_pos
+             if len(row_pos) > _conf.get('best_rows_selection_min_rows_thresh', 0)]
+    ncols = [len(col_pos) for _, col_pos in all_col_pos
+             if len(col_pos) > _conf.get('best_cols_selection_min_cols_thresh', 0)]
     
     print("row numbers:", nrows)
     print("col numbers:", ncols)
