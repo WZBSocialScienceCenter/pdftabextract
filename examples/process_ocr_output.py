@@ -29,6 +29,10 @@ cond_disabled = lambda t: False
 corner_box_cond_fns = (cond_topleft_text, cond_disabled, cond_disabled, cond_bottomleft_text)
 
 # Fix the rotation
+fixrotation.set_config_option('header_skip', 0.1)  # ignore top 10% of the page when inspecting the text box positions
+fixrotation.set_config_option('footer_skip', 0.1)  # ignore bottom 10% of the page when inspecting the text box positions
+fixrotation.set_config_option('divide', 0.5)  # two "real" pages per PDF page -> divide page at 50% (in the middle of th page)
+fixrotation.set_config_option('min_content_length_from_mean', 0.2)   # set minimum amount of content for processing
 xmltree, xmlroot, rot_results = fixrotation.fix_rotation('examples/ocr-output.pdf.xml', corner_box_cond_fns)
 
 print('FIXROTATION RESULTS:')

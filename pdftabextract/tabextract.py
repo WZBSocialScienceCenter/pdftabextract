@@ -21,8 +21,6 @@ from pdftabextract.common import read_xml, parse_pages, get_bodytexts, divide_te
 
 _conf = {}  # global configuration settings
 
-
-# TODO: test with subpages that are not really subpages
 # TODO: real logging instead of print()
 
 #%%
