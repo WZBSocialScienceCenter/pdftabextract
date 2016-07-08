@@ -29,7 +29,7 @@ the following libraries:
 * numpy
 * scipy
 
-**The scripts were only tested with Python 3. The might also work with Python 2.x with minor modifications**
+**The scripts were only tested with Python 3. They might also work with Python 2.x with minor modifications.**
 
 ## Converting PDF files to XML files with pdf2xml format
 
