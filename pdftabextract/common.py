@@ -104,6 +104,11 @@ def get_bodytexts(page, header_ratio=0.0, footer_ratio=1.0):
     miny = page['height'] * header_ratio
     maxy = page['height'] * (1 - footer_ratio)
     
+    if header_ratio != 0.0:
+        print('page %d/%s: header cutoff at %f' % (page['number'], page['subpage'], miny))
+    if footer_ratio != 1.0:
+        print('page %d/%s: footer cutoff at %f' % (page['number'], page['subpage'], maxy))
+    
     return list(filter(lambda t: t['top'] >= miny and t['bottom'] <= maxy, page['texts']))    
 
 
@@ -186,5 +191,5 @@ def mode(arr):
     return uniques[np.argmax(counts)]
 
 
-def sorted_by_attr(vals, attr):
-    return sorted(vals, key=lambda x: x[attr])
+def sorted_by_attr(vals, attr, reverse=False):
+    return sorted(vals, key=lambda x: x[attr], reverse=reverse)
