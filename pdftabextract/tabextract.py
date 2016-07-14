@@ -21,6 +21,8 @@ from pdftabextract.common import read_xml, parse_pages, get_bodytexts, divide_te
 
 _conf = {}  # global configuration settings
 
+
+# TODO: test with subpages that are not really subpages
 # TODO: real logging instead of print()
 
 #%%
@@ -153,7 +155,9 @@ def get_subpages_from_xmlroot(xmlroot):
         if _conf.get('divide', 0) != 0:
             page_subpages = divide_texts_horizontally(page, _conf.get('divide'), bodytexts)
         else:
-            page_subpages = (page, )
+            singlepage = dict(page)
+            singlepage['texts'] = bodytexts
+            page_subpages = (singlepage, )
             
         for sub_p in page_subpages:
             p_id = (sub_p['number'], sub_p['subpage'])        
@@ -274,10 +278,8 @@ def analyze_subpage_layouts(subpages):
                    if layout[1]]
         
     # get all numbers of rows and columns across the subpages
-    nrows = [len(row_pos) for row_pos in all_row_pos
-             if len(row_pos) > _conf.get('best_rows_selection_min_rows_thresh', 0)]
-    ncols = [len(col_pos) for _, col_pos in all_col_pos
-             if len(col_pos) > _conf.get('best_cols_selection_min_cols_thresh', 0)]
+    nrows = [len(row_pos) for row_pos in all_row_pos if len(row_pos) > _conf.get('best_rows_selection_min_rows_thresh')]
+    ncols = [len(col_pos) for _, col_pos in all_col_pos if len(col_pos) > _conf.get('best_cols_selection_min_cols_thresh')]
     
     print("row numbers:", nrows)
     print("col numbers:", ncols)
@@ -357,12 +359,7 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
     n_rows = len(row_positions)
     n_cols = len(col_positions)
 
-    row_ranges = position_ranges(row_positions, subpage['height'])
-    col_ranges = position_ranges(col_positions, subpage['x_offset'] + subpage['width'])
-    
-    # create a grid with rectangles of table cells
-    grid = {(r_i, c_i): rect(pt(l, t), pt(r, b)) for r_i, (t, b) in enumerate(row_ranges)
-                                                 for c_i, (l, r) in enumerate(col_ranges)}
+    grid = make_grid_from_positions(subpage, row_positions, col_positions)
     
     # create an empty table with the found dimensions
     # each cell will have a list with textblocks inside
@@ -479,6 +476,21 @@ def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
         row_positions = positions_list_from_clustervalues(y_clust_w_vals.values())
     
     return col_positions, row_positions, ((min_x, max_x), (min_y, max_y))
+
+
+def make_grid_from_positions(subpage, rowpos, colpos, as_list=False):
+    row_ranges = position_ranges(rowpos, subpage['height'])
+    col_ranges = position_ranges(colpos, subpage['x_offset'] + subpage['width'])    
+    
+    # create a grid with rectangles of table cells
+    if not as_list:
+        grid = {(r_i, c_i): rect(pt(l, t), pt(r, b)) for r_i, (t, b) in enumerate(row_ranges)
+                                                     for c_i, (l, r) in enumerate(col_ranges)}
+    else:
+        grid = [[rect(pt(l, t), pt(r, b)) for l, r in col_ranges]
+                                          for t, b in row_ranges]
+
+    return grid
 
 
 def position_ranges(positions, last_val):
