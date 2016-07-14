@@ -39,7 +39,7 @@ xmltree.write('testxmls/1992_93_neu_rotfixed.pdf.xml')
 
 #%%
 
-from common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally
+from pdftabextract.common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally
 
 HEADER_RATIO = 0.1
 FOOTER_RATIO = 0.1
