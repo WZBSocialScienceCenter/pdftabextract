@@ -16,7 +16,7 @@ import numpy as np
 
 from pdftabextract.geom import pt, rect, rectintersect, rectcenter_dist
 from pdftabextract.common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, sorted_by_attr, \
-                                 texts_at_page_corners, mode
+                                 texts_at_page_corners, mode, flatten_list
 
 
 _conf = {}  # global configuration settings
@@ -381,11 +381,18 @@ def analyze_subpage_layouts(subpages):
     return layouts, best_col_pos_medians, overall_row_height_mean, page_column_offsets
 
 
-def create_datatable_from_subpage(subpage, row_positions, col_positions):    
-    n_rows = len(row_positions)
-    n_cols = len(col_positions)
-
+def create_datatable_from_subpage(subpage, row_positions, col_positions):
     grid = make_grid_from_positions(subpage, row_positions, col_positions)
+    
+    table = fit_texts_into_grid(subpage['texts'], grid)
+    
+    return table, grid
+
+
+def fit_texts_into_grid(texts, grid, p_id_for_logging=None):
+    keys = list(grid.keys())
+    n_rows = max(k[0] for k in keys) + 1
+    n_cols = max(k[1] for k in keys) + 1
     
     # create an empty table with the found dimensions
     # each cell will have a list with textblocks inside
@@ -396,7 +403,7 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
             table[j, k] = []
     
     # iterate through the textblocks of this page
-    for t in subpage['texts']:
+    for t in texts:
         t_rect = rect_from_text(t)   # rectangle of the textbox
         
         # find out the cells with which this textbox rectangle intersects
@@ -409,20 +416,19 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
         if len(cell_isects) > 0:
             # find out the cell with most overlap
             max_isect_val = max([x[1] for x in cell_isects])
-            if max_isect_val < 0.5:
-                warning("subpage %d/%s: low best cell intersection value: %f" % (subpage['number'], subpage['subpage'],
-                                                                                 max_isect_val))
+            if max_isect_val < 0.5 and p_id_for_logging:
+                warning("subpage %s: low best cell intersection value: %f" % (p_id_for_logging, max_isect_val))
             best_isects = list(sorted([x for x in cell_isects if x[1] == max_isect_val], key=lambda x: x[2]))
             best_idx = best_isects[0][0]
             
             # add this textblock to the table at the found cell index
             table[best_idx].append(t)
         else:
-            warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'],
-                                                                         t['value']))
+            if p_id_for_logging:
+                warning("subpage %s: no cell found for textblock '%s'" % (p_id_for_logging, t['value']))
     
-    return table, grid
-    
+    return table
+
 
 def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
     if corner_box_cond_fns is None:
@@ -552,6 +558,11 @@ def create_cluster_dicts(vals, clust_ind, sorted_texts=None):
 def calc_cluster_means(clusters_w_vals):
     # calculate mean position value per cluster
     return {c: np.mean(vals) for c, vals in clusters_w_vals.items()}
+
+
+def calc_cluster_medians(clusters_w_vals):
+    # calculate median position value per cluster
+    return {c: np.median(vals) for c, vals in clusters_w_vals.items()}
 
 
 def calc_cluster_sds(clusters_w_vals):
@@ -729,3 +740,110 @@ def create_text_from_lines(lines, linebreak='\n', linejoin=' '):
 
 def rect_from_text(t):
     return rect(t['topleft'], t['bottomright'])
+
+
+def identify_sections_in_direction(texts, direction, break_section_on_distance):
+    """
+    Identify sections, i.e. columns or lines, in a certain direction ('x' or 'y') by breaking the input texts
+    appart on <break_section_on_distance>.
+    Return a list of sections, each section containing a list of texts.
+    """
+    # handle parameters
+    direction_param_valid_values = ('x', 'y')
+    if direction not in direction_param_valid_values:
+        raise ValueError("direction paramater must be one of %s" % list(direction_param_valid_values))
+    
+    if direction == 'x':
+        pos_attr = 'left'
+    else:
+        pos_attr = 'top'
+    
+    # sort by position attribute
+    sorted_texts = sorted_by_attr(texts, pos_attr)
+    
+    # calculate the distances between the sorted texts
+    dists = [t[pos_attr] - sorted_texts[i-1][pos_attr] if i > 0 else 0
+             for i, t in enumerate(sorted_texts)]
+
+    # break into sections
+    texts_in_secs = []
+    cur_sec = []
+    for t, dist in zip(sorted_texts, dists):
+        if dist >= break_section_on_distance:   # if the distance is higher than break_section_on_distance
+            texts_in_secs.append(cur_sec)       # save the current section
+            cur_sec = []                        # and create a new section
+
+        cur_sec.append(t)
+    
+    return texts_in_secs
+
+def merge_overlapping_sections(texts_in_secs, direction, overlap_thresh):
+    """
+    Merge overlapping sections of texts in <direction> 'x' or 'y' whose consecutive
+    "distance" or overlap (when the distance is negative) is less than <overlap_thresh>.
+    """
+    direction_param_valid_values = ('x', 'y')
+    if direction not in direction_param_valid_values:
+        raise ValueError("direction paramater must be one of %s" % list(direction_param_valid_values))
+    
+    if direction == 'x':
+        pos_attr = 'left'
+        other_pos_attr = 'right'
+    else:
+        pos_attr = 'top'
+        other_pos_attr = 'bottom'    
+    
+    # sorted section positions for left side or top side
+    sec_positions1 = [sorted_by_attr(sec, pos_attr, reverse=True)[0][pos_attr] for sec in texts_in_secs]
+    # sorted section positions for right side or bottom side
+    sec_positions2 = [sorted_by_attr(sec, other_pos_attr, reverse=True)[0][other_pos_attr] for sec in texts_in_secs]
+    
+    # calculate distance/overlap between sections
+    sec_positions = list(zip(sec_positions1, sec_positions2))
+    sec_dists = [pos[0] - sec_positions[i-1][1] if i > 0 else 0 for i, pos in enumerate(sec_positions)]
+    #print(sum([d <= 0 for d in sec_dists]))
+    
+    # merge sections that overlap (whose distance is less than <overlap_thresh>)
+    merged_secs = []
+    prev_sec = []
+    for i, dist in enumerate(sec_dists):
+        cur_sec = texts_in_secs[i]
+        if dist < overlap_thresh:
+            sec = cur_sec + prev_sec
+            if len(merged_secs) > 0:
+                merged_secs.pop()
+        else:
+            sec = cur_sec
+        
+        merged_secs.append(sec)
+        prev_sec = sec
+    
+    assert len(flatten_list(texts_in_secs)) == len(flatten_list(merged_secs))
+    
+    return merged_secs
+
+
+def merge_small_sections(texts_in_secs, min_num_texts):
+    """
+    Merge sections that are too small, i.e. have too few "content" which means that their number
+    of texts is lower than or equal <min_num_texts>.
+    """
+    merged_secs = []
+    prev_sec = None
+    for cur_sec in texts_in_secs:
+        if prev_sec:
+            if len(cur_sec) <= min_num_texts:  # number of texts is too low
+                sec = cur_sec + prev_sec       # merge this section with the previous section
+                if len(merged_secs) > 0:       # remove the prev. section from the final list
+                    merged_secs.pop()          # in order to add the merged section later
+            else:
+                sec = cur_sec
+        else:
+            sec = cur_sec
+        
+        merged_secs.append(sec)   # add the (possibly merged) section
+        prev_sec = sec
+
+    assert len(flatten_list(texts_in_secs)) == len(flatten_list(merged_secs))
+
+    return merged_secs

@@ -137,7 +137,7 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
     """    
     p_name = str(p['number'])
     if 'subpage' in p:
-        p_name += '/' + p['subpage']    
+        p_name += '/' + str(p['subpage'])
     
 
     page_corners_texts = texts_at_page_corners(p, corner_box_cond_fns)
@@ -176,6 +176,8 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
     
     rot_about = pointintersect(text_topleft['topleft'], text_bottomleft['bottomleft'], *bottomline_pts,
                                check_in_segm=False)
+    if sum(np.isnan(rot_about)) > 0:
+        return False, 'no_rotation_point_found'
     
     print("page %s: rotate about %f, %f" % (p_name, rot_about[0], rot_about[1]))
     

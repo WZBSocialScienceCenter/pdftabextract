@@ -10,18 +10,36 @@ Created on Tue Jun  7 10:49:35 2016
 
 import xml.etree.ElementTree as ET
 from copy import copy
+import json
 
 import numpy as np
 
 from .geom import pt, vecdist, rect, rectarea
 
-#%%
+#%% I/O
 
 def read_xml(fname):
     tree = ET.parse(fname)
     root = tree.getroot()
     
     return tree, root
+
+class JSONEncoderPlus(json.JSONEncoder):
+    def default(self, o):
+       try:
+           iterable = iter(o)
+       except TypeError:
+           pass
+       else:
+           return list(iterable)
+       # Let the base class default method raise the TypeError
+       return super().default(self, o)
+
+def save_page_grids(page_grids, output_file):
+    with open(output_file, 'w') as f:
+        json.dump(page_grids, f, cls=JSONEncoderPlus)
+
+#%% parsing
 
 def parse_pages(root):
     pages = {}
@@ -44,17 +62,10 @@ def parse_pages(root):
             
             if rectarea(trect) <= 0:    # seems like there are rectangles with zero area
                 continue                # -> skip them
-            
-            if not t.text:  # if there's not text in this element, then there's
-                            # probably text in the children tags (mostly <b> or <i> tags)
-                t_children = t.findall('.//')
-                if not t_children:
-                    continue
-                
-                tdict['value'] = ' '.join([c.text for c in t_children if c and c.text])
-            else:    
-                tdict['value'] = t.text
-            
+                        
+            # join all text elements to one string
+            tdict['value'] = ' '.join(t.itertext())
+                        
             page['texts'].append(tdict)
 
         pages[p_num] = page
@@ -99,15 +110,16 @@ def update_text_dict_pos(t, pos, update_node=False):
         t['xmlnode'].attrib['left'] = str(int(round(pos[0])))
         t['xmlnode'].attrib['top'] = str(int(round(pos[1])))
 
+#%% utility functions for textboxes
 
 def get_bodytexts(page, header_ratio=0.0, footer_ratio=1.0):
     miny = page['height'] * header_ratio
     maxy = page['height'] * (1 - footer_ratio)
     
-    if header_ratio != 0.0:
-        print('page %d/%s: header cutoff at %f' % (page['number'], page['subpage'], miny))
-    if footer_ratio != 1.0:
-        print('page %d/%s: footer cutoff at %f' % (page['number'], page['subpage'], maxy))
+    #if header_ratio != 0.0:
+    #    print('page %d/%s: header cutoff at %f' % (page['number'], page['subpage'], miny))
+    #if footer_ratio != 1.0:
+    #    print('page %d/%s: footer cutoff at %f' % (page['number'], page['subpage'], maxy))
     
     return list(filter(lambda t: t['top'] >= miny and t['bottom'] <= maxy, page['texts']))    
 
@@ -185,6 +197,59 @@ def texts_at_page_corners(p, cond_fns):
     
     return text_topleft, text_topright, text_bottomright, text_bottomleft
 
+#%% string functions
+
+def rel_levenshtein(s1, s2):
+    """Relative Levenshtein distance taking its upper bound into consideration and return a value in [0, 1]"""
+    maxlen = max(len(s1), len(s2))
+    if maxlen > 0:
+        return levenshtein(s1, s2) / float(maxlen)
+    else:
+        return 0
+
+
+def levenshtein(source, target):
+    """
+    Compute Levenshtein-Distance between strings <source> and <target>.
+    Taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
+    """
+    if len(source) < len(target):
+        return levenshtein(target, source)
+
+    # So now we have len(source) >= len(target).
+    if len(target) == 0:
+        return len(source)
+
+    # We call tuple() to force strings to be used as sequences
+    # ('c', 'a', 't', 's') - numpy uses them as values by default.
+    source = np.array(tuple(source))
+    target = np.array(tuple(target))
+
+    # We use a dynamic programming algorithm, but with the
+    # added optimization that we only need the last two rows
+    # of the matrix.
+    previous_row = np.arange(target.size + 1)
+    for s in source:
+        # Insertion (target grows longer than source):
+        current_row = previous_row + 1
+
+        # Substitution or matching:
+        # Target and source items are aligned, and either
+        # are different (cost of 1), or are the same (cost of 0).
+        current_row[1:] = np.minimum(
+                current_row[1:],
+                np.add(previous_row[:-1], target != s))
+
+        # Deletion (target grows shorter than source):
+        current_row[1:] = np.minimum(
+                current_row[1:],
+                current_row[0:-1] + 1)
+
+        previous_row = current_row
+
+    return previous_row[-1]
+
+#%% Other functions
 
 def mode(arr):
     uniques, counts = np.unique(arr, return_counts=True)
@@ -193,3 +258,9 @@ def mode(arr):
 
 def sorted_by_attr(vals, attr, reverse=False):
     return sorted(vals, key=lambda x: x[attr], reverse=reverse)
+
+    
+def flatten_list(l):
+    return sum(l, [])
+
+

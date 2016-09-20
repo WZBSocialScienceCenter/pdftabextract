@@ -104,8 +104,8 @@ def rectintersect(a, b, norm_intersect_area=None):
     a_a = rectarea(a)
     a_b = rectarea(b)
 
-    assert a_a > 0
-    assert a_b > 0
+    assert a_a >= 0
+    assert a_b >= 0
     
     max_a = min(a_a, a_b)
     
