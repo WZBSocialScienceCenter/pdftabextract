@@ -90,7 +90,9 @@ def extract_tabular_data_from_subpages(subpages):
         
         if pagenum not in output:
             output[pagenum] = OrderedDict()
-                
+        if pagenum not in page_grids:
+            page_grids[pagenum] = OrderedDict()
+        
         # get the column positions
         subp_col_positions = list(np.array(col_positions[pageside]) + sub_p['x_offset'] + page_col_offset)
         

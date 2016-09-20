@@ -1,73 +1,4 @@
 "page_num","page_side","col1","col2","col3","col4","col5"
-17,"right","103093 
-G ","Grundschule  4 
-Am  Robert·Schulz-Ring  58 
-o  - 2130  Prenzlau ","Frau  Dederky 
-Frau  Quade ","039841 
-2189 ","06  Filial e 
-1 "
-17,"right","103718 
-G ","Grundschule 
-Röddeliner  Straße 
-o- 2090  Templin ","Frau  Delander 
-Frau  Benzmann ","03987/ 
-6282 ","06 "
-17,"right","103720 
-G ","Lindenschule  Templin 
-lychener  Straße  65 
-o- 2090  Templin ","Frau  Liebe 
-Herr  Werner ","
-6872 ","06 "
-17,"right","103731 
-G ","Grundschute  Ringenwalde 
-Dorfstraße  19 
-0  .  2091  Ringenwalde ","Herr  Weiß 
-Frau  Hohlbein ","039881/ 
-234 ","06 
-1 "
-17,"right","103743 
-G ","Grundschule  Warthe 
-Dorfstraße  9/10 
-o  - 2091  Warthe ","Herr  Hobohm 
-Frau  Collin ","039885/ 
-2245 ","06 "
-17,"right","103755 
-G ","Grundschule  Hammelspring 
-Templiner  Straße  37 
-0  .  2091  Hammelspring ","Frau  Buchmann 
-Herr  Walter ","03987/ 
-2021 ","06 "
-17,"right","103767 
-G ","Grundschule 
-Dorfstraße  16 
-0  •  2091  Mittenwalde ","Frau  Eisner 
-Frau  von  Ziemer ","039884/ 
-1534 ","06 "
-17,"right","1o3n9 
-G ","Grundschule 
-Pannwitz-Allee 
-o  - 2093  Lychen ","Frau  Süß 
-Frau  Drews ","
-434 ","06 
-1 "
-17,"right","105740 
-G ","Grundschule  1 
-Fischerstraße  15116 
-0  .  1320  Angermünde ","Herr  Breßler 
-Frau  Kauk ","033311 
-32506 ","06 "
-17,"right","105855 
-G ","Grundschule  Hetzdorf 
-Dorfstraße  4 
-o  .  2151  Hetzdorf ","Frau  Müller 
-Frau  Meyer ","0397451 
-261 ","06 "
-17,"right","105867 
-G ","Grundschule  Werbelew 
-Dorfstraße  33 
-o  - 2151  Werbelew ","Frau  Neumann 
-Frau  Herrmann ","0397401 
-415 ","06 "
 17,"left","101576 
 G ","6.  Grundschule 
 Dr.-W.-ICülz-Viertel  2 
@@ -75,7 +6,7 @@ Dr.-W.-ICülz-Viertel  2
 Herr  lüthke ","03332/ 
 32209 ","03 "
 17,"left","101588 
-G "," Grundschule 
+G ","7.  Grundschule 
 Goethering  12 
 0  - 1330  Schwedt ","Frau  Sorrmer 
 Frau  Rosentreter ","03332/ 
@@ -139,6 +70,75 @@ Pestalozzistraße  44
 0  - 2130  Prenzlau ","Herr  Wesenberg 
 Frau  Schote ","03984/ 
 2224 ","06 "
+17,"right","103093 
+G ","Grundschule  4 
+Am  Robert·Schulz-Ring  58 
+o  - 2130  Prenzlau ","Frau  Dederky 
+Frau  Quade ","039841 
+2189 ","06  Filial e 
+1 "
+17,"right","103718 
+G ","Grundschule 
+Röddeliner  Straße 
+o- 2090  Templin ","Frau  Delander 
+Frau  Benzmann ","03987/ 
+6282 ","06 "
+17,"right","103720 
+G ","Lindenschule  Templin 
+lychener  Straße  65 
+o- 2090  Templin ","Frau  Liebe 
+Herr  Werner ","039871 
+6872 ","06 "
+17,"right","103731 
+G ","Grundschute  Ringenwalde 
+Dorfstraße  19 
+0  .  2091  Ringenwalde ","Herr  Weiß 
+Frau  Hohlbein ","039881/ 
+234 ","06 
+1 "
+17,"right","103743 
+G ","Grundschule  Warthe 
+Dorfstraße  9/10 
+o  - 2091  Warthe ","Herr  Hobohm 
+Frau  Collin ","039885/ 
+2245 ","06 "
+17,"right","103755 
+G ","Grundschule  Hammelspring 
+Templiner  Straße  37 
+0  .  2091  Hammelspring ","Frau  Buchmann 
+Herr  Walter ","03987/ 
+2021 ","06 "
+17,"right","103767 
+G ","Grundschule 
+Dorfstraße  16 
+0  •  2091  Mittenwalde ","Frau  Eisner 
+Frau  von  Ziemer ","039884/ 
+1534 ","06 "
+17,"right","1o3n9 
+G ","Grundschule 
+Pannwitz-Allee 
+o  - 2093  Lychen ","Frau  Süß 
+Frau  Drews ","0398881 
+434 ","06 
+1 "
+17,"right","105740 
+G ","Grundschule  1 
+Fischerstraße  15116 
+0  .  1320  Angermünde ","Herr  Breßler 
+Frau  Kauk ","033311 
+32506 ","06 "
+17,"right","105855 
+G ","Grundschule  Hetzdorf 
+Dorfstraße  4 
+o  .  2151  Hetzdorf ","Frau  Müller 
+Frau  Meyer ","0397451 
+261 ","06 "
+17,"right","105867 
+G ","Grundschule  Werbelew 
+Dorfstraße  33 
+o  - 2151  Werbelew ","Frau  Neumann 
+Frau  Herrmann ","0397401 
+415 ","06 "
 18,"right","103536 
 G ","Grundschule  ""A.  Diesterweg"" 
 Hertzstraße  19-25 
@@ -227,79 +227,8 @@ Frl.  Alseher ","039862/
 G ","Grundschule  111 
 Rosa-Luxemburg-Straße  18 
 0- 2090  Templin ","Frau  Pilz 
-Herr  Reinbote ","
+Herr  Reinbote ","039671 
 5485 ","06 "
-19,"right","105181 
-G ","3.  Grundschule  ""Am  Weinberg"" 
-Schulplatz  3 
-0  - 1830  Rathenow ","Herr  llgner 
-Herr  Stieger ","033851 
-2262 ","06 
-1 "
-19,"right","105193 
-G ","4.  Grundschule  ""Geschwister  Scholl"" 
-Geschwister-Scholl-Straße   a 
-0  - 1830  Rathenow ","Herr  Kurth 
-Frau  Feld ","033851 
-2105 ","06 "
-19,"right","105200 
-G ","Grundschule  ""Altstadt"" 
-Baustraße  5 
-0  - 1831  Rathenow ","Herr  Mantau 
-Frau  Schmidt ","033851 
-2324 ","06 "
-19,"right","105211 
-G ","5.  Grundschule 
-Pfarrer-Fröhlich-Straße  9 
-0  - 1830  Rathenow ","Herr  Goldan 
-Frau  Herrmann ","033851 
-2961 ","06 
-1 "
-19,"right","105223 
-G ","Grundschule  ""Am  Dachsberg"" 
-Karl-Marx-Straße  15 
-0  - 2832  Premnitz ","Herr  Warnke 
-Frau  Seiß ","033861 
-2023 ","06 
-1 "
-19,"right","105235 
-G ","Grundschule  ""Geschwister  Scholl"" 
-Hauptstraße  24 
-0  - 1832  Premnitz ","Herr  Schäfer 
-Frau  Kolrep ","03386/ 
-2061 ","06 "
-19,"right","105247 
-G ","Grundschule  Milow 
-Forststraße  2  a 
-0  - 1831  Mi  low ","Herr  Schubert 
-Frau  Henschel ","03386/ 
-2027 ","06 
-1 "
-19,"right","105259 
-G ","Grundschule-Süd 
-Mühlenweg  1 
-0  - 1832  Premnitz ","Frau  Hahn 
-Frau  Hoffmann ","03386/ 
-301 ","06 
-1 "
-19,"right","105260 
-G ","Grundschule  ""Otto  Lilienthal"" 
-Lindenstraße  1 
-0  - 1833  Rhinow ","Herr  Rall 
-Frau  Götze ","033875/ 
-223 ","06 "
-19,"right","105272 
-G ","Grundschule 
-Parkstraße  5 
-0  - 1831  Großwudicke ","Herr  Sahr 
-Frau  Krüger ","033873/ 
-238 ","06 "
-19,"right","105284 
-G ","Grundschule  Nennhausen 
-Fontanestraße  2 
-0  - 1831  Nennhausen ","Frau  Liebrecht 
-Frau  Schmidt ","033878/ 
-227 ","06 "
 19,"left","103640 
 G ","Grundschule  Ketzin 
 W.·Pieck-Ring  20 
@@ -361,3 +290,74 @@ Jahnstraße  33
 0  - 1830  Rathenow ","Frau  Wolf 
 Herr  Gens ","03385/ 
 2182 ","06 "
+19,"right","105181 
+G ","3.  Grundschule  ""Am  Weinberg"" 
+Schulplatz  3 
+0  - 1830  Rathenow ","Herr  llgner 
+Herr  Stieger ","033851 
+2262 ","06 
+1 "
+19,"right","105193 
+G ","4.  Grundschule  ""Geschwister  Scholl"" 
+Geschwister-Scholl-Straße  7  a 
+0  - 1830  Rathenow ","Herr  Kurth 
+Frau  Feld ","033851 
+2105 ","06 "
+19,"right","105200 
+G ","Grundschule  ""Altstadt"" 
+Baustraße  5 
+0  - 1831  Rathenow ","Herr  Mantau 
+Frau  Schmidt ","033851 
+2324 ","06 "
+19,"right","105211 
+G ","5.  Grundschule 
+Pfarrer-Fröhlich-Straße  9 
+0  - 1830  Rathenow ","Herr  Goldan 
+Frau  Herrmann ","033851 
+2961 ","06 
+1 "
+19,"right","105223 
+G ","Grundschule  ""Am  Dachsberg"" 
+Karl-Marx-Straße  15 
+0  - 2832  Premnitz ","Herr  Warnke 
+Frau  Seiß ","033861 
+2023 ","06 
+1 "
+19,"right","105235 
+G ","Grundschule  ""Geschwister  Scholl"" 
+Hauptstraße  24 
+0  - 1832  Premnitz ","Herr  Schäfer 
+Frau  Kolrep ","03386/ 
+2061 ","06 "
+19,"right","105247 
+G ","Grundschule  Milow 
+Forststraße  2  a 
+0  - 1831  Mi  low ","Herr  Schubert 
+Frau  Henschel ","03386/ 
+2027 ","06 
+1 "
+19,"right","105259 
+G ","Grundschule-Süd 
+Mühlenweg  1 
+0  - 1832  Premnitz ","Frau  Hahn 
+Frau  Hoffmann ","03386/ 
+301 ","06 
+1 "
+19,"right","105260 
+G ","Grundschule  ""Otto  Lilienthal"" 
+Lindenstraße  1 
+0  - 1833  Rhinow ","Herr  Rall 
+Frau  Götze ","033875/ 
+223 ","06 "
+19,"right","105272 
+G ","Grundschule 
+Parkstraße  5 
+0  - 1831  Großwudicke ","Herr  Sahr 
+Frau  Krüger ","033873/ 
+238 ","06 "
+19,"right","105284 
+G ","Grundschule  Nennhausen 
+Fontanestraße  2 
+0  - 1831  Nennhausen ","Frau  Liebrecht 
+Frau  Schmidt ","033878/ 
+227 ","06 "

@@ -53,8 +53,12 @@ For usage and background information, please read my series of blog posts about
 
 You should have a look at the examples to see how to use the provided functions and configuration settings. Examples are
 provided in the *examples* directory. Remember to set the PYTHONPATH according to where you put the
-*pdftabextract* package or use an IDE like [Spyder](https://github.com/spyder-ide/spyder). See the following images of
-the example input/output:
+*pdftabextract* package. You can run an example straight from the root dictionary with
+`PYTHONPATH=. python examples/process_ocr_output.py` (note: your Python 3 executable might be named `python3`).
+
+Alternatively, you can use an IDE like [Spyder](https://github.com/spyder-ide/spyder).
+
+See the following images of the example input/output:
 
 Original OCR-processed ("sandwich") PDF
 ![original OCR-processed PDF](https://datascience.blog.wzb.eu/wp-content/uploads/10/2016/07/ocr-output-pdf.png)

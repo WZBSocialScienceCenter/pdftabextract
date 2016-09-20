@@ -1,84 +1,5 @@
 {
   "17": {
-    "right": [
-      [
-        "103093 \nG ",
-        "Grundschule  4 \nAm  Robert\u00b7Schulz-Ring  58 \no  - 2130  Prenzlau ",
-        "Frau  Dederky \nFrau  Quade ",
-        "039841 \n2189 ",
-        "06  Filial e \n1 "
-      ],
-      [
-        "103718 \nG ",
-        "Grundschule \nR\u00f6ddeliner  Stra\u00dfe \no- 2090  Templin ",
-        "Frau  Delander \nFrau  Benzmann ",
-        "03987/ \n6282 ",
-        "06 "
-      ],
-      [
-        "103720 \nG ",
-        "Lindenschule  Templin \nlychener  Stra\u00dfe  65 \no- 2090  Templin ",
-        "Frau  Liebe \nHerr  Werner ",
-        "\n6872 ",
-        "06 "
-      ],
-      [
-        "103731 \nG ",
-        "Grundschute  Ringenwalde \nDorfstra\u00dfe  19 \n0  .  2091  Ringenwalde ",
-        "Herr  Wei\u00df \nFrau  Hohlbein ",
-        "039881/ \n234 ",
-        "06 \n1 "
-      ],
-      [
-        "103743 \nG ",
-        "Grundschule  Warthe \nDorfstra\u00dfe  9/10 \no  - 2091  Warthe ",
-        "Herr  Hobohm \nFrau  Collin ",
-        "039885/ \n2245 ",
-        "06 "
-      ],
-      [
-        "103755 \nG ",
-        "Grundschule  Hammelspring \nTempliner  Stra\u00dfe  37 \n0  .  2091  Hammelspring ",
-        "Frau  Buchmann \nHerr  Walter ",
-        "03987/ \n2021 ",
-        "06 "
-      ],
-      [
-        "103767 \nG ",
-        "Grundschule \nDorfstra\u00dfe  16 \n0  \u2022  2091  Mittenwalde ",
-        "Frau  Eisner \nFrau  von  Ziemer ",
-        "039884/ \n1534 ",
-        "06 "
-      ],
-      [
-        "1o3n9 \nG ",
-        "Grundschule \nPannwitz-Allee \no  - 2093  Lychen ",
-        "Frau  S\u00fc\u00df \nFrau  Drews ",
-        "\n434 ",
-        "06 \n1 "
-      ],
-      [
-        "105740 \nG ",
-        "Grundschule  1 \nFischerstra\u00dfe  15116 \n0  .  1320  Angerm\u00fcnde ",
-        "Herr  Bre\u00dfler \nFrau  Kauk ",
-        "033311 \n32506 ",
-        "06 "
-      ],
-      [
-        "105855 \nG ",
-        "Grundschule  Hetzdorf \nDorfstra\u00dfe  4 \no  .  2151  Hetzdorf ",
-        "Frau  M\u00fcller \nFrau  Meyer ",
-        "0397451 \n261 ",
-        "06 "
-      ],
-      [
-        "105867 \nG ",
-        "Grundschule  Werbelew \nDorfstra\u00dfe  33 \no  - 2151  Werbelew ",
-        "Frau  Neumann \nFrau  Herrmann ",
-        "0397401 \n415 ",
-        "06 "
-      ]
-    ],
     "left": [
       [
         "101576 \nG ",
@@ -89,7 +10,7 @@
       ],
       [
         "101588 \nG ",
-        " Grundschule \nGoethering  12 \n0  - 1330  Schwedt ",
+        "7.  Grundschule \nGoethering  12 \n0  - 1330  Schwedt ",
         "Frau  Sorrmer \nFrau  Rosentreter ",
         "03332/ \n32401 ",
         "03 "
@@ -155,6 +76,85 @@
         "-\nGrundschule  3  - Pestalozzi-Schule \nPestalozzistra\u00dfe  44 \n0  - 2130  Prenzlau ",
         "Herr  Wesenberg \nFrau  Schote ",
         "03984/ \n2224 ",
+        "06 "
+      ]
+    ],
+    "right": [
+      [
+        "103093 \nG ",
+        "Grundschule  4 \nAm  Robert\u00b7Schulz-Ring  58 \no  - 2130  Prenzlau ",
+        "Frau  Dederky \nFrau  Quade ",
+        "039841 \n2189 ",
+        "06  Filial e \n1 "
+      ],
+      [
+        "103718 \nG ",
+        "Grundschule \nR\u00f6ddeliner  Stra\u00dfe \no- 2090  Templin ",
+        "Frau  Delander \nFrau  Benzmann ",
+        "03987/ \n6282 ",
+        "06 "
+      ],
+      [
+        "103720 \nG ",
+        "Lindenschule  Templin \nlychener  Stra\u00dfe  65 \no- 2090  Templin ",
+        "Frau  Liebe \nHerr  Werner ",
+        "039871 \n6872 ",
+        "06 "
+      ],
+      [
+        "103731 \nG ",
+        "Grundschute  Ringenwalde \nDorfstra\u00dfe  19 \n0  .  2091  Ringenwalde ",
+        "Herr  Wei\u00df \nFrau  Hohlbein ",
+        "039881/ \n234 ",
+        "06 \n1 "
+      ],
+      [
+        "103743 \nG ",
+        "Grundschule  Warthe \nDorfstra\u00dfe  9/10 \no  - 2091  Warthe ",
+        "Herr  Hobohm \nFrau  Collin ",
+        "039885/ \n2245 ",
+        "06 "
+      ],
+      [
+        "103755 \nG ",
+        "Grundschule  Hammelspring \nTempliner  Stra\u00dfe  37 \n0  .  2091  Hammelspring ",
+        "Frau  Buchmann \nHerr  Walter ",
+        "03987/ \n2021 ",
+        "06 "
+      ],
+      [
+        "103767 \nG ",
+        "Grundschule \nDorfstra\u00dfe  16 \n0  \u2022  2091  Mittenwalde ",
+        "Frau  Eisner \nFrau  von  Ziemer ",
+        "039884/ \n1534 ",
+        "06 "
+      ],
+      [
+        "1o3n9 \nG ",
+        "Grundschule \nPannwitz-Allee \no  - 2093  Lychen ",
+        "Frau  S\u00fc\u00df \nFrau  Drews ",
+        "0398881 \n434 ",
+        "06 \n1 "
+      ],
+      [
+        "105740 \nG ",
+        "Grundschule  1 \nFischerstra\u00dfe  15116 \n0  .  1320  Angerm\u00fcnde ",
+        "Herr  Bre\u00dfler \nFrau  Kauk ",
+        "033311 \n32506 ",
+        "06 "
+      ],
+      [
+        "105855 \nG ",
+        "Grundschule  Hetzdorf \nDorfstra\u00dfe  4 \no  .  2151  Hetzdorf ",
+        "Frau  M\u00fcller \nFrau  Meyer ",
+        "0397451 \n261 ",
+        "06 "
+      ],
+      [
+        "105867 \nG ",
+        "Grundschule  Werbelew \nDorfstra\u00dfe  33 \no  - 2151  Werbelew ",
+        "Frau  Neumann \nFrau  Herrmann ",
+        "0397401 \n415 ",
         "06 "
       ]
     ]
@@ -265,91 +265,12 @@
         "112197 \nG ",
         "Grundschule  111 \nRosa-Luxemburg-Stra\u00dfe  18 \n0- 2090  Templin ",
         "Frau  Pilz \nHerr  Reinbote ",
-        "\n5485 ",
+        "039671 \n5485 ",
         "06 "
       ]
     ]
   },
   "19": {
-    "right": [
-      [
-        "105181 \nG ",
-        "3.  Grundschule  \"Am  Weinberg\" \nSchulplatz  3 \n0  - 1830  Rathenow ",
-        "Herr  llgner \nHerr  Stieger ",
-        "033851 \n2262 ",
-        "06 \n1 "
-      ],
-      [
-        "105193 \nG ",
-        "4.  Grundschule  \"Geschwister  Scholl\" \nGeschwister-Scholl-Stra\u00dfe   a \n0  - 1830  Rathenow ",
-        "Herr  Kurth \nFrau  Feld ",
-        "033851 \n2105 ",
-        "06 "
-      ],
-      [
-        "105200 \nG ",
-        "Grundschule  \"Altstadt\" \nBaustra\u00dfe  5 \n0  - 1831  Rathenow ",
-        "Herr  Mantau \nFrau  Schmidt ",
-        "033851 \n2324 ",
-        "06 "
-      ],
-      [
-        "105211 \nG ",
-        "5.  Grundschule \nPfarrer-Fr\u00f6hlich-Stra\u00dfe  9 \n0  - 1830  Rathenow ",
-        "Herr  Goldan \nFrau  Herrmann ",
-        "033851 \n2961 ",
-        "06 \n1 "
-      ],
-      [
-        "105223 \nG ",
-        "Grundschule  \"Am  Dachsberg\" \nKarl-Marx-Stra\u00dfe  15 \n0  - 2832  Premnitz ",
-        "Herr  Warnke \nFrau  Sei\u00df ",
-        "033861 \n2023 ",
-        "06 \n1 "
-      ],
-      [
-        "105235 \nG ",
-        "Grundschule  \"Geschwister  Scholl\" \nHauptstra\u00dfe  24 \n0  - 1832  Premnitz ",
-        "Herr  Sch\u00e4fer \nFrau  Kolrep ",
-        "03386/ \n2061 ",
-        "06 "
-      ],
-      [
-        "105247 \nG ",
-        "Grundschule  Milow \nForststra\u00dfe  2  a \n0  - 1831  Mi  low ",
-        "Herr  Schubert \nFrau  Henschel ",
-        "03386/ \n2027 ",
-        "06 \n1 "
-      ],
-      [
-        "105259 \nG ",
-        "Grundschule-S\u00fcd \nM\u00fchlenweg  1 \n0  - 1832  Premnitz ",
-        "Frau  Hahn \nFrau  Hoffmann ",
-        "03386/ \n301 ",
-        "06 \n1 "
-      ],
-      [
-        "105260 \nG ",
-        "Grundschule  \"Otto  Lilienthal\" \nLindenstra\u00dfe  1 \n0  - 1833  Rhinow ",
-        "Herr  Rall \nFrau  G\u00f6tze ",
-        "033875/ \n223 ",
-        "06 "
-      ],
-      [
-        "105272 \nG ",
-        "Grundschule \nParkstra\u00dfe  5 \n0  - 1831  Gro\u00dfwudicke ",
-        "Herr  Sahr \nFrau  Kr\u00fcger ",
-        "033873/ \n238 ",
-        "06 "
-      ],
-      [
-        "105284 \nG ",
-        "Grundschule  Nennhausen \nFontanestra\u00dfe  2 \n0  - 1831  Nennhausen ",
-        "Frau  Liebrecht \nFrau  Schmidt ",
-        "033878/ \n227 ",
-        "06 "
-      ]
-    ],
     "left": [
       [
         "103640 \nG ",
@@ -419,6 +340,85 @@
         "2.  Grundschule  \"Friedrich  Ludwig  Jahn\" \nJahnstra\u00dfe  33 \n0  - 1830  Rathenow ",
         "Frau  Wolf \nHerr  Gens ",
         "03385/ \n2182 ",
+        "06 "
+      ]
+    ],
+    "right": [
+      [
+        "105181 \nG ",
+        "3.  Grundschule  \"Am  Weinberg\" \nSchulplatz  3 \n0  - 1830  Rathenow ",
+        "Herr  llgner \nHerr  Stieger ",
+        "033851 \n2262 ",
+        "06 \n1 "
+      ],
+      [
+        "105193 \nG ",
+        "4.  Grundschule  \"Geschwister  Scholl\" \nGeschwister-Scholl-Stra\u00dfe  7  a \n0  - 1830  Rathenow ",
+        "Herr  Kurth \nFrau  Feld ",
+        "033851 \n2105 ",
+        "06 "
+      ],
+      [
+        "105200 \nG ",
+        "Grundschule  \"Altstadt\" \nBaustra\u00dfe  5 \n0  - 1831  Rathenow ",
+        "Herr  Mantau \nFrau  Schmidt ",
+        "033851 \n2324 ",
+        "06 "
+      ],
+      [
+        "105211 \nG ",
+        "5.  Grundschule \nPfarrer-Fr\u00f6hlich-Stra\u00dfe  9 \n0  - 1830  Rathenow ",
+        "Herr  Goldan \nFrau  Herrmann ",
+        "033851 \n2961 ",
+        "06 \n1 "
+      ],
+      [
+        "105223 \nG ",
+        "Grundschule  \"Am  Dachsberg\" \nKarl-Marx-Stra\u00dfe  15 \n0  - 2832  Premnitz ",
+        "Herr  Warnke \nFrau  Sei\u00df ",
+        "033861 \n2023 ",
+        "06 \n1 "
+      ],
+      [
+        "105235 \nG ",
+        "Grundschule  \"Geschwister  Scholl\" \nHauptstra\u00dfe  24 \n0  - 1832  Premnitz ",
+        "Herr  Sch\u00e4fer \nFrau  Kolrep ",
+        "03386/ \n2061 ",
+        "06 "
+      ],
+      [
+        "105247 \nG ",
+        "Grundschule  Milow \nForststra\u00dfe  2  a \n0  - 1831  Mi  low ",
+        "Herr  Schubert \nFrau  Henschel ",
+        "03386/ \n2027 ",
+        "06 \n1 "
+      ],
+      [
+        "105259 \nG ",
+        "Grundschule-S\u00fcd \nM\u00fchlenweg  1 \n0  - 1832  Premnitz ",
+        "Frau  Hahn \nFrau  Hoffmann ",
+        "03386/ \n301 ",
+        "06 \n1 "
+      ],
+      [
+        "105260 \nG ",
+        "Grundschule  \"Otto  Lilienthal\" \nLindenstra\u00dfe  1 \n0  - 1833  Rhinow ",
+        "Herr  Rall \nFrau  G\u00f6tze ",
+        "033875/ \n223 ",
+        "06 "
+      ],
+      [
+        "105272 \nG ",
+        "Grundschule \nParkstra\u00dfe  5 \n0  - 1831  Gro\u00dfwudicke ",
+        "Herr  Sahr \nFrau  Kr\u00fcger ",
+        "033873/ \n238 ",
+        "06 "
+      ],
+      [
+        "105284 \nG ",
+        "Grundschule  Nennhausen \nFontanestra\u00dfe  2 \n0  - 1831  Nennhausen ",
+        "Frau  Liebrecht \nFrau  Schmidt ",
+        "033878/ \n227 ",
         "06 "
       ]
     ]
