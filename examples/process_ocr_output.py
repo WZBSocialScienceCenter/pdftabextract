@@ -77,7 +77,7 @@ extract_conf = {
 tabextract.set_config(extract_conf)
 
 # Extract tabular data
-tabdata, skipped_pages = tabextract.extract_tabular_data_from_xmlroot(xmlroot)
+tabdata, skipped_pages, page_grids = tabextract.extract_tabular_data_from_xmlroot(xmlroot)
 
 print('SKIPPED PAGES DURING DATA EXTRACTION:')
 for p_id in sorted(skipped_pages, key=lambda x: x[0]):

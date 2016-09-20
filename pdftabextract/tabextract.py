@@ -22,8 +22,25 @@ from pdftabextract.common import read_xml, parse_pages, get_bodytexts, divide_te
 _conf = {}  # global configuration settings
 
 
-# TODO: test with subpages that are not really subpages
 # TODO: real logging instead of print()
+
+#%%
+
+class JSONEncoderPlus(json.JSONEncoder):
+    """
+    JSON encode also for iterables
+    Needed for save_page_grids()
+    """
+    def default(self, o):
+       try:
+           iterable = iter(o)
+       except TypeError:
+           pass
+       else:
+           return list(iterable)
+       # Let the base class default method raise the TypeError
+       return super().default(self, o)
+
 
 #%%
 def set_config(c):
@@ -57,6 +74,7 @@ def extract_tabular_data_from_subpages(subpages):
         
     # go through all subpages
     output = OrderedDict()
+    page_grids = OrderedDict()
     skipped_pages = []
     for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
         if p_id in skip_pages:
@@ -91,9 +109,9 @@ def extract_tabular_data_from_subpages(subpages):
         
         # fit the textboxes from this subpage into the tabular grid defined by the
         # row and column positions
-        table = create_datatable_from_subpage(sub_p,
-                                              row_positions=row_positions,
-                                              col_positions=subp_col_positions)
+        table, grid = create_datatable_from_subpage(sub_p,
+                                                    row_positions=row_positions,
+                                                    col_positions=subp_col_positions)
 
         # create a table of texts from the textboxes inside the table cells
         table_texts = []
@@ -107,8 +125,9 @@ def extract_tabular_data_from_subpages(subpages):
         
         # add this table to the output
         output[pagenum][pageside] = table_texts
+        page_grids[pagenum][pageside] = grid
 
-    return output, skip_pages + skipped_pages
+    return output, skip_pages + skipped_pages, page_grids
 
 
 def save_tabular_data_dict_as_json(data, jsonfile):
@@ -125,6 +144,11 @@ def save_tabular_data_dict_as_csv(data, csvfile):
         csv_header = ['page_num', 'page_side'] + ['col' + str(i+1) for i in range(n_addcols)]
         
         csvwriter.writerows([csv_header] + csv_rows)
+
+
+def save_page_grids(page_grids, jsonfile):
+    with open(jsonfile, 'w') as f:
+        json.dump(page_grids, f, cls=JSONEncoderPlus)
 
 
 def convert_tabular_data_dict_to_matrix(data):
@@ -397,7 +421,7 @@ def create_datatable_from_subpage(subpage, row_positions, col_positions):
             warning("subpage %d/%s: no cell found for textblock '%s'" % (subpage['number'], subpage['subpage'],
                                                                          t['value']))
     
-    return table
+    return table, grid
     
 
 def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
