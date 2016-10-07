@@ -19,8 +19,6 @@ from .common import read_xml, parse_pages, get_bodytexts, divide_texts_horizonta
 
 _conf = {}  # global configuration settings
 
-#%%
-
 def set_config(c):
     global _conf
     _conf = c
@@ -29,8 +27,9 @@ def set_config(c):
 def set_config_option(o, v):
     _conf[o] = v
 
-
-def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None):
+#%%
+def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None,
+                 use_sides=set(('left', 'top', 'right', 'bottom'))):
     override_angles = override_angles or {}
     tree, root = read_xml(input_xml)
     
@@ -72,6 +71,7 @@ def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None):
         # only fix rotation of pages that have a certain minimum amount of content (perc. of mean content length)
         if contentlength_mean_dev_ratio >= _conf.get('min_content_length_from_mean', 0):
             rotation_results[p_id] = fix_rotation_for_page(sub_p, corner_box_cond_fns,
+                                                           use_sides=use_sides,
                                                            manual_rot_angle=manual_rot_angle)
         else:
             print("skipping page '%d/%s': not enough content (%f perc. of the mean %f)"
@@ -84,7 +84,8 @@ def fix_rotation(input_xml, corner_box_cond_fns=None, override_angles=None):
 #%%
 
 
-def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft):
+def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bottomleft,
+                        use_sides=set(('left', 'top', 'right', 'bottom'))):
     up = pt(0, 1)
     right = pt(1, 0)
 
@@ -92,27 +93,27 @@ def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bott
     lcol_align = _conf.get('leftmost_col_align', 'topleft')    
     rcol_align = _conf.get('rightmost_col_align', 'topleft')    
     
-    if text_bottomleft and text_topleft:  # left side
+    if 'left' in use_sides and text_bottomleft and text_topleft:  # left side
         vec_left = text_bottomleft[lcol_align] - text_topleft[lcol_align]
         vec_left[0] *= -1   # because our coordinate system is upside down
         a = vecangle(vec_left, up)
         a = -a if vec_left[0] < 0 else a
         angles_list.append(a)
     
-    if text_bottomright and text_topright: # right side
+    if 'right' in use_sides and text_bottomright and text_topright: # right side
         vec_right = text_bottomright[rcol_align] - text_topright[rcol_align]
         vec_right[0] *= -1  # because our coordinate system is upside down
         a = vecangle(vec_right, up)
         a = -a if vec_right[0] < 0 else a
         angles_list.append(a)
         
-    if text_topright and text_topleft:     # top side
+    if 'top' in use_sides and text_topright and text_topleft:     # top side
         vec_top = text_topright[rcol_align] - text_topleft[lcol_align]
         a = vecangle(vec_top, right)
         a = -a if vec_top[1] < 0 else a
         angles_list.append(a)
 
-    if text_bottomright and text_bottomleft:  # bottom side
+    if 'bottom' in use_sides and text_bottomright and text_bottomleft:  # bottom side
         vec_bottom = text_bottomright[rcol_align] - text_bottomleft[lcol_align]
         a = -a if vec_bottom[1] < 0 else a
         angles_list.append(a)
@@ -131,7 +132,8 @@ def page_rotation_angle(text_topleft, text_topright, text_bottomright, text_bott
     return np.median(angles)
 
 
-def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
+def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None,
+                          use_sides=set(('left', 'top', 'right', 'bottom'))):
     """
     :param p page or subpage
     """    
@@ -155,7 +157,7 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
 #        print("page %s: corner %s %s" % (p_name, corners[i], infostr))
 
     if manual_rot_angle is None:        
-        page_rot = page_rotation_angle(*page_corners_texts)
+        page_rot = page_rotation_angle(*page_corners_texts, use_sides=use_sides)
         print("page %s: rotation %f" % (p_name, math.degrees(page_rot)))
     else:
         page_rot = manual_rot_angle
@@ -169,15 +171,21 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None):
         return False, 'marginal_rotation'
     
     text_topleft, text_bottomleft = page_corners_texts[0], page_corners_texts[3]
-    bottomline_pts = (
-        pt(0, p['height']),
-        pt(p['x_offset'] + p['width'], p['height'])
-    )
-    
-    rot_about = pointintersect(text_topleft['topleft'], text_bottomleft['bottomleft'], *bottomline_pts,
-                               check_in_segm=False)
-    if sum(np.isnan(rot_about)) > 0:
-        return False, 'no_rotation_point_found'
+   
+    if text_topleft is not None and text_bottomleft is not None:    
+        bottomline_pts = (
+            pt(0, p['height']),
+            pt(p['x_offset'] + p['width'], p['height'])
+        )
+            
+        rot_about = pointintersect(text_topleft['topleft'], text_bottomleft['bottomleft'], *bottomline_pts,
+                                   check_in_segm=False)
+    else:
+        rot_about = None
+
+    if rot_about is None or np.sum(np.isnan(rot_about)) != 0:
+        print("page %s: rotation point could not be identified or is undefined" % p_name)
+        rot_about = pt(p['x_offset'], p['height'])
     
     print("page %s: rotate about %f, %f" % (p_name, rot_about[0], rot_about[1]))
     
