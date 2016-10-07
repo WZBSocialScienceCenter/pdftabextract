@@ -48,27 +48,84 @@ def line_from_points(p1, p2):
     return a, b
 
 
+def overlap(a1, a2, b1, b2):
+    """
+    Check if ranges a1-a2 and b1-b2 overlap.
+    """
+    a_min = min(a1, a2)
+    a_max = max(a1, a2)
+    b_min = min(b1, b2)
+    b_max = max(b1, b2)
+    
+    return a_min <= b_min <= a_max or b_min <= a_min <= b_max or \
+           a_min <= b_max <= a_max or b_min <= a_max <= b_max
+
+
 def pointintersect(p1, p2, p3, p4, check_in_segm=True):
-    a, b = line_from_points(p1, p2)
-    c, d = line_from_points(p3, p4)
+    """
+    Check if two lines made from (p1, p2) and (p3, p4) respectively, intersect.
     
-    x = (d - b) / (a - c)
-    y = (a * d - b * c) / (a - c)
+    If check_in_segm is True, will check that the line segments actually intersect,
+    will calculate intersection of inifite lines.
     
-    range_xs = (
-        (min(p1[0], p2[0]), max(p1[0], p2[0])),
-        (min(p3[0], p4[0]), max(p3[0], p4[0])),
-    )
-    range_ys = (
-        (min(p1[1], p2[1]), max(p1[1], p2[1])),
-        (min(p3[1], p4[1]), max(p3[1], p4[1])),
-    )
+    If no intersection is found, returns None
+    For parallel lines, returns pt(np.nan, np.nan) if they are coincident.
+    For non-parallel lines, returns point of intersection as pt(x, y)
     
-    if not check_in_segm or (check_in_segm and all((rx[0] <= x <= rx[1] for rx in range_xs)) \
-            and all((ry[0] <= y <= ry[1] for ry in range_ys))):
-        return pt(x, y)
-    else:
-        return None
+    See http://mathworld.wolfram.com/Line-LineIntersection.html
+    """    
+    
+    # check for intersection in infinity
+    p1p2 = np.array([p1, p2])
+    p3p4 = np.array([p3, p4])
+    
+    det_p1p2 = np.linalg.det(p1p2)
+    det_p3p4 = np.linalg.det(p3p4)
+    diff_x12 = p1[0] - p2[0]
+    diff_x34 = p3[0] - p4[0]
+    diff_y12 = p1[1] - p2[1]
+    diff_y34 = p3[1] - p4[1]
+    
+    x_num_mat = np.array([[det_p1p2, diff_x12], [det_p3p4, diff_x34]])
+    y_num_mat = np.array([[det_p1p2, diff_y12], [det_p3p4, diff_y34]])
+    den_mat = np.array([[diff_x12, diff_y12], [diff_x34, diff_y34]])
+    den = np.linalg.det(den_mat)
+    
+    if den == 0:  # parallel
+        isect_x = np.nan
+        isect_y = np.nan
+        parallel = True
+    else:         # not parallel
+        isect_x = np.linalg.det(x_num_mat) / den
+        isect_y = np.linalg.det(y_num_mat) / den
+        parallel = False
+    
+    P = pt(isect_x, isect_y)    
+    
+    if not check_in_segm and not parallel:   # no segment checking necessary
+        return P
+        
+    if parallel:  # check if parallel segments are coincident
+        if overlap(p1[0], p2[0], p3[0], p4[0]) and overlap(p1[1], p2[1], p3[1], p4[1]):
+            return P      # lines coincident -> return pt(np.nan, np.nan)
+        else:
+            return None   # no intersection in segment, only parallel
+    else:  # non parallel intersection -> check if segments are in range
+        range_xs = (
+            (min(p1[0], p2[0]), max(p1[0], p2[0])),
+            (min(p3[0], p4[0]), max(p3[0], p4[0])),
+        )
+        range_ys = (
+            (min(p1[1], p2[1]), max(p1[1], p2[1])),
+            (min(p3[1], p4[1]), max(p3[1], p4[1])),
+        )        
+        
+        in_range = (all((rx[0] <= P[0] <= rx[1] for rx in range_xs)) \
+                    and all((ry[0] <= P[1] <= ry[1] for ry in range_ys)))
+        if in_range:
+            return P     # intersection of segments
+        else:
+            return None  # no intersection
 
 
 def rect(lefttop, rightbottom):
