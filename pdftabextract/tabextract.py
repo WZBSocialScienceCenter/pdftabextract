@@ -361,7 +361,8 @@ def analyze_subpage_layouts(subpages):
                 if split_col + 1 < len(best_col_pos_medians[side]):
                     x2 = best_col_pos_medians[side][split_col + 1]
                 else:
-                    x2 = subpages[(1, side)]['width']
+                    first_pagenum = sorted(subpages.keys(), key=lambda x: x[0])[0][0]
+                    x2 = subpages[(first_pagenum, side)]['width']
                     
                 best_col_pos_medians[side].append(x1 + (x2 - x1) * split_ratio)
                 best_col_pos_medians[side] = list(sorted(best_col_pos_medians[side]))
