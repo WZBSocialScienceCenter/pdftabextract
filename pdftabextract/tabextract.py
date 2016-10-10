@@ -771,12 +771,16 @@ def identify_sections_in_direction(texts, direction, break_section_on_distance):
     # break into sections
     texts_in_secs = []
     cur_sec = []
-    for t, dist in zip(sorted_texts, dists):
-        if dist >= break_section_on_distance:   # if the distance is higher than break_section_on_distance
+    for i, (t, dist) in enumerate(zip(sorted_texts, dists)):
+        # if the distance is higher than break_section_on_distance
+        if dist >= break_section_on_distance:
             texts_in_secs.append(cur_sec)       # save the current section
             cur_sec = []                        # and create a new section
 
         cur_sec.append(t)
+        
+    if cur_sec:  # if the last section was not added, do it now
+        texts_in_secs.append(cur_sec)       # save the current section            
     
     return texts_in_secs
 
