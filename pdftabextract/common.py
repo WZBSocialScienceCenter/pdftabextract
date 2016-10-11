@@ -259,8 +259,27 @@ def mode(arr):
 def sorted_by_attr(vals, attr, reverse=False):
     return sorted(vals, key=lambda x: x[attr], reverse=reverse)
 
+
+def list_from_attr(vals, attr, **kwargs):
+    if 'default' in kwargs:
+        return [v.get(attr, kwargs['default']) for v in vals]
+    else:
+        return [v[attr] for v in vals]
+
     
 def flatten_list(l):
     return sum(l, [])
 
 
+def any_of_a_in_b(a, b):
+    return any(s in b for s in a)
+
+    
+def all_of_a_in_b(a, b):
+    return all(s in b for s in a)
+
+
+def updated_dict_copy(d_orig, d_upd):
+    d = d_orig.copy()
+    d.update(d_upd)
+    return d
