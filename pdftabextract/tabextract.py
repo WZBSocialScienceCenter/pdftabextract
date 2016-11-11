@@ -58,13 +58,13 @@ def extract_tabular_data_from_xmlfile(xmlfile):
     return extract_tabular_data_from_subpages(subpages)
 
 
-def extract_tabular_data_from_xmlroot(xmlroot):
+def extract_tabular_data_from_xmlroot(xmlroot, grids_as_list=False):
     subpages = get_subpages_from_xmlroot(xmlroot)
     
-    return extract_tabular_data_from_subpages(subpages)
+    return extract_tabular_data_from_subpages(subpages, grids_as_list=grids_as_list)
 
 
-def extract_tabular_data_from_subpages(subpages):
+def extract_tabular_data_from_subpages(subpages, grids_as_list=False):
     skip_pages = _conf.get('skip_pages', [])
     
     # analyze the row/column layout of each page and return these layouts,
@@ -75,6 +75,7 @@ def extract_tabular_data_from_subpages(subpages):
     # go through all subpages
     output = OrderedDict()
     page_grids = OrderedDict()
+    page_gridlists = OrderedDict()
     skipped_pages = []
     for p_id in sorted(subpages.keys(), key=lambda x: x[0]):
         if p_id in skip_pages:
@@ -92,6 +93,8 @@ def extract_tabular_data_from_subpages(subpages):
             output[pagenum] = OrderedDict()
         if pagenum not in page_grids:
             page_grids[pagenum] = OrderedDict()
+        if pagenum not in page_gridlists:
+            page_gridlists[pagenum] = OrderedDict()
         
         # get the column positions
         subp_col_positions = list(np.array(col_positions[pageside]) + sub_p['x_offset'] + page_col_offset)
@@ -111,9 +114,10 @@ def extract_tabular_data_from_subpages(subpages):
         
         # fit the textboxes from this subpage into the tabular grid defined by the
         # row and column positions
-        table, grid = create_datatable_from_subpage(sub_p,
-                                                    row_positions=row_positions,
-                                                    col_positions=subp_col_positions)
+        table, grid, grid_list = create_datatable_from_subpage(sub_p,
+                                                               row_positions=row_positions,
+                                                               col_positions=subp_col_positions,
+                                                               grid_as_list=grids_as_list)
 
         # create a table of texts from the textboxes inside the table cells
         table_texts = []
@@ -128,8 +132,12 @@ def extract_tabular_data_from_subpages(subpages):
         # add this table to the output
         output[pagenum][pageside] = table_texts
         page_grids[pagenum][pageside] = grid
+        page_gridlists[pagenum][pageside] = grid_list
 
-    return output, skip_pages + skipped_pages, page_grids
+    if grids_as_list:
+        return output, skip_pages + skipped_pages, page_grids, page_gridlists
+    else:
+        return output, skip_pages + skipped_pages, page_grids
 
 
 def save_tabular_data_dict_as_json(data, jsonfile):
@@ -383,13 +391,29 @@ def analyze_subpage_layouts(subpages):
     
     return layouts, best_col_pos_medians, overall_row_height_mean, page_column_offsets
 
+    
+def grid_dict_to_list(grid, grid_dims):    
+    grid_list = []
+    for r in range(grid_dims[0]):
+        row = []
+        for c in range(grid_dims[1]):
+            row.append(grid[(r, c)])
+        grid_list.append(row)
+    
+    return grid_list
+    
 
-def create_datatable_from_subpage(subpage, row_positions, col_positions):
-    grid = make_grid_from_positions(subpage, row_positions, col_positions)
+def create_datatable_from_subpage(subpage, row_positions, col_positions, grid_as_list=False):
+    grid, grid_dims = make_grid_from_positions(subpage, row_positions, col_positions)
+    
+    if grid_as_list:
+        grid_list = grid_dict_to_list(grid, grid_dims)
+    else:
+        grid_list = None
     
     table = fit_texts_into_grid(subpage['texts'], grid)
     
-    return table, grid
+    return table, grid, grid_list
 
 
 def fit_texts_into_grid(texts, grid, p_id_for_logging=None):
@@ -525,7 +549,7 @@ def make_grid_from_positions(subpage, rowpos, colpos, as_list=False):
         grid = [[rect(pt(l, t), pt(r, b)) for l, r in col_ranges]
                                           for t, b in row_ranges]
 
-    return grid
+    return grid, (len(row_ranges), len(col_ranges))
 
 
 def position_ranges(positions, last_val):
