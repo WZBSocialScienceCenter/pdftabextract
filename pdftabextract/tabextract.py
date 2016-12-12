@@ -537,17 +537,13 @@ def find_col_and_row_positions_in_subpage(subpage, corner_box_cond_fns=None):
     return col_positions, row_positions, ((min_x, max_x), (min_y, max_y))
 
 
-def make_grid_from_positions(subpage, rowpos, colpos, as_list=False):
+def make_grid_from_positions(subpage, rowpos, colpos):
     row_ranges = position_ranges(rowpos, subpage['height'])
     col_ranges = position_ranges(colpos, subpage['x_offset'] + subpage['width'])    
     
     # create a grid with rectangles of table cells
-    if not as_list:
-        grid = {(r_i, c_i): rect(pt(l, t), pt(r, b)) for r_i, (t, b) in enumerate(row_ranges)
-                                                     for c_i, (l, r) in enumerate(col_ranges)}
-    else:
-        grid = [[rect(pt(l, t), pt(r, b)) for l, r in col_ranges]
-                                          for t, b in row_ranges]
+    grid = {(r_i, c_i): rect(pt(l, t), pt(r, b)) for r_i, (t, b) in enumerate(row_ranges)
+                                                 for c_i, (l, r) in enumerate(col_ranges)}
 
     return grid, (len(row_ranges), len(col_ranges))
 
