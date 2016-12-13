@@ -16,11 +16,13 @@ def pt(x, y, dtype=np.float):
     return np.array((x, y), dtype=dtype)
 
 
-def vecdist(p1, p2):
+def ptdist(p1, p2):
+    """distance between two points p1, p2"""
     return np.linalg.norm(p2-p1)
 
 
 def vecangle(v1, v2):
+    """angle between two vectors v1, v2 in radians"""
     denom = (np.linalg.norm(v1) * np.linalg.norm(v2))
     if denom == 0:
         return np.nan
@@ -28,6 +30,7 @@ def vecangle(v1, v2):
 
 
 def vecrotate(v, theta, about=np.array((0,0))):
+    """rotate a vector v by angle theta (in radians) about point <about>"""
     cth = math.cos(theta)
     sth = math.sin(theta)
         
@@ -35,17 +38,6 @@ def vecrotate(v, theta, about=np.array((0,0))):
         cth * v[0] - sth * v[1] + about[0] - cth * about[0] + sth * about[1],
         sth * v[0] + cth * v[1] + about[1] - sth * about[0] - cth * about[1]
     )
-
-
-def line_from_points(p1, p2):
-    """
-    Return a and b for y = a*x + b
-    """
-    v1 = p2 - p1
-    a = v1[1] / v1[0]
-    b = (p2[0] * p1[1] - p1[0] * p2[1]) / v1[0]
-    
-    return a, b
 
 
 def overlap(a1, a2, b1, b2):

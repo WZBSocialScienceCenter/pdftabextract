@@ -14,7 +14,7 @@ import json
 
 import numpy as np
 
-from .geom import pt, vecdist, rect, rectarea
+from .geom import pt, ptdist, rect, rectarea
 
 #%% I/O
 
@@ -169,7 +169,7 @@ def mindist_text(texts, origin, pos_attr, cond_fn=None):
     Get the text that minimizes the distance from its position (defined in pos_attr) to <origin> and satisifies
     the condition function <cond_fn> (if not None).
     """
-    texts_by_dist = sorted(texts, key=lambda t: vecdist(origin, t[pos_attr]))
+    texts_by_dist = sorted(texts, key=lambda t: ptdist(origin, t[pos_attr]))
     
     if not cond_fn:
         return texts_by_dist[0]
