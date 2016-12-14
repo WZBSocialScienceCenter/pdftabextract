@@ -13,7 +13,7 @@ import numpy as np
 from .geom import pt, vecangle, vecrotate, pointintersect
 
 from .common import read_xml, parse_pages, get_bodytexts, divide_texts_horizontally, update_text_dict_pos, \
-                    texts_at_page_corners
+                    texts_at_page_corners, SKEW_X, SKEW_Y
 
 #%%
 
@@ -189,13 +189,46 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None,
     
     print("page %s: rotate about %f, %f" % (p_name, rot_about[0], rot_about[1]))
     
-    for t in p['texts']:
+    rotate_back(p, -page_rot, rot_about)
+    
+    return True, str(-math.degrees(page_rot))
+
+#%%
+
+def rotate_back(page, page_rot, about_pt):
+    for t in page['texts']:
         t_pt = pt(t['left'], t['top'])
         
         # rotate back
-        t_pt_rot = vecrotate(t_pt, -page_rot, rot_about)
+        t_pt_rot = vecrotate(t_pt, page_rot, about_pt)
         
         # update text dict
         update_text_dict_pos(t, t_pt_rot, update_node=True)
+
+
+def deskew(page, skew_radians, skew_direction, about_pt):
+    if skew_direction not in (SKEW_X, SKEW_Y):
+        raise ValueError("invalid parameter value '%s' for skew_direction" % skew_direction)
     
-    return True, str(-math.degrees(page_rot))
+    for t in page['texts']:
+        if skew_direction == SKEW_X:
+            x = t['top'] + t['height'] / 2
+            ref_idx = 1
+            trigon_fn = math.cos
+        else:
+            x = t['left'] + t['width'] / 2
+            ref_idx = 0
+            trigon_fn = math.sin
+
+        # x, y have nothing to do with the x and y in a cartesian coord. system
+        # y is the coordinate that gets changed depending on x
+        d = x - about_pt[ref_idx]
+        y_diff = trigon_fn(skew_radians) * d
+        
+        
+        if skew_direction == SKEW_X:
+            pt_deskewed = pt(t['left'] + y_diff, t['top'])
+        else:
+            pt_deskewed = pt(t['left'], t['top'] + y_diff)
+        
+        update_text_dict_pos(t, pt_deskewed, update_node=True)

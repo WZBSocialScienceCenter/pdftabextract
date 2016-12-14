@@ -10,11 +10,19 @@ Created on Tue Jun  7 10:49:35 2016
 
 import xml.etree.ElementTree as ET
 from copy import copy
+from collections import OrderedDict
 import json
 
 import numpy as np
 
 from .geom import pt, ptdist, rect, rectarea
+
+#%% Constants
+
+ROTATION = 'r'
+SKEW_X = 'sx'
+SKEW_Y = 'sy'
+
 
 #%% I/O
 
@@ -42,16 +50,24 @@ def save_page_grids(page_grids, output_file):
 #%% parsing
 
 def parse_pages(root):
-    pages = {}
-        
+    pages = OrderedDict()
+    
     for p in root.findall('page'):
         p_num = int(p.attrib['number'])
+        
+        p_image = p.findall('image')
+        if p_image:
+            if len(p_image) != 1:
+                raise ValueError("invalid number of image tags on page %d" % p_num)
+            imgfile = p_image[0].attrib['src']
+        else:
+            imgfile = None
+        
         page = {
             'number': p_num,
+            'image': imgfile,
             'width': int(float(p.attrib['width'])),
             'height': int(float(p.attrib['height'])),
-            'x_offset': 0,
-            'subpage': None,
             'texts': [],
             'xmlnode': p,
         }
