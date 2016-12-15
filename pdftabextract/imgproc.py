@@ -14,6 +14,14 @@ import numpy as np
 import cv2
 
 from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y
+from pdftabextract.geom import pt
+
+
+DIRECTION_HORIZONTAL = 'h'
+DIRECTION_VERTICAL = 'v'
+
+PIHLF = np.pi / 2
+PI4TH = np.pi / 4
 
 
 class ImageProc:    
@@ -25,11 +33,16 @@ class ImageProc:
         self.input_img = None
         self.img_w = None
         self.img_h = None
-        
+                
+        self._reset()
+    
+    def _reset(self):
         self.gray_img = None
         self.edges = None     # edges detected by Canny algorithm
-    
-
+        
+        self.lines_hough = []   # contains tuples (rho, theta, theta_norm, DIRECTION_HORIZONTAL or DIRECTION_VERTICAL)
+        self.lines_ab = []      # contains tuples (point_a, point_b, DIRECTION_HORIZONTAL or DIRECTION_VERTICAL)        
+   
     def detect_lines(self, gray_conversion=cv2.COLOR_BGR2GRAY,
                      canny_low_thresh=50, canny_high_tresh=150, canny_kernel_size=3,
                      hough_rho_res=1,
@@ -46,7 +59,7 @@ class ImageProc:
         self.edges = cv2.Canny(self.gray_img, canny_low_thresh, canny_high_tresh, apertureSize=canny_kernel_size)
         
         if return_output_images:
-            lines_only_img = np.zeros((self.img_w, self.img_h, 1), np.uint8)
+            lines_only_img = np.zeros((self.img_h, self.img_w, 1), np.uint8)
             input_img_copy = np.copy(self.input_img)
         else:
             lines_only_img = None
@@ -57,29 +70,21 @@ class ImageProc:
         # detect lines with hough transform
         lines = cv2.HoughLines(self.edges, hough_rho_res, hough_theta_res, votes_thresh)
         
-        if return_output_images:        
-            max_img_dim = max(self.img_w, self.img_h)
-            
-            for l in lines:
-                rho, theta = l[0]
-                a = np.cos(theta)
-                b = np.sin(theta)
-                x0 = a * rho
-                y0 = b * rho
-                x1 = int(x0 + max_img_dim*(-b))
-                y1 = int(y0 + max_img_dim*(a))
-                x2 = int(x0 - max_img_dim*(-b))
-                y2 = int(y0 - max_img_dim*(a))
+        lines_hough, lines_ab = self._generate_hough_and_ab_lines(lines, self.img_w, self.img_h)
+        
+        if return_output_images:
+            for p1, p2, line_dir in lines_ab:
+                p1 = tuple(p1)
+                p2 = tuple(p2)
+                cv2.line(lines_only_img, p1, p2, 255, 1)
+                line_color = (0, 255, 0) if line_dir == DIRECTION_HORIZONTAL else (0, 0, 255)
+                cv2.line(input_img_copy, p1, p2, line_color, 1)
                 
-                cv2.line(lines_only_img, (x1, y1), (x2, y2), 255, 1)
-                cv2.line(input_img_copy, (x1, y1), (x2, y2), (0,255,0), 1)
-            
-            return lines, lines_only_img, input_img_copy
+            return lines_hough, lines_ab, lines_only_img, input_img_copy
         else:
-            return lines
+            return lines_hough, lines_ab
     
-    @staticmethod
-    def find_rotation_or_skew(lines, rot_thresh, rot_same_dir_thresh):
+    def find_rotation_or_skew(self, rot_thresh, rot_same_dir_thresh):
         """
         Find page rotation or horizontal/vertical skew using detected lines in <lines>. The lines list must consist
         of arrays with the line rotation "theta" at array index 1 like the returned list from detect_lines().
@@ -87,37 +92,24 @@ class ImageProc:
         <rot_same_dir_thresh> is the maximum threshold for the difference between horizontal and vertical line
         rotation.
         """
-        pihlf = np.pi / 2
-        pi4th = np.pi / 4
-
-        hori_deviations = []
-        vert_deviations = []
+        if not self.lines_hough or not self.lines_ab:
+            raise ValueError("no lines present. did you run detect_lines()?")
         
-        for l in lines:
-            _, theta = l[0]
-            
-            if theta >= np.pi:
-                theta_norm = theta - np.pi
-            elif theta < -np.pi:
-                theta_norm = theta + 2 * np.pi
-            elif theta < 0:
-                theta_norm = theta + np.pi
-            else:
-                theta_norm = theta
-            
-            assert 0 <= theta_norm < np.pi
-            
-            hori_deviation = pihlf - theta_norm
-                
-            if abs(hori_deviation) > pi4th:  # vertical
-                deviation = hori_deviation - pihlf
-                if deviation < -pihlf:
+        # get the deviations
+        
+        hori_deviations = []   # deviation from unity vector in x-direction
+        vert_deviations = []   # deviation from unity vector in y-direction
+        
+        for _, _, theta_norm, line_dir in self.lines_hough:                        
+            if line_dir == DIRECTION_VERTICAL:
+                deviation = -theta_norm
+                if deviation < -PIHLF:
                     deviation += np.pi
-                assert abs(deviation) <= pi4th
-                vert_deviations.append(-deviation)
             else:
-                assert abs(hori_deviation) <= pi4th
-                hori_deviations.append(-hori_deviation)
+                deviation = PIHLF - theta_norm
+                
+            assert abs(deviation) <= PI4TH
+            vert_deviations.append(-deviation)
 
         # get the medians
 
@@ -149,25 +141,23 @@ class ImageProc:
 
         return None, None
 
-
     @property
     def imgfile(self):
         return self._imgfile
-    
         
     @imgfile.setter
     def imgfile(self, v):
         self._imgfile = v
         # reset
         self.input_img = None
-        self.gray_img = None
-        self.edges = None
-    
+        self.img_w = None
+        self.img_h = None
         
+        self._reset()
+    
     def _load_imgfile(self):
         # reset
-        self.gray_img = None
-        self.edges = None
+        self._reset()
         
         if self.input_img is not None:   # already loaded
             return
@@ -176,4 +166,73 @@ class ImageProc:
         if self.input_img is None:
             raise IOError("could not load file '%s'" % self.imgfile)
 
-        self.img_w, self.img_h = self.input_img.shape[:2]
+        self.img_h, self.img_w = self.input_img.shape[:2]
+    
+    @staticmethod
+    def _normalize_angle(theta):
+        if theta >= np.pi:
+            theta_norm = theta - np.pi
+        elif theta < -np.pi:
+            theta_norm = theta + 2 * np.pi
+        elif theta < 0:
+            theta_norm = theta + np.pi
+        else:
+            theta_norm = theta
+        
+        assert 0 <= theta_norm < np.pi
+        
+        return theta_norm
+
+    @classmethod
+    def _generate_hough_and_ab_lines(cls, lines, img_w, img_h):
+        lines_hough = []
+        lines_ab = []
+        for l in lines:
+            rho, theta = l[0]
+            theta_norm = cls._normalize_angle(theta)
+                
+            if abs(PIHLF - theta_norm) > PI4TH:  # vertical
+                line_dir = DIRECTION_VERTICAL
+            else:
+                line_dir = DIRECTION_HORIZONTAL
+            
+            # calculate intersections with image dimension minima/maxima
+            
+            cos_theta = np.cos(theta)
+            sin_theta = np.sin(theta)
+                        
+            x_miny = round(rho / cos_theta) if cos_theta != 0 else img_w
+            y_minx = round(rho / sin_theta) if sin_theta != 0 else img_h
+            x_maxy = round((rho - img_h * sin_theta) / cos_theta) if cos_theta != 0 else img_w
+            y_maxx = round((rho - img_w * cos_theta) / sin_theta) if sin_theta != 0 else img_h
+            
+            if 0 <= y_minx < img_h:
+                x1 = 0
+                if 0 <= y_minx < img_h:
+                    y1 = y_minx
+                else:
+                    y1 = y_maxx
+            else:
+                if 0 <= x_maxy < img_w:
+                    x1 = x_maxy
+                else:
+                    x1 = x_miny
+                y1 = img_h
+                
+            if 0 <= x_maxy < img_w:
+                if 0 <= x_miny < img_w:
+                    x2 = x_miny
+                else:
+                    x2 = x_maxy
+                y2 = 0
+            else:
+                x2 = img_w
+                if 0 <= y_maxx < img_h:
+                    y2 = y_maxx
+                else:
+                    y2 = y_minx
+            
+            lines_hough.append((rho, theta, theta_norm, line_dir))
+            lines_ab.append((pt(x1, y1, np.int), pt(x2, y2, np.int), line_dir))
+        
+        return lines_hough, lines_ab

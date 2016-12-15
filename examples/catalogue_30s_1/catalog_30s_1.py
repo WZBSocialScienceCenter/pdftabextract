@@ -31,8 +31,8 @@ for p_num, p in pages.items():
     print("page %d: detecting lines in image file '%s'" % (p_num, imgfile))
     iproc_obj = imgproc.ImageProc(imgfile)
     
-    lines, img_lines, img_on_orig = iproc_obj.detect_lines(return_output_images=True)
-    print("> found %d lines" % len(lines))
+    lines_hough, lines_ab, img_lines, img_on_orig = iproc_obj.detect_lines(return_output_images=True)
+    print("> found %d lines" % len(lines_hough))
     
     img_lines_file = os.path.join(OUTPUTPATH, imgfilebasename + '-lines.png')
     print("> saving image with detected lines to '%s'" % img_lines_file)
@@ -42,19 +42,19 @@ for p_num, p in pages.items():
     print("> saving image with detected lines projected on input image to '%s'" % img_on_orig_file)
     cv2.imwrite(img_on_orig_file, img_on_orig)
     
-    rot_or_skew_type, rot_or_skew_radians = iproc_obj.find_rotation_or_skew(lines, radians(0.5), radians(1))
-    
-    if rot_or_skew_type == ROTATION:
-        print("> rotating back by %f" % -rot_or_skew_radians)
-        rotate_back(p, -rot_or_skew_radians, pt(0, 0))
-    elif rot_or_skew_type in (SKEW_X, SKEW_Y):
-        print("> deskewing in direction '%s' by %f" % (rot_or_skew_type, -rot_or_skew_radians))
-        deskew(p, -rot_or_skew_radians, rot_or_skew_type, pt(0, 0))
-    else:
-        print("> no page rotation / skew found")
-    
-# save repaired XML
-repaired_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.repaired.xml')
-
-print("> saving repaired XML file to '%s'" % repaired_xmlfile)
-xmltree.write(repaired_xmlfile)
+#    rot_or_skew_type, rot_or_skew_radians = iproc_obj.find_rotation_or_skew(lines, radians(0.5), radians(1))
+#    
+#    if rot_or_skew_type == ROTATION:
+#        print("> rotating back by %f" % -rot_or_skew_radians)
+#        rotate_back(p, -rot_or_skew_radians, pt(0, 0))
+#    elif rot_or_skew_type in (SKEW_X, SKEW_Y):
+#        print("> deskewing in direction '%s' by %f" % (rot_or_skew_type, -rot_or_skew_radians))
+#        deskew(p, -rot_or_skew_radians, rot_or_skew_type, pt(0, 0))
+#    else:
+#        print("> no page rotation / skew found")
+#    
+## save repaired XML
+#repaired_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.repaired.xml')
+#
+#print("> saving repaired XML file to '%s'" % repaired_xmlfile)
+#xmltree.write(repaired_xmlfile)
