@@ -189,13 +189,13 @@ def fix_rotation_for_page(p, corner_box_cond_fns, manual_rot_angle=None,
     
     print("page %s: rotate about %f, %f" % (p_name, rot_about[0], rot_about[1]))
     
-    rotate_back(p, -page_rot, rot_about)
+    rotate_textboxes(p, -page_rot, rot_about)
     
     return True, str(-math.degrees(page_rot))
 
 #%%
 
-def rotate_back(page, page_rot, about_pt):
+def rotate_textboxes(page, page_rot, about_pt):
     for t in page['texts']:
         t_pt = pt(t['left'], t['top'])
         
@@ -206,7 +206,7 @@ def rotate_back(page, page_rot, about_pt):
         update_text_dict_pos(t, t_pt_rot, update_node=True)
 
 
-def deskew(page, skew_radians, skew_direction, about_pt):
+def deskew_textboxes(page, skew_radians, skew_direction, about_pt):
     if skew_direction not in (SKEW_X, SKEW_Y):
         raise ValueError("invalid parameter value '%s' for skew_direction" % skew_direction)
     
