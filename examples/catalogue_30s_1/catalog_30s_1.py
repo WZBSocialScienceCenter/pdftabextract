@@ -69,8 +69,8 @@ for p_num, p in pages.items():
         # rotate back or deskew detected lines
         lines_hough = iproc_obj.apply_found_rotation_or_skew(rot_or_skew_type, -rot_or_skew_radians)
         
-        save_image_w_lines(iproc_obj, imgfilebasename + '-fixed', True)
-        save_image_w_lines(iproc_obj, imgfilebasename + '-fixed', False)
+        save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
+        save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
     
 # save repaired XML
