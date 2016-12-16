@@ -12,6 +12,7 @@ import numpy as np
 import cv2
 
 from pdftabextract import imgproc
+from pdftabextract.clustering import find_clusters_1d_break_dist, calc_cluster_centers_1d
 from pdftabextract.geom import pt
 from pdftabextract.common import read_xml, parse_pages, ROTATION, SKEW_X, SKEW_Y
 from pdftabextract.fixrotation import rotate_textboxes, deskew_textboxes
@@ -72,7 +73,7 @@ for p_num, p in pages.items():
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
-    clusters_w_vals = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, imgproc.CLUSTMETHOD_SIMPLE_DIST_THRESH,
+    clusters_w_vals = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
                                               dist_thresh=20)
     print("> found %d clusters" % len(clusters_w_vals))
     

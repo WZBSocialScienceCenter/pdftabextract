@@ -15,12 +15,11 @@ import cv2
 
 from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y
 from pdftabextract.geom import normalize_angle, project_polarcoord_lines
+from pdftabextract.clustering import zip_clusters_and_values
 
 
 DIRECTION_HORIZONTAL = 'h'
 DIRECTION_VERTICAL = 'v'
-
-CLUSTMETHOD_SIMPLE_DIST_THRESH = 'simple_dist'
 
 PIHLF = np.pi / 2
 PI4TH = np.pi / 4
@@ -165,23 +164,23 @@ class ImageProc:
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
-        if method not in (CLUSTMETHOD_SIMPLE_DIST_THRESH, ):
-            raise ValueError("invalid value for 'method': '%s'" % method)
+        if not callable(method):
+            raise ValueError("'method' must be callable")
         
         lines_ab = self.ab_lines_from_hough_lines([l for l in self.lines_hough if l[3] == direction])
         
         coord_idx = 0 if direction == DIRECTION_VERTICAL else 1
         positions = np.array([(l[0][coord_idx] + l[1][coord_idx]) / 2 for l in lines_ab])
         
-        if method == CLUSTMETHOD_SIMPLE_DIST_THRESH:
-            clusters = self._find_clusters_method_simple_dist(positions, **method_kwargs)
+        clusters = method(positions, **method_kwargs)
         
-        clusters_w_vals = []
-        for ind in clusters:
-            vals = positions[ind]
-            clusters_w_vals.append((ind, vals))
+        if type(clusters) != list:
+            raise ValueError("'method' returned invalid clusters (must be list)")
         
-        return clusters_w_vals
+        if len(clusters) > 0 and type(clusters[0]) != np.ndarray:
+            raise ValueError("'method' returned invalid cluster elements (must be list of numpy.ndarray objects)")
+        
+        return zip_clusters_and_values(clusters, positions)
             
     def draw_lines(self, orig_img_as_background=True):
         lines_ab = self.ab_lines_from_hough_lines(self.lines_hough)
@@ -245,35 +244,6 @@ class ImageProc:
         else:
             return np.zeros((self.img_h, self.img_w, 3), np.uint8)
         
-        
-    def _find_clusters_method_simple_dist(self, positions, **kwargs):
-        if 'dist_thresh' not in kwargs:
-            raise ValueError("parameter 'dist_thresh' must be given for cluster method CLUSTMETHOD_SIMPLE_DIST_THRESH")
-        
-        dist_thresh = kwargs['dist_thresh']
-        
-        clusters = []
-        
-        if len(positions) > 0:
-            pos_indices_sorted = np.argsort(positions)
-            pos_sorted = positions[pos_indices_sorted]
-            gaps = np.diff(pos_sorted)
-            
-            cur_clust = [pos_indices_sorted[0]]
-            
-            if len(positions) > 1:
-                for idx, gap in zip(pos_indices_sorted[1:], gaps):
-                    if gap >= dist_thresh:           # create new cluster
-                        clusters.append(np.array(cur_clust))
-                        cur_clust = []
-                    cur_clust.append(idx)
-                
-            clusters.append(np.array(cur_clust))
-        
-        assert len(positions) == sum(map(len, clusters))
-        
-        return clusters
-    
     def _load_imgfile(self):        
         self.input_img = cv2.imread(self.imgfile)
         if self.input_img is None:
