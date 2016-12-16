@@ -20,8 +20,14 @@ from pdftabextract.geom import normalize_angle, project_polarcoord_lines
 DIRECTION_HORIZONTAL = 'h'
 DIRECTION_VERTICAL = 'v'
 
+CLUSTMETHOD_SIMPLE_DIST_THRESH = 'simple_dist'
+
 PIHLF = np.pi / 2
 PI4TH = np.pi / 4
+
+
+def pt_to_tuple(p):
+    return (int(round(p[0])), int(round(p[1])))
 
 
 class ImageProc:
@@ -63,24 +69,7 @@ class ImageProc:
         self.lines_hough = self._generate_hough_lines(lines)
         
         return self.lines_hough
-    
-    def draw_lines(self, orig_img_as_background=True):
-        lines_ab = self.ab_lines_from_hough_lines(self.lines_hough)
         
-        if orig_img_as_background:
-            baseimg = np.copy(self.input_img)
-        else:
-            baseimg = np.zeros((self.img_h, self.img_w, 3), np.uint8)
-        
-        for p1, p2, line_dir in lines_ab:
-            p1 = tuple(p1)
-            p2 = tuple(p2)
-            line_color = (0, 255, 0) if line_dir == DIRECTION_HORIZONTAL else (0, 0, 255)
-            
-            cv2.line(baseimg, p1, p2, line_color, self.DRAW_LINE_WIDTH)
-        
-        return baseimg
-    
     def apply_found_rotation_or_skew(self, rot_or_skew_type, rot_or_skew_radians):        
         if rot_or_skew_type is None or rot_or_skew_radians is None:
             return self.lines_hough
@@ -104,6 +93,13 @@ class ImageProc:
 
     
     def ab_lines_from_hough_lines(self, lines_hough):
+        """
+        From a list of lines <lines_hough> in polar coordinate space, generate lines in cartesian coordinate space
+        from points A to B in image dimension space. A and B are at the respective opposite borders
+        of the line projected into the image.
+        Will return a list with tuples (A, B, DIRECTION_HORIZONTAL or DIRECTION_VERTICAL).
+        """
+        
         projected = project_polarcoord_lines([l[:2] for l in lines_hough], self.img_w, self.img_h)
         return [(p1, p2, line_dir) for (p1, p2), (_, _, _, line_dir) in zip(projected, lines_hough)]
     
@@ -164,6 +160,119 @@ class ImageProc:
             return SKEW_X, median_vert_dev
 
         return None, None
+    
+    def find_clusters(self, direction, method, **method_kwargs):
+        if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+            raise ValueError("invalid value for 'direction': '%s'" % direction)
+        
+        if method not in (CLUSTMETHOD_SIMPLE_DIST_THRESH, ):
+            raise ValueError("invalid value for 'method': '%s'" % method)
+        
+        lines_ab = self.ab_lines_from_hough_lines([l for l in self.lines_hough if l[3] == direction])
+        
+        coord_idx = 0 if direction == DIRECTION_VERTICAL else 1
+        positions = np.array([(l[0][coord_idx] + l[1][coord_idx]) / 2 for l in lines_ab])
+        
+        if method == CLUSTMETHOD_SIMPLE_DIST_THRESH:
+            clusters = self._find_clusters_method_simple_dist(positions, **method_kwargs)
+        
+        clusters_w_vals = []
+        for ind in clusters:
+            vals = positions[ind]
+            clusters_w_vals.append((ind, vals))
+        
+        return clusters_w_vals
+            
+    def draw_lines(self, orig_img_as_background=True):
+        lines_ab = self.ab_lines_from_hough_lines(self.lines_hough)
+        
+        baseimg = self._baseimg_for_drawing(orig_img_as_background)
+        
+        for p1, p2, line_dir in lines_ab:
+            line_color = (0, 255, 0) if line_dir == DIRECTION_HORIZONTAL else (0, 0, 255)
+            
+            cv2.line(baseimg, pt_to_tuple(p1), pt_to_tuple(p2), line_color, self.DRAW_LINE_WIDTH)
+        
+        return baseimg
+
+    def draw_line_clusters(self, direction, clusters_w_vals, orig_img_as_background=True):
+        if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+            raise ValueError("invalid value for 'direction': '%s'" % direction)
+        
+        baseimg = self._baseimg_for_drawing(orig_img_as_background)
+        
+        n_colors = len(clusters_w_vals)
+        color_incr = max(1, round(255 / n_colors))
+        
+        for i, (_, vals) in enumerate(clusters_w_vals):
+            i += 2
+            
+            line_color = (
+                (color_incr * i) % 256,
+                (color_incr * i * i) % 256,
+                (color_incr * i * i * i) % 256,
+            )
+            
+            self.draw_lines_in_dir(baseimg, direction, vals, line_color)
+        
+        return baseimg
+    
+    @staticmethod
+    def draw_lines_in_dir(baseimg, direction, line_positions, line_color, line_width=None):
+        if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+            raise ValueError("invalid value for 'direction': '%s'" % direction)
+        
+        if not line_width:
+            line_width = ImageProc.DRAW_LINE_WIDTH
+    
+        h, w = baseimg.shape[:2]
+        
+        for pos in line_positions:
+            pos = int(round(pos))
+            
+            if direction == DIRECTION_HORIZONTAL:
+                p1 = (0, pos)
+                p2 = (w, pos)
+            else:
+                p1 = (pos, 0)
+                p2 = (pos, h)
+            
+            cv2.line(baseimg, p1, p2, line_color, line_width)
+    
+    def _baseimg_for_drawing(self, use_orig):
+        if use_orig:
+            return np.copy(self.input_img)
+        else:
+            return np.zeros((self.img_h, self.img_w, 3), np.uint8)
+        
+        
+    def _find_clusters_method_simple_dist(self, positions, **kwargs):
+        if 'dist_thresh' not in kwargs:
+            raise ValueError("parameter 'dist_thresh' must be given for cluster method CLUSTMETHOD_SIMPLE_DIST_THRESH")
+        
+        dist_thresh = kwargs['dist_thresh']
+        
+        clusters = []
+        
+        if len(positions) > 0:
+            pos_indices_sorted = np.argsort(positions)
+            pos_sorted = positions[pos_indices_sorted]
+            gaps = np.diff(pos_sorted)
+            
+            cur_clust = [pos_indices_sorted[0]]
+            
+            if len(positions) > 1:
+                for idx, gap in zip(pos_indices_sorted[1:], gaps):
+                    if gap >= dist_thresh:           # create new cluster
+                        clusters.append(np.array(cur_clust))
+                        cur_clust = []
+                    cur_clust.append(idx)
+                
+            clusters.append(np.array(cur_clust))
+        
+        assert len(positions) == sum(map(len, clusters))
+        
+        return clusters
     
     def _load_imgfile(self):        
         self.input_img = cv2.imread(self.imgfile)

@@ -72,6 +72,15 @@ for p_num, p in pages.items():
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
+    clusters_w_vals = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, imgproc.CLUSTMETHOD_SIMPLE_DIST_THRESH,
+                                              dist_thresh=20)
+    print("> found %d clusters" % len(clusters_w_vals))
+    
+    img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_VERTICAL, clusters_w_vals)
+    save_img_file = os.path.join(OUTPUTPATH, '%s-vertical-clusters.png' % imgfilebasename)
+    print("> saving image with detected vertical clusters to '%s'" % save_img_file)
+    cv2.imwrite(save_img_file, img_w_clusters)
+    
     
 # save repaired XML
 repaired_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.repaired.xml')

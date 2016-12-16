@@ -194,11 +194,10 @@ def normalize_angle(theta):
     
     return theta_norm
 
-def project_polarcoord_lines(lines, img_w, img_h, descrete_space=True):
+def project_polarcoord_lines(lines, img_w, img_h):
     """
     Project lines in polar coordinate space <lines> (e.g. from hough transform) onto a canvas of size
     <img_w> by <img_h>.
-    Will round to integers if <descrete_space> is set to True.
     """
     
     lines_ab = []
@@ -240,12 +239,8 @@ def project_polarcoord_lines(lines, img_w, img_h, descrete_space=True):
                 y2 = y_minx
         
         # create points, add to lines
-        if descrete_space:
-            p1 = pt(round(x1), round(y1), np.int)
-            p2 = pt(round(x2), round(y2), np.int)
-        else:
-            p1 = pt(x1, y1)
-            p2 = pt(x2, y2)
+        p1 = pt(x1, y1)
+        p2 = pt(x2, y2)
         
         lines_ab.append((p1, p2))
     
