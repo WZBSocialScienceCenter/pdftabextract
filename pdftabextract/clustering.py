@@ -17,6 +17,9 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
     
     Returns a list if clusters, where each element in the list is a np.array with indices of <vals>.
     """
+    if type(vals) is not np.ndarray:
+        raise ValueError("vals must be a NumPy array")
+    
     clusters = []
     
     if len(vals) > 0:
@@ -51,3 +54,13 @@ def zip_clusters_and_values(clusters, values):
 
 def calc_cluster_centers_1d(clusters_w_vals, method=np.median):
     return [method(vals) for _, vals in clusters_w_vals]
+
+def calc_cluster_centers_range(clusters_w_vals, reduce_clusters_method=np.median, return_centers=False):
+    centers = calc_cluster_centers_1d(clusters_w_vals, method=reduce_clusters_method)
+    rng = max(centers) - min(centers)
+    if return_centers:
+        return rng, centers
+    else:
+        return rng
+
+
