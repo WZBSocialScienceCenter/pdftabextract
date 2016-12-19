@@ -13,9 +13,10 @@ import numpy as np
 import cv2
 
 from pdftabextract import imgproc
-from pdftabextract.clustering import find_clusters_1d_break_dist, calc_cluster_centers_range, zip_clusters_and_values
+from pdftabextract.clustering import find_clusters_1d_break_dist, calc_cluster_centers_range, zip_clusters_and_values, \
+                                     find_best_matching_array
 from pdftabextract.geom import pt
-from pdftabextract.common import read_xml, parse_pages, ROTATION, SKEW_X, SKEW_Y
+from pdftabextract.common import read_xml, parse_pages, fill_array_a_with_values_from_b, ROTATION, SKEW_X, SKEW_Y
 from pdftabextract.fixrotation import rotate_textboxes, deskew_textboxes
 
 
@@ -114,6 +115,7 @@ for p_num, centers in good_cluster_centers.items():
     centers_norm.extend(centers - centers[0])
 
 centers_norm = np.array(centers_norm)
+
 #%%
 centers_norm_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(centers_norm, dist_thresh=MIN_COL_WIDTH/2), centers_norm)
 
@@ -131,74 +133,13 @@ for min_n_values in range(MIN_N_VALUES_PER_CLUSTER_STARTVAL, 0, -1):
         continue
     break
 
-    
-#%%
-#from scipy.cluster.hierarchy import fclusterdata
-#from collections import defaultdict
-#
-#centers_norm_mat = np.array(centers_norm).reshape(len(centers_norm), 1)
-#clust_ind = fclusterdata(centers_norm_mat, N_COL_BORDERS, 'maxclust', 'cityblock', method='average')
-#clust_dict = defaultdict(list)
-#for idx, center in zip(clust_ind, centers_norm):
-#    clust_dict[idx].append(center)
-#
-#center_medians = []
-#for centers in clust_dict.values():
-#    center_medians.append(np.median(centers))
-#
-#center_medians = list(sorted(center_medians))
-
-#%%
-centers1 = all_clusters_centers[1]
-amount_diff = len(centers1) - N_COL_BORDERS
-
-def match_quality_1d(a, b):
-    if len(a) != len(b):
-        raise ValueError('Both arrays must have the same length')
-    
-    if len(a) == 0:
-        raise ValueError('Arrays must be filled')
-    
-    if type(a) is not np.ndarray:
-        a = np.array(a)
-    if type(b) is not np.ndarray:
-        b = np.array(b)
-    
-    return np.sum(np.abs(a - b))
-
-# brute force
-import itertools
-centers_arr = np.array(centers1)
-center_medians_arr = np.array(center_norm_medians)
-
-if amount_diff > 0:    # too many values in centers1
-    del_indices_perm = itertools.permutations(range(len(centers1)), amount_diff)
-    
-    candidates = []
-    for del_ind in del_indices_perm:
-        candidate_arr = np.delete(centers_arr, del_ind)
-        center_medians_w_offset = center_medians_arr + candidate_arr[0]
-        quality = match_quality_1d(candidate_arr, center_medians_w_offset)
-        candidates.append((candidate_arr, quality))
-elif amount_diff < 0:  # too few values in centers1
-    candidates = []
-    
-#%%
-for p_num, centers in all_clusters_centers.values():
-    pass
-
-#max_n_cluster_centers = max(map(len, good_cluster_centers.values()))
+center_norm_medians = np.array(sorted(center_norm_medians))
 
 #%%
 
-values = [
-    [0, 10,     30,         40],
-    [0, 11,     29,         42],
-    [0,  9, 15, 29, 32,     41],
-    [0, 10,     29, 35, 36, 40],
-    [0, 12,     32,         43],
-    [0,  9,                 41],
-]
+for p_num, centers in all_clusters_centers.items():
+    corrected_centers, diffsum = find_best_matching_array(np.array(centers), center_norm_medians)
+    print(p_num, diffsum, corrected_centers)
 
 
 #%%

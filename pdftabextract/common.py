@@ -266,6 +266,36 @@ def levenshtein(source, target):
     return previous_row[-1]
 
 #%% Other functions
+def fill_array_a_with_values_from_b(a, b, fill_indices):
+    """
+    Fill array <a> with values specified by <fill_indices> from <b>.
+    
+    Example:
+    fill_array_a_with_values_from_b(np.array(list('136')), np.array(list('abcdef')), [1, 3, 4])
+    
+    result: ['1' 'b' '3' 'd' 'e' '6']
+    """
+    if type(a) is not np.ndarray:
+        raise ValueError("'a' must be NumPy array")
+    if type(b) is not np.ndarray:
+        raise ValueError("'b' must be NumPy array")
+    
+    if len(fill_indices) != len(b) - len(a):
+        raise ValueError("Invalid number of indices")
+    
+    mrg = []  # result array
+    j = 0     # index in fill_indices
+    k = 0     # index in a
+    for i in range(len(b)):
+        if j < len(fill_indices) and i == fill_indices[j]:
+            mrg.append(b[fill_indices[j]])
+            j += 1
+        else:
+            mrg.append(a[k])
+            k += 1
+    
+    return np.array(mrg)
+
 
 def mode(arr):
     uniques, counts = np.unique(arr, return_counts=True)
