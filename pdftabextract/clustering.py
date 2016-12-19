@@ -11,6 +11,10 @@ import itertools
 
 import numpy as np
 
+from pdftabextract.common import fill_array_a_with_values_from_b
+
+
+#%% Clustering
 
 def find_clusters_1d_break_dist(vals, dist_thresh):
     """
@@ -42,6 +46,83 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
     assert len(vals) == sum(map(len, clusters))
     
     return clusters
+
+
+#%% Cluster adjustment
+
+def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviation,
+                                 find_center_clusters_method, **kwargs):
+    """
+    From a dict containing clusters per page, find the cluster centers and apply some adjustments to them
+    (filter bad values, interpolate missing values).
+    Return the adjusted cluster centers in a dict with page number -> cluster center mapping.
+    If parament <return_center_clusters_diffsums> is True, additionally return a dict with summed differences between
+    found centers and "model" centers as quality measure.
+    <n_required_clusters> is the number of cluster centers (i.e. number of columns or lines) to be found.
+    <max_range_deviation> is the maximum deviation of the centers range of a page from the median range.
+    <find_center_clusters_method> is the clustering method to cluster aligned ("normalized") centers (<kwargs> will
+    be passed to this function).
+    """
+    return_center_clusters_diffsums = kwargs.get('return_center_clusters_diffsums', False)
+    
+    # 1. Filter for pages with clusters whose min/max range is acceptable
+    # (i.e. the deviation from the median is below a certain threshold)
+    all_clusters_centers_range = {}
+    all_clusters_centers = {}
+    for p_num, clusters_w_vals in clusters.items():
+        all_clusters_centers_range[p_num], all_clusters_centers[p_num] = calc_cluster_centers_range(clusters_w_vals,
+                                                                                                    return_centers=True)
+    median_range = np.median(list(all_clusters_centers_range.values()))
+    
+    good_page_nums = [p_num for p_num, centers_range in all_clusters_centers_range.items()
+                      if abs(centers_range - median_range) <= max_range_deviation]
+    
+    good_cluster_centers = {p_num: all_clusters_centers[p_num] for p_num in good_page_nums}
+    
+    # 2. Align the cluster centers so that they all start with 0 and create a flat list that contains all centers
+    centers_norm = []
+    for p_num, centers in good_cluster_centers.items():
+        centers = np.array(centers)
+        centers_norm.extend(centers - centers[0])
+    
+    centers_norm = np.array(centers_norm)
+
+    # 3. Clustering second pass: Cluster aligned ("normalized") centers and filter them
+    centers_norm_clusters_ind = find_center_clusters_method(centers_norm, **kwargs)
+    centers_norm_clusters = zip_clusters_and_values(centers_norm_clusters_ind, centers_norm)
+    
+    center_norm_medians = []
+    
+    # Filter clusters: take only clusters with at least <min_n_values> inside. Decrease this value on each iteration.
+    for min_n_values in range(len(good_page_nums), 0, -1):
+        for _, vals in centers_norm_clusters:
+            if len(vals) >= min_n_values:
+                center_norm_medians.append(np.median(vals))
+        
+            if len(center_norm_medians) == n_required_clusters:
+                break
+        else:
+            continue
+        break
+    
+    assert len(center_norm_medians) == n_required_clusters
+    
+    center_norm_medians = np.array(sorted(center_norm_medians))
+
+    # 4. Adjust the cluster centers by finding the best matching array to <center_norm_medians> if sizes differ
+    adjusted_centers = {}
+    diffsums = {} if return_center_clusters_diffsums else None
+    for p_num, centers in all_clusters_centers.items():
+        corrected_centers, diffsum = find_best_matching_array(np.array(centers), center_norm_medians)
+        adjusted_centers[p_num] = corrected_centers
+        if return_center_clusters_diffsums:
+            diffsums[p_num] = diffsum
+    
+    if return_center_clusters_diffsums:
+        return adjusted_centers, diffsums
+    else:
+        return adjusted_centers
+
 
 #%% Helper functions
     
@@ -140,9 +221,9 @@ def find_best_matching_array(base_arr, model_arr):
         3
     """
     if type(base_arr) is not np.ndarray:
-        raise ValueError("base_arr must be NumPy array")
+        raise TypeError("base_arr must be NumPy array")
     if type(model_arr) is not np.ndarray:
-        raise ValueError("model_arr must be NumPy array")
+        raise TypeError("model_arr must be NumPy array")
     
     amount_diff = len(base_arr)  - len(model_arr)
     

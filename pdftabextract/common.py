@@ -276,9 +276,9 @@ def fill_array_a_with_values_from_b(a, b, fill_indices):
     result: ['1' 'b' '3' 'd' 'e' '6']
     """
     if type(a) is not np.ndarray:
-        raise ValueError("'a' must be NumPy array")
+        raise TypeError("'a' must be NumPy array")
     if type(b) is not np.ndarray:
-        raise ValueError("'b' must be NumPy array")
+        raise TypeError("'b' must be NumPy array")
     
     if len(fill_indices) != len(b) - len(a):
         raise ValueError("Invalid number of indices")
