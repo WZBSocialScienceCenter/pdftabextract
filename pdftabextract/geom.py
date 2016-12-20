@@ -16,11 +16,13 @@ def pt(x, y, dtype=np.float):
     return np.array((x, y), dtype=dtype)
 
 
-def vecdist(p1, p2):
+def ptdist(p1, p2):
+    """distance between two points p1, p2"""
     return np.linalg.norm(p2-p1)
 
 
 def vecangle(v1, v2):
+    """angle between two vectors v1, v2 in radians"""
     denom = (np.linalg.norm(v1) * np.linalg.norm(v2))
     if denom == 0:
         return np.nan
@@ -28,6 +30,7 @@ def vecangle(v1, v2):
 
 
 def vecrotate(v, theta, about=np.array((0,0))):
+    """rotate a vector v by angle theta (in radians) about point <about>"""
     cth = math.cos(theta)
     sth = math.sin(theta)
         
@@ -35,17 +38,6 @@ def vecrotate(v, theta, about=np.array((0,0))):
         cth * v[0] - sth * v[1] + about[0] - cth * about[0] + sth * about[1],
         sth * v[0] + cth * v[1] + about[1] - sth * about[0] - cth * about[1]
     )
-
-
-def line_from_points(p1, p2):
-    """
-    Return a and b for y = a*x + b
-    """
-    v1 = p2 - p1
-    a = v1[1] / v1[0]
-    b = (p2[0] * p1[1] - p1[0] * p2[1]) / v1[0]
-    
-    return a, b
 
 
 def overlap(a1, a2, b1, b2):
@@ -186,3 +178,70 @@ def rectintersect(a, b, norm_intersect_area=None):
         return min(max_a, np.min(np.abs(d[0:2])) * np.min(np.abs(d[2:4]))) / norm_with
     else:
         return None
+
+def normalize_angle(theta):
+    """Normalize an angle theta to theta_norm so that: 0 <= theta_norm < np.pi"""
+    if theta >= np.pi:
+        theta_norm = theta - np.pi
+    elif theta < -np.pi:
+        theta_norm = theta + 2 * np.pi
+    elif theta < 0:
+        theta_norm = theta + np.pi
+    else:
+        theta_norm = theta
+    
+    assert 0 <= theta_norm < np.pi
+    
+    return theta_norm
+
+def project_polarcoord_lines(lines, img_w, img_h):
+    """
+    Project lines in polar coordinate space <lines> (e.g. from hough transform) onto a canvas of size
+    <img_w> by <img_h>.
+    """
+    
+    lines_ab = []
+    for rho, theta in lines:        
+        # calculate intersections with canvas dimension minima/maxima
+        
+        cos_theta = np.cos(theta)
+        sin_theta = np.sin(theta)
+                    
+        x_miny = rho / cos_theta if cos_theta != 0 else img_w
+        y_minx = rho / sin_theta if sin_theta != 0 else img_h
+        x_maxy = (rho - img_h * sin_theta) / cos_theta if cos_theta != 0 else img_w
+        y_maxx = (rho - img_w * cos_theta) / sin_theta if sin_theta != 0 else img_h
+        
+        if 0 <= y_minx < img_h:
+            x1 = 0
+            if 0 <= y_minx < img_h:
+                y1 = y_minx
+            else:
+                y1 = y_maxx
+        else:
+            if 0 <= x_maxy < img_w:
+                x1 = x_maxy
+            else:
+                x1 = x_miny
+            y1 = img_h
+            
+        if 0 <= x_maxy < img_w:
+            if 0 <= x_miny < img_w:
+                x2 = x_miny
+            else:
+                x2 = x_maxy
+            y2 = 0
+        else:
+            x2 = img_w
+            if 0 <= y_maxx < img_h:
+                y2 = y_maxx
+            else:
+                y2 = y_minx
+        
+        # create points, add to lines
+        p1 = pt(x1, y1)
+        p2 = pt(x2, y2)
+        
+        lines_ab.append((p1, p2))
+    
+    return lines_ab

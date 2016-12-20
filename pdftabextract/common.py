@@ -10,11 +10,19 @@ Created on Tue Jun  7 10:49:35 2016
 
 import xml.etree.ElementTree as ET
 from copy import copy
+from collections import OrderedDict
 import json
 
 import numpy as np
 
-from .geom import pt, vecdist, rect, rectarea
+from .geom import pt, ptdist, rect, rectarea
+
+#%% Constants
+
+ROTATION = 'r'
+SKEW_X = 'sx'
+SKEW_Y = 'sy'
+
 
 #%% I/O
 
@@ -42,16 +50,24 @@ def save_page_grids(page_grids, output_file):
 #%% parsing
 
 def parse_pages(root):
-    pages = {}
-        
+    pages = OrderedDict()
+    
     for p in root.findall('page'):
         p_num = int(p.attrib['number'])
+        
+        p_image = p.findall('image')
+        if p_image:
+            if len(p_image) != 1:
+                raise ValueError("invalid number of image tags on page %d" % p_num)
+            imgfile = p_image[0].attrib['src']
+        else:
+            imgfile = None
+        
         page = {
             'number': p_num,
+            'image': imgfile,
             'width': int(float(p.attrib['width'])),
             'height': int(float(p.attrib['height'])),
-            'x_offset': 0,
-            'subpage': None,
             'texts': [],
             'xmlnode': p,
         }
@@ -169,7 +185,7 @@ def mindist_text(texts, origin, pos_attr, cond_fn=None):
     Get the text that minimizes the distance from its position (defined in pos_attr) to <origin> and satisifies
     the condition function <cond_fn> (if not None).
     """
-    texts_by_dist = sorted(texts, key=lambda t: vecdist(origin, t[pos_attr]))
+    texts_by_dist = sorted(texts, key=lambda t: ptdist(origin, t[pos_attr]))
     
     if not cond_fn:
         return texts_by_dist[0]
@@ -250,6 +266,36 @@ def levenshtein(source, target):
     return previous_row[-1]
 
 #%% Other functions
+def fill_array_a_with_values_from_b(a, b, fill_indices):
+    """
+    Fill array <a> with values specified by <fill_indices> from <b>.
+    
+    Example:
+    fill_array_a_with_values_from_b(np.array(list('136')), np.array(list('abcdef')), [1, 3, 4])
+    
+    result: ['1' 'b' '3' 'd' 'e' '6']
+    """
+    if type(a) is not np.ndarray:
+        raise TypeError("'a' must be NumPy array")
+    if type(b) is not np.ndarray:
+        raise TypeError("'b' must be NumPy array")
+    
+    if len(fill_indices) != len(b) - len(a):
+        raise ValueError("Invalid number of indices")
+    
+    mrg = []  # result array
+    j = 0     # index in fill_indices
+    k = 0     # index in a
+    for i in range(len(b)):
+        if j < len(fill_indices) and i == fill_indices[j]:
+            mrg.append(b[fill_indices[j]])
+            j += 1
+        else:
+            mrg.append(a[k])
+            k += 1
+    
+    return np.array(mrg)
+
 
 def mode(arr):
     uniques, counts = np.unique(arr, return_counts=True)
