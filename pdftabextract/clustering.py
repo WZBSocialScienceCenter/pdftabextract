@@ -56,14 +56,17 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     From a dict containing clusters per page, find the cluster centers and apply some adjustments to them
     (filter bad values, interpolate missing values).
     Return the adjusted cluster centers in a dict with page number -> cluster center mapping.
-    If parament <return_center_clusters_diffsums> is True, additionally return a dict with summed differences between
+    If parameter <return_center_clusters_diffsums> is True, additionally return a dict with summed differences between
     found centers and "model" centers as quality measure.
     <n_required_clusters> is the number of cluster centers (i.e. number of columns or lines) to be found.
     <max_range_deviation> is the maximum deviation of the centers range of a page from the median range.
     <find_center_clusters_method> is the clustering method to cluster aligned ("normalized") centers (<kwargs> will
     be passed to this function).
+    <image_scaling> is an optional parameter: dict with page number -> <scaling> mapping with which the
+    final centers for each page are calculated by <center> / <scaling>.
     """
-    return_center_clusters_diffsums = kwargs.get('return_center_clusters_diffsums', False)
+    return_center_clusters_diffsums = kwargs.pop('return_center_clusters_diffsums', False)
+    image_scaling = kwargs.pop('image_scaling', None)
     
     # 1. Filter for pages with clusters whose min/max range is acceptable
     # (i.e. the deviation from the median is below a certain threshold)
@@ -114,6 +117,11 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     diffsums = {} if return_center_clusters_diffsums else None
     for p_num, centers in all_clusters_centers.items():
         corrected_centers, diffsum = find_best_matching_array(np.array(centers), center_norm_medians)
+        
+        if image_scaling is not None:
+            scaling_for_page = image_scaling[p_num]
+            corrected_centers /= scaling_for_page
+        
         adjusted_centers[p_num] = corrected_centers
         if return_center_clusters_diffsums:
             diffsums[p_num] = diffsum

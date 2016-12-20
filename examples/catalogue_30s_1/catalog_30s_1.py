@@ -42,6 +42,7 @@ xmltree, xmlroot = read_xml(os.path.join(DATAPATH, INPUT_XML))
 pages = parse_pages(xmlroot)
     
 vertical_lines_clusters = {}
+pages_image_scaling = {}     # scaling of the scanned page image in relation to the OCR page dimensions for each page
 
 for p_num, p in pages.items():
     imgfilebasename = p['image'][:p['image'].rindex('.')]
@@ -49,6 +50,8 @@ for p_num, p in pages.items():
     
     print("page %d: detecting lines in image file '%s'" % (p_num, imgfile))
     iproc_obj = imgproc.ImageProc(imgfile)
+    
+    pages_image_scaling[p_num] = (iproc_obj.img_w / p['width'], iproc_obj.img_h / p['height'])
     
     lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_tresh=150, canny_kernel_size=3,
                                          hough_rho_res=1,
@@ -91,19 +94,24 @@ for p_num, p in pages.items():
     
     vertical_lines_clusters[p_num] = clusters_w_vals
 
-#%% Get adjusted vertical line clusters
-
-vertical_cluster_centers = get_adjusted_cluster_centers(vertical_lines_clusters, N_COL_BORDERS,
-                                                        max_range_deviation=MIN_COL_WIDTH/2,
-                                                        find_center_clusters_method=find_clusters_1d_break_dist,
-                                                        dist_thresh=MIN_COL_WIDTH/2)
-
-
 #%%
-    
-    
 # save repaired XML (i.e. XML with deskewed textbox positions)
 repaired_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.repaired.xml')
 
 print("> saving repaired XML file to '%s'" % repaired_xmlfile)
 xmltree.write(repaired_xmlfile)
+
+    
+#%% Get column positions as adjusted vertical line clusters
+pages_image_scaling_x = {p_num: sx for p_num, (sx, _) in pages_image_scaling.items()}
+
+col_positions = get_adjusted_cluster_centers(vertical_lines_clusters, N_COL_BORDERS,
+                                             max_range_deviation=MIN_COL_WIDTH/2,
+                                             find_center_clusters_method=find_clusters_1d_break_dist,
+                                             dist_thresh=MIN_COL_WIDTH/2,
+                                             image_scaling=pages_image_scaling_x)
+
+
+#%%
+    
+    
