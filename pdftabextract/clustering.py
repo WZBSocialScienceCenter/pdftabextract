@@ -11,7 +11,8 @@ import itertools
 
 import numpy as np
 
-from pdftabextract.common import fill_array_a_with_values_from_b
+from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list,
+                                  DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
 
 
 #%% Clustering
@@ -132,6 +133,78 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
         return adjusted_centers, diffsums
     else:
         return adjusted_centers
+        
+        
+def merge_overlapping_sections(texts_in_secs, direction, overlap_thresh):
+    """
+    Merge overlapping sections of texts in <direction> whose consecutive
+    "distance" or overlap (when the distance is negative) is less than <overlap_thresh>.
+    """
+    if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
+    
+    if direction == DIRECTION_HORIZONTAL:
+        pos_attr = 'left'
+        other_pos_attr = 'right'
+    else:
+        pos_attr = 'top'
+        other_pos_attr = 'bottom'    
+    
+    # sorted section positions for left side or top side
+    sec_positions1 = [sorted_by_attr(sec, pos_attr, reverse=True)[0][pos_attr] for sec in texts_in_secs]
+    # sorted section positions for right side or bottom side
+    sec_positions2 = [sorted_by_attr(sec, other_pos_attr, reverse=True)[0][other_pos_attr] for sec in texts_in_secs]
+    
+    # calculate distance/overlap between sections
+    sec_positions = list(zip(sec_positions1, sec_positions2))
+    sec_dists = [pos[0] - sec_positions[i-1][1] if i > 0 else 0 for i, pos in enumerate(sec_positions)]
+    #print(sum([d <= 0 for d in sec_dists]))
+    
+    # merge sections that overlap (whose distance is less than <overlap_thresh>)
+    merged_secs = []
+    prev_sec = []
+    for i, dist in enumerate(sec_dists):
+        cur_sec = texts_in_secs[i]
+        if dist < overlap_thresh:
+            sec = cur_sec + prev_sec
+            if len(merged_secs) > 0:
+                merged_secs.pop()
+        else:
+            sec = cur_sec
+        
+        merged_secs.append(sec)
+        prev_sec = sec
+    
+    assert len(flatten_list(texts_in_secs)) == len(flatten_list(merged_secs))
+    
+    return merged_secs
+
+
+def merge_small_sections(texts_in_secs, min_num_texts):
+    """
+    Merge sections that are too small, i.e. have too few "content" which means that their number
+    of texts is lower than or equal <min_num_texts>.
+    """
+    merged_secs = []
+    prev_sec = None
+    for cur_sec in texts_in_secs:
+        if prev_sec:
+            if len(cur_sec) <= min_num_texts:  # number of texts is too low
+                sec = cur_sec + prev_sec       # merge this section with the previous section
+                if len(merged_secs) > 0:       # remove the prev. section from the final list
+                    merged_secs.pop()          # in order to add the merged section later
+            else:
+                sec = cur_sec
+        else:
+            sec = cur_sec
+        
+        merged_secs.append(sec)   # add the (possibly merged) section
+        prev_sec = sec
+
+    assert len(flatten_list(texts_in_secs)) == len(flatten_list(merged_secs))
+
+    return merged_secs
+
 
 
 #%% Helper functions

@@ -113,6 +113,9 @@ def fit_texts_into_grid(texts, grid, return_unmatched_texts=False):
 
 
 def datatable_to_dataframe(table, **join_texts_kwargs):
+    """
+    Create a pandas dataframe using datatable <table> and joining all texts in the individual cells.
+    """
     import pandas as pd
     
     n_rows = len(table)

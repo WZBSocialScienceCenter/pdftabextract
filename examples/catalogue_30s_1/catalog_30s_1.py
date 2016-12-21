@@ -17,8 +17,8 @@ import cv2
 
 from pdftabextract import imgproc
 from pdftabextract.geom import pt
-from pdftabextract.fixrotation import rotate_textboxes, deskew_textboxes
-from pdftabextract.textboxes import border_positions_from_texts, split_texts_by_positions, join_texts
+from pdftabextract.textboxes import (border_positions_from_texts, split_texts_by_positions, join_texts,
+                                     rotate_textboxes, deskew_textboxes)
 from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
                                       zip_clusters_and_values,

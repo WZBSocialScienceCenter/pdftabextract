@@ -7,9 +7,13 @@ Created on Wed Dec 21 11:03:14 2016
 @author: mkonrad
 """
 
+import math
+
 import numpy as np
 
-from pdftabextract.common import sorted_by_attr, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL
+from pdftabextract.common import (update_text_dict_pos, sorted_by_attr,
+                                  DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, SKEW_X, SKEW_Y)
+from pdftabextract.geom import pt, vecrotate
 
 
 def border_positions_from_texts(texts, direction):
@@ -93,3 +97,90 @@ def join_texts(texts, sorted_by='left', glue=' ', strip=True):
     if strip:
         s = s.strip()
     return s
+
+
+def put_texts_in_lines(texts):
+    if not texts:
+        return []
+    
+    mean_text_height = np.mean([t['bottom'] - t['top'] for t in texts])
+    
+    sorted_ts = list(sorted(texts, key=lambda x: x['top']))     # sort texts vertically
+    # create list of vertical spacings between sorted texts
+    text_spacings = [t['top'] - sorted_ts[i - 1]['bottom'] for i, t in enumerate(sorted_ts) if i > 0]
+    text_spacings.append(0.0)   # last line
+    
+    # minimum positive spacing is considered to be the general vertical line spacing
+    pos_sp = [v for v in text_spacings if v > 0]
+    line_vspace = min(pos_sp) if pos_sp else None
+    
+    # go through all vertically sorted texts
+    lines = []
+    cur_line = []
+    min_vspace_for_break = -mean_text_height / 2   # texts might overlap vertically. if the overlap is more than half
+                                                   # the mean text height, it is considered a line break
+    for t, spacing in zip(sorted_ts, text_spacings):
+        cur_line.append(t)
+        
+        if spacing >= min_vspace_for_break:    # this is a line break            
+            # add all texts to this line sorted by x-position
+            lines.append(list(sorted(cur_line, key=lambda x: x['left'])))
+            
+            # add some empty line breaks if necessary
+            if line_vspace:
+                lines.extend([] * int(spacing / line_vspace))
+            
+            # reset
+            cur_line = []            
+
+    assert len(cur_line) == 0    # because last line gets a zero-spacing appended
+    assert len(texts) == sum(map(len, lines))     # check if all texts were put into lines
+    
+    return lines
+    
+
+def create_text_from_lines(lines, linebreak='\n', linejoin=' '):
+    text = ''
+    for l in lines:
+        text += linejoin.join([t['value'] for t in l]) + linebreak
+    
+    return text[:-1]
+    
+    
+def rotate_textboxes(page, page_rot, about_pt):
+    for t in page['texts']:
+        t_pt = pt(t['left'], t['top'])
+        
+        # rotate back
+        t_pt_rot = vecrotate(t_pt, page_rot, about_pt)
+        
+        # update text dict
+        update_text_dict_pos(t, t_pt_rot, update_node=True)
+
+
+def deskew_textboxes(page, skew_radians, skew_direction, about_pt):
+    if skew_direction not in (SKEW_X, SKEW_Y):
+        raise ValueError("invalid parameter value '%s' for skew_direction" % skew_direction)
+    
+    for t in page['texts']:
+        if skew_direction == SKEW_X:
+            x = t['top'] + t['height'] / 2
+            ref_idx = 1
+            trigon_fn = math.cos
+        else:
+            x = t['left'] + t['width'] / 2
+            ref_idx = 0
+            trigon_fn = math.sin
+
+        # x, y have nothing to do with the x and y in a cartesian coord. system
+        # y is the coordinate that gets changed depending on x
+        d = x - about_pt[ref_idx]
+        y_diff = trigon_fn(skew_radians) * d
+        
+        
+        if skew_direction == SKEW_X:
+            pt_deskewed = pt(t['left'] + y_diff, t['top'])
+        else:
+            pt_deskewed = pt(t['left'], t['top'] + y_diff)
+        
+        update_text_dict_pos(t, pt_deskewed, update_node=True)
