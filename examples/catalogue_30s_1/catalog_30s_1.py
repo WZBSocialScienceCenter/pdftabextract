@@ -19,7 +19,8 @@ from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
                                       zip_clusters_and_values,
                                       get_adjusted_cluster_centers)
-from pdftabextract.common import (read_xml, parse_pages,
+from pdftabextract.extract import make_grid_from_positions
+from pdftabextract.common import (read_xml, parse_pages, save_page_grids,
                                   ROTATION, SKEW_X, SKEW_Y,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
 
@@ -101,7 +102,8 @@ for p_num, p in pages.items():
 
 #%%
 # save repaired XML (i.e. XML with deskewed textbox positions)
-repaired_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.repaired.xml')
+output_files_basename = INPUT_XML[:INPUT_XML.rindex('.')]
+repaired_xmlfile = os.path.join(OUTPUTPATH, output_files_basename + '.repaired.xml')
 
 print("> saving repaired XML file to '%s'" % repaired_xmlfile)
 xmltree.write(repaired_xmlfile)
@@ -131,9 +133,21 @@ for p_num, p in pages.items():
     hori_clusters = find_clusters_1d_break_dist(borders_y, dist_thresh=median_text_height/2)
     hori_clusters_w_vals = zip_clusters_and_values(hori_clusters, borders_y)
     
-    line_positions = calc_cluster_centers_1d(hori_clusters_w_vals)
-    line_heights = np.diff(line_positions)
+    pos_y = calc_cluster_centers_1d(hori_clusters_w_vals)
+    line_heights = np.diff(pos_y)
+    
+    line_positions[p_num] = pos_y
     
     print("> page %d: %d lines, median text height = %f, median line height = %f, min line height = %f, max line height = %f"
-          % (p_num, len(line_positions), median_text_height, np.median(line_heights), min(line_heights), max(line_heights)))
+          % (p_num, len(pos_y), median_text_height, np.median(line_heights), min(line_heights), max(line_heights)))
 
+#%% Create page grids
+print("> creating page grids for all pages")
+page_grids = {}
+for p_num, p in pages.items():
+    grid = make_grid_from_positions(col_positions[p_num], line_positions[p_num])
+    page_grids[p_num] = grid
+
+page_grids_file = os.path.join(OUTPUTPATH, output_files_basename + '.pagegrids.json')
+print("> saving page grids JSON file to '%s'" % page_grids_file)
+save_page_grids(page_grids, page_grids_file)
