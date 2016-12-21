@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+An example script that shows how to 
+
 Created on Wed Dec 14 14:28:29 2016
 
 @author: mkonrad
@@ -26,7 +28,7 @@ from pdftabextract.common import (read_xml, parse_pages, save_page_grids, all_a_
                                   ROTATION, SKEW_X, SKEW_Y,
                                   DIRECTION_VERTICAL)
 
-
+#%% Some constants
 DATAPATH = 'data/'
 OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'ALA1934_RR-excerpt.pdf.xml'
@@ -34,7 +36,7 @@ INPUT_XML = 'ALA1934_RR-excerpt.pdf.xml'
 N_COL_BORDERS = 17
 MIN_COL_WIDTH = 60
 
-
+#%% Some helper functions
 def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background):
     file_suffix = 'lines-orig' if orig_img_as_background else 'lines'
     
@@ -43,24 +45,35 @@ def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background):
     
     print("> saving image with detected lines to '%s'" % img_lines_file)
     cv2.imwrite(img_lines_file, img_lines)
-    
 
+#%% Read the XML
+
+# Load the XML that was generated with pdftohtml
 xmltree, xmlroot = read_xml(os.path.join(DATAPATH, INPUT_XML))
 
+# parse it and generate a dict of pages
 pages = parse_pages(xmlroot)
-    
+
+#%% Detect clusters of vertical lines using the image processing module
+
 vertical_lines_clusters = {}
 pages_image_scaling = {}     # scaling of the scanned page image in relation to the OCR page dimensions for each page
 
 for p_num, p in pages.items():
+    # get the image file of the scanned page
     imgfilebasename = p['image'][:p['image'].rindex('.')]
     imgfile = os.path.join(DATAPATH, p['image'])
     
     print("page %d: detecting lines in image file '%s'..." % (p_num, imgfile))
+    
+    # create an image processing object with the scanned page
     iproc_obj = imgproc.ImageProc(imgfile)
     
-    pages_image_scaling[p_num] = (iproc_obj.img_w / p['width'], iproc_obj.img_h / p['height'])
+    # calculate the scaling of the image file in relation to the text boxes coordinate system dimensions
+    pages_image_scaling[p_num] = (iproc_obj.img_w / p['width'],   # scaling in X-direction
+                                  iproc_obj.img_h / p['height'])  # scaling in Y-direction
     
+    # detect the lines
     lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_tresh=150, canny_kernel_size=3,
                                          hough_rho_res=1,
                                          hough_theta_res=np.pi/500,
@@ -69,7 +82,11 @@ for p_num, p in pages.items():
     
     save_image_w_lines(iproc_obj, imgfilebasename, True)
     save_image_w_lines(iproc_obj, imgfilebasename, False)
-            
+    
+    # find rotation or skew
+    # the parameters are:
+    # 1. the minimum threshold in radians for a rotation to be counted as such
+    # 2. the maximum threshold for the difference between horizontal and vertical line rotation (to detect skew)
     rot_or_skew_type, rot_or_skew_radians = iproc_obj.find_rotation_or_skew(radians(0.5), radians(1))  # uses "lines_hough"
     
     # rotate back or deskew text boxes
@@ -91,10 +108,13 @@ for p_num, p in pages.items():
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
+    # cluster the detected lines using find_clusters_1d_break_dist as simple clustering function
+    # (break on distance MIN_COL_WIDTH/2)
     clusters_w_vals = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
                                               dist_thresh=MIN_COL_WIDTH/2)
     print("> found %d clusters" % len(clusters_w_vals))
     
+    # draw the clusters
     img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_VERTICAL, clusters_w_vals)
     save_img_file = os.path.join(OUTPUTPATH, '%s-vertical-clusters.png' % imgfilebasename)
     print("> saving image with detected vertical clusters to '%s'" % save_img_file)
