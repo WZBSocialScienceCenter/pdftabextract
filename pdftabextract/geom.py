@@ -130,7 +130,11 @@ def rect(lefttop, rightbottom):
     
     return np.array((lefttop, rightbottom), dtype=lefttop.dtype)
 
+    
+def rect_from_text(t):
+    return rect(t['topleft'], t['bottomright'])
 
+    
 def rectcenter(r):
     w = r[1][0] - r[0][0]
     h = r[1][1] - r[0][1]
@@ -139,7 +143,7 @@ def rectcenter(r):
 
 
 def rectcenter_dist(r1, r2):
-    return vecdist(rectcenter(r1), rectcenter(r2))
+    return ptdist(rectcenter(r1), rectcenter(r2))
 
 
 def rectarea(r):
