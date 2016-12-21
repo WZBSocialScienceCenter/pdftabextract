@@ -23,6 +23,9 @@ ROTATION = 'r'
 SKEW_X = 'sx'
 SKEW_Y = 'sy'
 
+DIRECTION_HORIZONTAL = 'h'
+DIRECTION_VERTICAL = 'v'
+
 
 #%% I/O
 

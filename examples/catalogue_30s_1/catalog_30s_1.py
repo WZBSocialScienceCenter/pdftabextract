@@ -12,11 +12,16 @@ import numpy as np
 import cv2
 
 from pdftabextract import imgproc
-from pdftabextract.clustering import find_clusters_1d_break_dist, calc_cluster_centers_range, zip_clusters_and_values, \
-                                     get_adjusted_cluster_centers
 from pdftabextract.geom import pt
-from pdftabextract.common import read_xml, parse_pages, ROTATION, SKEW_X, SKEW_Y
 from pdftabextract.fixrotation import rotate_textboxes, deskew_textboxes
+from pdftabextract.textboxes import border_positions_and_spans_from_texts
+from pdftabextract.clustering import (find_clusters_1d_break_dist,
+                                      calc_cluster_centers_1d,
+                                      zip_clusters_and_values,
+                                      get_adjusted_cluster_centers)
+from pdftabextract.common import (read_xml, parse_pages,
+                                  ROTATION, SKEW_X, SKEW_Y,
+                                  DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
 
 
 DATAPATH = 'data/'
@@ -103,15 +108,32 @@ xmltree.write(repaired_xmlfile)
 
     
 #%% Get column positions as adjusted vertical line clusters
+print("> calculating column positions for all pages")
+
 pages_image_scaling_x = {p_num: sx for p_num, (sx, _) in pages_image_scaling.items()}
 
 col_positions = get_adjusted_cluster_centers(vertical_lines_clusters, N_COL_BORDERS,
                                              max_range_deviation=MIN_COL_WIDTH/2,
                                              find_center_clusters_method=find_clusters_1d_break_dist,
                                              dist_thresh=MIN_COL_WIDTH/2,
-                                             image_scaling=pages_image_scaling_x)
+                                             image_scaling=pages_image_scaling_x)   # the positions are in "scanned
+                                                                                    # image space" -> we scale them
+                                                                                    # to "text box space"
 
+#%% Get line positions
+print("> calculating line positions for all pages")
+line_positions = {}
 
-#%%
+for p_num, p in pages.items():
+    borders_y, text_heights = border_positions_and_spans_from_texts(p['texts'], DIRECTION_VERTICAL)
+    median_text_height = np.median(text_heights)
     
+    hori_clusters = find_clusters_1d_break_dist(borders_y, dist_thresh=median_text_height/2)
+    hori_clusters_w_vals = zip_clusters_and_values(hori_clusters, borders_y)
     
+    line_positions = calc_cluster_centers_1d(hori_clusters_w_vals)
+    line_heights = np.diff(line_positions)
+    
+    print("> page %d: %d lines, median text height = %f, median line height = %f, min line height = %f, max line height = %f"
+          % (p_num, len(line_positions), median_text_height, np.median(line_heights), min(line_heights), max(line_heights)))
+

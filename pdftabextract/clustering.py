@@ -55,7 +55,9 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     """
     From a dict containing clusters per page, find the cluster centers and apply some adjustments to them
     (filter bad values, interpolate missing values).
+    
     Return the adjusted cluster centers in a dict with page number -> cluster center mapping.
+    
     If parameter <return_center_clusters_diffsums> is True, additionally return a dict with summed differences between
     found centers and "model" centers as quality measure.
     <n_required_clusters> is the number of cluster centers (i.e. number of columns or lines) to be found.

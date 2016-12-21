@@ -13,13 +13,10 @@ from math import degrees, radians
 import numpy as np
 import cv2
 
-from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y
+from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL
 from pdftabextract.geom import normalize_angle, project_polarcoord_lines
 from pdftabextract.clustering import zip_clusters_and_values
 
-
-DIRECTION_HORIZONTAL = 'h'
-DIRECTION_VERTICAL = 'v'
 
 PIHLF = np.pi / 2
 PI4TH = np.pi / 4
