@@ -15,7 +15,7 @@ import cv2
 from pdftabextract import imgproc
 from pdftabextract.geom import pt
 from pdftabextract.fixrotation import rotate_textboxes, deskew_textboxes
-from pdftabextract.textboxes import border_positions_and_spans_from_texts, split_texts_by_positions, join_texts
+from pdftabextract.textboxes import border_positions_from_texts, split_texts_by_positions, join_texts
 from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
                                       zip_clusters_and_values,
@@ -130,26 +130,32 @@ pttrn_table_row_beginning = re.compile(r'^[\d Oo][\d Oo]{2,} +[A-ZÄÖÜ]')   # 
 words_in_footer = ('anzeige', 'annahme', 'ala')
 
 for p_num, p in pages.items():
-    # Get all textboxes' top and bottom border positions and the textboxes' height
-    borders_y, text_heights = border_positions_and_spans_from_texts(p['texts'], DIRECTION_VERTICAL)
-    median_text_height = np.median(text_heights)
+    page_colpos = col_positions[p_num]  # column positions of this page
+    col2_rightborder = page_colpos[2]   # right border of the second column
     
-    # break into clusters using half of the median text height as break distance
-    hori_clusters = find_clusters_1d_break_dist(borders_y, dist_thresh=median_text_height/2)
-    hori_clusters_w_vals = zip_clusters_and_values(hori_clusters, borders_y)
+    # calculate median text box height
+    median_text_height = np.median([t['height'] for t in p['texts']])
     
-    # for each cluster, calculate the median as center
-    pos_y = calc_cluster_centers_1d(hori_clusters_w_vals)
-    
-    ### make some additional filtering of the row positions ###
-    # 1. try to find the top row of the table
-    page_colpos = col_positions[p_num]
-    col2_rightborder = page_colpos[2]
+    # get all texts in the first two columns with a "usual" textbox height
+    # we will only use these text boxes in order to determine the line positions because they are more "stable"
+    # otherwise, especially the right side of the column header can lead to problems detecting the first table row
     text_height_deviation_tresh = median_text_height / 2
-    # get all texts in the first two columns
     texts_cols_1_2 = [t for t in p['texts']
                       if t['right'] <= col2_rightborder
                          and abs(t['height'] - median_text_height) <= text_height_deviation_tresh]
+    
+    # get all textboxes' top and bottom border positions
+    borders_y = border_positions_from_texts(texts_cols_1_2, DIRECTION_VERTICAL)
+    
+    # break into clusters using half of the median text height as break distance
+    clusters_y = find_clusters_1d_break_dist(borders_y, dist_thresh=median_text_height/2)
+    clusters_w_vals = zip_clusters_and_values(clusters_y, borders_y)
+    
+    # for each cluster, calculate the median as center
+    pos_y = calc_cluster_centers_1d(clusters_w_vals)
+    
+    ### make some additional filtering of the row positions ###
+    # 1. try to find the top row of the table
     texts_cols_1_2_per_line = split_texts_by_positions(texts_cols_1_2, pos_y, DIRECTION_VERTICAL,
                                                        enrich_with_positions=True)
     
@@ -168,7 +174,9 @@ for p_num, p in pages.items():
     # get all texts in the lower 30% of the page that have are at least 50% bigger than the median textbox height
     bottom_texts = [t for t in p['texts']
                     if t['top'] >= min_footer_y_pos and t['height'] >= min_footer_text_height]
-    bottom_texts_per_line = split_texts_by_positions(bottom_texts, pos_y, DIRECTION_VERTICAL,
+    bottom_texts_per_line = split_texts_by_positions(bottom_texts,
+                                                     pos_y + [p['height']],   # always down to the end of the page
+                                                     DIRECTION_VERTICAL,
                                                      enrich_with_positions=True)
     # go through the texts line per line
     page_span = page_colpos[-1] - page_colpos[0]
