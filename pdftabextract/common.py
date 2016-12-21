@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+Common functions used in all modules of pdftabextract.
+
 Created on Tue Jun  7 10:49:35 2016
 
 @author: mkonrad

@@ -137,6 +137,12 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
 #%% Helper functions
     
 def zip_clusters_and_values(clusters, values):
+    """
+    Combine cluster indices in <clusters> (as returned from find_clusters_1d_break_dist) with the respective values
+    in <values>.
+    Return list of tuples, each tuple representing a cluster and containing two NumPy arrays:
+    1. cluster indices into <values>, 2. values of this cluster
+    """
     clusters_w_vals = []
     for c_ind in clusters:
         c_vals = values[c_ind]
@@ -146,10 +152,20 @@ def zip_clusters_and_values(clusters, values):
 
 
 def calc_cluster_centers_1d(clusters_w_vals, method=np.median):
+    """
+    Calculate the cluster centers (for 1D clusters) using <method>.
+    <clusters_w_vals> must be a sequence of tuples t where t[1] contains the values (as returned from
+    zip_clusters_and_values).
+    """
     return [method(vals) for _, vals in clusters_w_vals]
 
     
 def calc_cluster_centers_range(clusters_w_vals, reduce_clusters_method=np.median, return_centers=False):
+    """
+    Calculate the cluster centers of <clusters_w_vals> using calc_cluster_centers_1d and return their range, i.e.
+    max(centers) - min(centers).
+    Optionally return also the centers.
+    """
     centers = calc_cluster_centers_1d(clusters_w_vals, method=reduce_clusters_method)
     rng = max(centers) - min(centers)
     if return_centers:
