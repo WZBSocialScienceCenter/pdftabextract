@@ -6,6 +6,7 @@ Created on Wed Dec 14 14:28:29 2016
 """
 
 import os
+import re
 from math import radians, degrees
 
 import numpy as np
@@ -14,13 +15,13 @@ import cv2
 from pdftabextract import imgproc
 from pdftabextract.geom import pt
 from pdftabextract.fixrotation import rotate_textboxes, deskew_textboxes
-from pdftabextract.textboxes import border_positions_and_spans_from_texts
+from pdftabextract.textboxes import border_positions_and_spans_from_texts, split_texts_by_positions, join_texts
 from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
                                       zip_clusters_and_values,
                                       get_adjusted_cluster_centers)
 from pdftabextract.extract import make_grid_from_positions
-from pdftabextract.common import (read_xml, parse_pages, save_page_grids,
+from pdftabextract.common import (read_xml, parse_pages, save_page_grids, all_a_in_b,
                                   ROTATION, SKEW_X, SKEW_Y,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
 
@@ -125,21 +126,73 @@ col_positions = get_adjusted_cluster_centers(vertical_lines_clusters, N_COL_BORD
 #%% Get line positions
 print("> calculating line positions for all pages")
 line_positions = {}
+pttrn_table_row_beginning = re.compile(r'^[\d Oo][\d Oo]{2,} +[A-ZÄÖÜ]')   # a (possibly malformed) population number + space + start of city name
+words_in_footer = ('anzeige', 'annahme', 'ala')
 
 for p_num, p in pages.items():
+    # Get all textboxes' top and bottom border positions and the textboxes' height
     borders_y, text_heights = border_positions_and_spans_from_texts(p['texts'], DIRECTION_VERTICAL)
     median_text_height = np.median(text_heights)
     
+    # break into clusters using half of the median text height as break distance
     hori_clusters = find_clusters_1d_break_dist(borders_y, dist_thresh=median_text_height/2)
     hori_clusters_w_vals = zip_clusters_and_values(hori_clusters, borders_y)
     
+    # for each cluster, calculate the median as center
     pos_y = calc_cluster_centers_1d(hori_clusters_w_vals)
+    
+    ### make some additional filtering of the row positions ###
+    # 1. try to find the top row of the table
+    page_colpos = col_positions[p_num]
+    col2_rightborder = page_colpos[2]
+    text_height_deviation_tresh = median_text_height / 2
+    # get all texts in the first two columns
+    texts_cols_1_2 = [t for t in p['texts']
+                      if t['right'] <= col2_rightborder
+                         and abs(t['height'] - median_text_height) <= text_height_deviation_tresh]
+    texts_cols_1_2_per_line = split_texts_by_positions(texts_cols_1_2, pos_y, DIRECTION_VERTICAL,
+                                                       enrich_with_positions=True)
+    
+    # go through the texts line per line
+    for line_texts, (line_top, line_bottom) in texts_cols_1_2_per_line:
+        line_str = join_texts(line_texts)
+        if pttrn_table_row_beginning.match(line_str):  # check if the line content matches the given pattern
+            top_y = line_top
+            break
+    else:
+        top_y = 0
+    
+    # 2. try to find the bottom row of the table
+    min_footer_text_height = median_text_height * 1.5
+    min_footer_y_pos = p['height'] * 0.7
+    # get all texts in the lower 30% of the page that have are at least 50% bigger than the median textbox height
+    bottom_texts = [t for t in p['texts']
+                    if t['top'] >= min_footer_y_pos and t['height'] >= min_footer_text_height]
+    bottom_texts_per_line = split_texts_by_positions(bottom_texts, pos_y, DIRECTION_VERTICAL,
+                                                     enrich_with_positions=True)
+    # go through the texts line per line
+    page_span = page_colpos[-1] - page_colpos[0]
+    min_footer_text_width = page_span * 0.8
+    for line_texts, (line_top, line_bottom) in bottom_texts_per_line:
+        line_str = join_texts(line_texts)
+        has_wide_footer_text = any(t['width'] >= min_footer_text_width for t in line_texts)
+        # check if there's at least one wide text or if all of the required words for a footer match
+        if has_wide_footer_text or all_a_in_b(words_in_footer, line_str):
+            bottom_y = line_top
+            break
+    else:
+        bottom_y = p['height']
+    
+    pos_y = [y for y in pos_y if top_y <= y <= bottom_y]
+    
     line_heights = np.diff(pos_y)
     
     line_positions[p_num] = pos_y
     
-    print("> page %d: %d lines, median text height = %f, median line height = %f, min line height = %f, max line height = %f"
-          % (p_num, len(pos_y), median_text_height, np.median(line_heights), min(line_heights), max(line_heights)))
+    print("> page %d: %d lines between [%f, %f], median text height = %f, median line height = %f, min line height = %f, max line height = %f"
+          % (p_num, len(pos_y), top_y, bottom_y,
+             median_text_height, np.median(line_heights),
+             min(line_heights), max(line_heights)))
 
 #%% Create page grids
 print("> creating page grids for all pages")

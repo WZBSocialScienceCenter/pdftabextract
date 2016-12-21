@@ -320,11 +320,11 @@ def flatten_list(l):
     return sum(l, [])
 
 
-def any_of_a_in_b(a, b):
+def any_a_in_b(a, b):
     return any(s in b for s in a)
 
     
-def all_of_a_in_b(a, b):
+def all_a_in_b(a, b):
     return all(s in b for s in a)
 
 
