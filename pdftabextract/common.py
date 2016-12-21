@@ -52,7 +52,7 @@ def save_page_grids(page_grids, output_file):
     with open(output_file, 'w') as f:
         json.dump(page_grids, f, cls=JSONEncoderPlus)
 
-#%% parsing
+#%% XML parsing / text box dict handling
 
 def parse_pages(root):
     pages = OrderedDict()
@@ -131,146 +131,9 @@ def update_text_dict_pos(t, pos, update_node=False):
         t['xmlnode'].attrib['left'] = str(int(round(pos[0])))
         t['xmlnode'].attrib['top'] = str(int(round(pos[1])))
 
-#%% utility functions for textboxes
-
-def get_bodytexts(page, header_ratio=0.0, footer_ratio=1.0):
-    miny = page['height'] * header_ratio
-    maxy = page['height'] * (1 - footer_ratio)
-    
-    #if header_ratio != 0.0:
-    #    print('page %d/%s: header cutoff at %f' % (page['number'], page['subpage'], miny))
-    #if footer_ratio != 1.0:
-    #    print('page %d/%s: footer cutoff at %f' % (page['number'], page['subpage'], maxy))
-    
-    return list(filter(lambda t: t['top'] >= miny and t['bottom'] <= maxy, page['texts']))    
-
-
-def divide_texts_horizontally(page, divide_ratio, texts=None):
-    """
-    Divide a page into two subpages by assigning all texts left of a vertical line specified by
-    page['width'] * DIVIDE_RATIO to a "left" subpage and all texts right of it to a "right" subpage.
-    The positions of the texts in the subpages will stay unmodified and retain their absolute position
-    in relation to the page. However, the right subpage has an "offset_x" attribute to later calculate
-    the text positions in relation to the right subpage.
-    :param page single page dict as returned from parse_pages()
-    """
-    assert divide_ratio    
-    
-    if texts is None:
-        texts = page['texts']
-    
-    divide_x = page['width'] * divide_ratio
-    lefttexts = list(filter(lambda t: t['right'] <= divide_x, texts))
-    righttexts = list(filter(lambda t: t['right'] > divide_x, texts))
-    
-    assert len(lefttexts) + len(righttexts) == len(texts)
-    
-    subpage_tpl = {
-        'number': page['number'],
-        'width': divide_x,
-        'height': page['height'],
-        'parentpage': page
-    }
-    
-    subpage_left = copy(subpage_tpl)
-    subpage_left['subpage'] = 'left'
-    subpage_left['x_offset'] = 0
-    subpage_left['texts'] = lefttexts
-    
-    subpage_right = copy(subpage_tpl)
-    subpage_right['subpage'] = 'right'
-    subpage_right['x_offset'] = divide_x
-    subpage_right['texts'] = righttexts
-    
-    return subpage_left, subpage_right
-
-
-def mindist_text(texts, origin, pos_attr, cond_fn=None):
-    """
-    Get the text that minimizes the distance from its position (defined in pos_attr) to <origin> and satisifies
-    the condition function <cond_fn> (if not None).
-    """
-    texts_by_dist = sorted(texts, key=lambda t: ptdist(origin, t[pos_attr]))
-    
-    if not cond_fn:
-        return texts_by_dist[0]
-    else:
-        for t in texts_by_dist:
-            if cond_fn(t):
-                return t
-    
-    return None
-
-
-def texts_at_page_corners(p, cond_fns):
-    """
-    :param p page or subpage
-    """
-    if cond_fns is None:
-        cond_fns = (None, ) * 4
-    
-    x_offset = p['x_offset']
-    
-    text_topleft = mindist_text(p['texts'], (x_offset, 0), 'topleft', cond_fns[0])
-    text_topright = mindist_text(p['texts'], (x_offset + p['width'], 0), 'topright', cond_fns[1])
-    text_bottomright = mindist_text(p['texts'], (x_offset + p['width'], p['height']), 'bottomright', cond_fns[2])
-    text_bottomleft = mindist_text(p['texts'], (x_offset, p['height']), 'bottomleft', cond_fns[3])
-    
-    return text_topleft, text_topright, text_bottomright, text_bottomleft
-
-#%% string functions
-
-def rel_levenshtein(s1, s2):
-    """Relative Levenshtein distance taking its upper bound into consideration and return a value in [0, 1]"""
-    maxlen = max(len(s1), len(s2))
-    if maxlen > 0:
-        return levenshtein(s1, s2) / float(maxlen)
-    else:
-        return 0
-
-
-def levenshtein(source, target):
-    """
-    Compute Levenshtein-Distance between strings <source> and <target>.
-    Taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
-    """
-    if len(source) < len(target):
-        return levenshtein(target, source)
-
-    # So now we have len(source) >= len(target).
-    if len(target) == 0:
-        return len(source)
-
-    # We call tuple() to force strings to be used as sequences
-    # ('c', 'a', 't', 's') - numpy uses them as values by default.
-    source = np.array(tuple(source))
-    target = np.array(tuple(target))
-
-    # We use a dynamic programming algorithm, but with the
-    # added optimization that we only need the last two rows
-    # of the matrix.
-    previous_row = np.arange(target.size + 1)
-    for s in source:
-        # Insertion (target grows longer than source):
-        current_row = previous_row + 1
-
-        # Substitution or matching:
-        # Target and source items are aligned, and either
-        # are different (cost of 1), or are the same (cost of 0).
-        current_row[1:] = np.minimum(
-                current_row[1:],
-                np.add(previous_row[:-1], target != s))
-
-        # Deletion (target grows shorter than source):
-        current_row[1:] = np.minimum(
-                current_row[1:],
-                current_row[0:-1] + 1)
-
-        previous_row = current_row
-
-    return previous_row[-1]
 
 #%% Other functions
+
 def fill_array_a_with_values_from_b(a, b, fill_indices):
     """
     Fill array <a> with values specified by <fill_indices> from <b>.
@@ -303,15 +166,18 @@ def fill_array_a_with_values_from_b(a, b, fill_indices):
 
 
 def mode(arr):
+    """Return the mode, i.e. most common value, of NumPy array <arr>"""
     uniques, counts = np.unique(arr, return_counts=True)
     return uniques[np.argmax(counts)]
 
 
 def sorted_by_attr(vals, attr, reverse=False):
+    """Sort sequence <vals> by using attribute/key <attr> for each item in the sequence."""
     return sorted(vals, key=lambda x: x[attr], reverse=reverse)
 
 
 def list_from_attr(vals, attr, **kwargs):
+    """Generate a list with all one the items' attributes' in <vals>. The attribute is specified as <attr>."""
     if 'default' in kwargs:
         return [v.get(attr, kwargs['default']) for v in vals]
     else:
@@ -319,6 +185,7 @@ def list_from_attr(vals, attr, **kwargs):
 
     
 def flatten_list(l):
+    """Flatten a 2D list"""
     return sum(l, [])
 
 
