@@ -46,7 +46,7 @@ class ImageProc:
         self._load_imgfile()
 
         
-    def detect_lines(self, canny_low_thresh, canny_high_tresh, canny_kernel_size,
+    def detect_lines(self, canny_low_thresh, canny_high_thresh, canny_kernel_size,
                      hough_rho_res, hough_theta_res, hough_votes_thresh_rel,
                      hough_votes_thresh_abs=None,
                      gray_conversion=cv2.COLOR_BGR2GRAY):
@@ -55,7 +55,7 @@ class ImageProc:
         """
         
         self.gray_img = cv2.cvtColor(self.input_img, gray_conversion)
-        self.edges = cv2.Canny(self.gray_img, canny_low_thresh, canny_high_tresh, apertureSize=canny_kernel_size)
+        self.edges = cv2.Canny(self.gray_img, canny_low_thresh, canny_high_thresh, apertureSize=canny_kernel_size)
         
         votes_thresh = hough_votes_thresh_abs if hough_votes_thresh_abs else round(self.img_w * hough_votes_thresh_rel)
         
@@ -141,18 +141,18 @@ class ImageProc:
             median_vert_dev = 0
             warning('no vertical lines found')
         
-        hori_rot_above_tresh = abs(median_hori_dev) > rot_thresh
-        vert_rot_above_tresh = abs(median_vert_dev) > rot_thresh
+        hori_rot_above_thresh = abs(median_hori_dev) > rot_thresh
+        vert_rot_above_thresh = abs(median_vert_dev) > rot_thresh
         
-        if hori_rot_above_tresh and vert_rot_above_tresh:
+        if hori_rot_above_thresh and vert_rot_above_thresh:
             if abs(median_hori_dev - median_vert_dev) < rot_same_dir_thresh:
                 return ROTATION, (median_hori_dev + median_vert_dev) / 2
             else:
                 warning('horizontal / vertical rotation not in same direction (%f / %f)'
                       % (degrees(median_hori_dev), degrees(median_vert_dev)))
-        elif hori_rot_above_tresh:
+        elif hori_rot_above_thresh:
             return SKEW_Y, median_hori_dev
-        elif vert_rot_above_tresh:
+        elif vert_rot_above_thresh:
             return SKEW_X, median_vert_dev
 
         return None, None

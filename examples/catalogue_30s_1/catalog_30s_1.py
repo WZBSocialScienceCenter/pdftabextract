@@ -82,7 +82,7 @@ for p_num, p in pages.items():
                                   iproc_obj.img_h / p['height'])  # scaling in Y-direction
     
     # detect the lines
-    lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_tresh=150, canny_kernel_size=3,
+    lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
                                          hough_rho_res=1,
                                          hough_theta_res=np.pi/500,
                                          hough_votes_thresh_rel=0.2)
@@ -168,10 +168,10 @@ for p_num, p in pages.items():
     # get all texts in the first two columns with a "usual" textbox height
     # we will only use these text boxes in order to determine the line positions because they are more "stable"
     # otherwise, especially the right side of the column header can lead to problems detecting the first table row
-    text_height_deviation_tresh = median_text_height / 2
+    text_height_deviation_thresh = median_text_height / 2
     texts_cols_1_2 = [t for t in p['texts']
                       if t['right'] <= col2_rightborder
-                         and abs(t['height'] - median_text_height) <= text_height_deviation_tresh]
+                         and abs(t['height'] - median_text_height) <= text_height_deviation_thresh]
     
     # get all textboxes' top and bottom border positions
     borders_y = border_positions_from_texts(texts_cols_1_2, DIRECTION_VERTICAL)
@@ -182,6 +182,7 @@ for p_num, p in pages.items():
     
     # for each cluster, calculate the median as center
     pos_y = calc_cluster_centers_1d(clusters_w_vals)
+    pos_y.append(p['height'])
     
     ### make some additional filtering of the row positions ###
     # 1. try to find the top row of the table

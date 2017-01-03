@@ -53,11 +53,14 @@ def save_page_grids(page_grids, output_file):
 
 #%% XML parsing / text box dict handling
 
-def parse_pages(root):
+def parse_pages(root, load_page_nums=None):
     pages = OrderedDict()
     
     for p in root.findall('page'):
         p_num = int(p.attrib['number'])
+        
+        if load_page_nums is not None and p_num not in load_page_nums:
+            continue
         
         p_image = p.findall('image')
         if p_image:
@@ -131,6 +134,60 @@ def update_text_dict_pos(t, pos, update_node=False):
         t['xmlnode'].attrib['top'] = str(int(round(pos[1])))
 
 
+#%% string functions
+
+def rel_levenshtein(s1, s2):
+    """Relative Levenshtein distance taking its upper bound into consideration and return a value in [0, 1]"""
+    maxlen = max(len(s1), len(s2))
+    if maxlen > 0:
+        return levenshtein(s1, s2) / float(maxlen)
+    else:
+        return 0
+
+
+def levenshtein(source, target):
+    """
+    Compute Levenshtein-Distance between strings <source> and <target>.
+    Taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
+    """
+    if len(source) < len(target):
+        return levenshtein(target, source)
+
+    # So now we have len(source) >= len(target).
+    if len(target) == 0:
+        return len(source)
+
+    # We call tuple() to force strings to be used as sequences
+    # ('c', 'a', 't', 's') - numpy uses them as values by default.
+    source = np.array(tuple(source))
+    target = np.array(tuple(target))
+
+    # We use a dynamic programming algorithm, but with the
+    # added optimization that we only need the last two rows
+    # of the matrix.
+    previous_row = np.arange(target.size + 1)
+    for s in source:
+        # Insertion (target grows longer than source):
+        current_row = previous_row + 1
+
+        # Substitution or matching:
+        # Target and source items are aligned, and either
+        # are different (cost of 1), or are the same (cost of 0).
+        current_row[1:] = np.minimum(
+                current_row[1:],
+                np.add(previous_row[:-1], target != s))
+
+        # Deletion (target grows shorter than source):
+        current_row[1:] = np.minimum(
+                current_row[1:],
+                current_row[0:-1] + 1)
+
+        previous_row = current_row
+
+    return previous_row[-1]
+
+
+        
 #%% Other functions
 
 def fill_array_a_with_values_from_b(a, b, fill_indices):

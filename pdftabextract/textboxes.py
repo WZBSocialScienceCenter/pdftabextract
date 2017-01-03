@@ -68,7 +68,7 @@ def split_texts_by_positions(texts, positions, direction, alignment='high',
     else:
         attr = 'right' if alignment == 'high' else 'left'
     
-    prev_pos = 0
+    prev_pos = -1
     split_texts = []
     n_added_texts = 0
     for pos in positions:
