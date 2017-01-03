@@ -11,13 +11,12 @@ Created on Tue Jun  7 10:49:35 2016
 #%%
 
 import xml.etree.ElementTree as ET
-from copy import copy
 from collections import OrderedDict
 import json
 
 import numpy as np
 
-from .geom import pt, ptdist, rect, rectarea
+from .geom import pt, rect, rectarea
 
 #%% Constants
 

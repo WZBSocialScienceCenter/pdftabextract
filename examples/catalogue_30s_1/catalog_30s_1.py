@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-An example script that shows how to 
+An example script that shows how to extract tabular data from OCR-scanned pages.
+It includes the following stages:
+1. Load the XML describing the pages and text boxes (the XML was generated from the OCR scanned PDF with poppler
+   utils (pdftohtml command))
+2. Detect clusters of vertical lines using the image processing module imgproc
+3. Find page rotation or skew and fix it
+4. Get column and line positions of all pages
+5. Create a grid of columns and lines for each page
+6. Match the text boxes into the grid and hence extract the tabular data, storing it into a pandas DataFrame
 
-Created on Wed Dec 14 14:28:29 2016
+Dec. 2016
 
 @author: mkonrad
 """
