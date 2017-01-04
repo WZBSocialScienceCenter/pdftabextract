@@ -7,3 +7,4 @@ __pycache__/
 build/
 dist/
 pdftabextract.egg-info/
+ipynotes.py
