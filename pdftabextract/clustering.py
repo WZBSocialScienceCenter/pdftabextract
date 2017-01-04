@@ -87,7 +87,7 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     
     # Filter clusters: take only clusters with at least <min_n_values> inside. Decrease this value on each iteration.
     center_norm_medians = []
-    min_n_startval = max(map(len, centers_norm_clusters))
+    min_n_startval = max(map(len, centers_norm_clusters_ind))
     for min_n_values in range(min_n_startval, 0, -1):
         for _, vals in centers_norm_clusters:
             if len(vals) >= min_n_values:

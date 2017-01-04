@@ -81,7 +81,7 @@ for p_num, p in pages.items():
     page_scaling_x = iproc_obj.img_w / p['width']
     page_scaling_y = iproc_obj.img_h / p['height']
     pages_image_scaling[p_num] = (page_scaling_x,   # scaling in X-direction
-                                  page_scaling_y)  # scaling in Y-direction
+                                  page_scaling_y)   # scaling in Y-direction
     
     # detect the lines
     lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
