@@ -122,7 +122,10 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     adjusted_centers = {}
     diffsums = {} if return_center_clusters_diffsums else None
     for p_num, centers in all_clusters_centers.items():
-        corrected_centers, diffsum = find_best_matching_array(np.array(centers), center_norm_medians)
+        centers = np.array(centers)
+        centers_norm = centers - centers[0]
+        corrected_centers, diffsum = find_best_matching_array(centers_norm, center_norm_medians)
+        corrected_centers += centers[0]
         
         if image_scaling is not None:
             scaling_for_page = image_scaling[p_num]
