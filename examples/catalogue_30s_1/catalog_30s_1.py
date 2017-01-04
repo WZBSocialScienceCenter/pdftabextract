@@ -95,7 +95,11 @@ for p_num, p in pages.items():
     # the parameters are:
     # 1. the minimum threshold in radians for a rotation to be counted as such
     # 2. the maximum threshold for the difference between horizontal and vertical line rotation (to detect skew)
-    rot_or_skew_type, rot_or_skew_radians = iproc_obj.find_rotation_or_skew(radians(0.5), radians(1))  # uses "lines_hough"
+    # 3. an optional threshold to filter out "stray" lines whose angle is too far apart from the median angle of
+    #    all other lines that go in the same direction (no effect here)
+    rot_or_skew_type, rot_or_skew_radians = iproc_obj.find_rotation_or_skew(radians(0.5),    # uses "lines_hough"
+                                                                            radians(1),
+                                                                            omit_on_rot_thresh=radians(0.5))
     
     # rotate back or deskew text boxes
     needs_fix = True
@@ -116,19 +120,19 @@ for p_num, p in pages.items():
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
-    # cluster the detected lines using find_clusters_1d_break_dist as simple clustering function
+    # cluster the detected *vertical* lines using find_clusters_1d_break_dist as simple clustering function
     # (break on distance MIN_COL_WIDTH/2)
-    clusters_w_vals = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
-                                              dist_thresh=MIN_COL_WIDTH/2)
-    print("> found %d clusters" % len(clusters_w_vals))
+    vertical_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
+                                               dist_thresh=MIN_COL_WIDTH/2)
+    print("> found %d clusters" % len(vertical_clusters))
     
     # draw the clusters
-    img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_VERTICAL, clusters_w_vals)
+    img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_VERTICAL, vertical_clusters)
     save_img_file = os.path.join(OUTPUTPATH, '%s-vertical-clusters.png' % imgfilebasename)
     print("> saving image with detected vertical clusters to '%s'" % save_img_file)
     cv2.imwrite(save_img_file, img_w_clusters)
     
-    vertical_lines_clusters[p_num] = clusters_w_vals
+    vertical_lines_clusters[p_num] = vertical_clusters
 
 #%%
 # save repaired XML (i.e. XML with deskewed textbox positions)

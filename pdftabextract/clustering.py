@@ -206,7 +206,6 @@ def merge_small_sections(texts_in_secs, min_num_texts):
     return merged_secs
 
 
-
 #%% Helper functions
     
 def zip_clusters_and_values(clusters, values):
