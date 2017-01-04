@@ -78,8 +78,10 @@ for p_num, p in pages.items():
     iproc_obj = imgproc.ImageProc(imgfile)
     
     # calculate the scaling of the image file in relation to the text boxes coordinate system dimensions
-    pages_image_scaling[p_num] = (iproc_obj.img_w / p['width'],   # scaling in X-direction
-                                  iproc_obj.img_h / p['height'])  # scaling in Y-direction
+    page_scaling_x = iproc_obj.img_w / p['width']
+    page_scaling_y = iproc_obj.img_h / p['height']
+    pages_image_scaling[p_num] = (page_scaling_x,   # scaling in X-direction
+                                  page_scaling_y)  # scaling in Y-direction
     
     # detect the lines
     lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
@@ -122,10 +124,13 @@ for p_num, p in pages.items():
     
     # cluster the detected *vertical* lines using find_clusters_1d_break_dist as simple clustering function
     # (break on distance MIN_COL_WIDTH/2)
+    # additionaly, remove all cluster sections that are considered empty
+    # a cluster is considered empty when the number of text boxes in it is below 10% of the median number of text boxes
+    # per cluster section
     vertical_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
-                                                remove_empty_cluster_sections_use_texts=p['texts'],
-                                                remove_empty_cluster_sections_n_texts_ratio=0.1,
-                                                remove_empty_cluster_sections_scaling=pages_image_scaling[p_num][0],
+                                                remove_empty_cluster_sections_use_texts=p['texts'], # use this page's textboxes
+                                                remove_empty_cluster_sections_n_texts_ratio=0.1,    # 10% rule
+                                                remove_empty_cluster_sections_scaling=page_scaling_x,  # the positions are in "scanned image space" -> we scale them to "text box space"
                                                 dist_thresh=MIN_COL_WIDTH/2)
     print("> found %d clusters" % len(vertical_clusters))
     
