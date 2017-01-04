@@ -83,6 +83,9 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     good_page_nums = [p_num for p_num, centers_range in all_clusters_centers_range.items()
                       if abs(centers_range - median_range) <= max_range_deviation]
     
+    if len(good_page_nums) < 1:
+        raise RuntimeError('At least one page with clusters that have an accaptable min/max range must be found.')
+
     good_cluster_centers = {p_num: all_clusters_centers[p_num] for p_num in good_page_nums}
     
     # 2. Align the cluster centers so that they all start with 0 and create a flat list that contains all centers
@@ -97,10 +100,10 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     centers_norm_clusters_ind = find_center_clusters_method(centers_norm, **kwargs)
     centers_norm_clusters = zip_clusters_and_values(centers_norm_clusters_ind, centers_norm)
     
-    center_norm_medians = []
-    
     # Filter clusters: take only clusters with at least <min_n_values> inside. Decrease this value on each iteration.
-    for min_n_values in range(len(good_page_nums), 0, -1):
+    center_norm_medians = []
+    min_n_startval = max(map(len, centers_norm_clusters))
+    for min_n_values in range(min_n_startval, 0, -1):
         for _, vals in centers_norm_clusters:
             if len(vals) >= min_n_values:
                 center_norm_medians.append(np.median(vals))
