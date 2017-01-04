@@ -13,6 +13,7 @@ import numpy as np
 
 from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
+from pdftabextract.textboxes import split_texts_by_positions
 
 
 #%% Clustering
@@ -50,9 +51,7 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
 
 
 #%% Cluster adjustment
-
-def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviation,
-                                 find_center_clusters_method, **kwargs):
+def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clusters_method, **kwargs):
     """
     From a dict containing clusters per page, find the cluster centers and apply some adjustments to them
     (filter bad values, interpolate missing values).
@@ -62,7 +61,6 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     If parameter <return_center_clusters_diffsums> is True, additionally return a dict with summed differences between
     found centers and "model" centers as quality measure.
     <n_required_clusters> is the number of cluster centers (i.e. number of columns or lines) to be found.
-    <max_range_deviation> is the maximum deviation of the centers range of a page from the median range.
     <find_center_clusters_method> is the clustering method to cluster aligned ("normalized") centers (<kwargs> will
     be passed to this function).
     <image_scaling> is an optional parameter: dict with page number -> <scaling> mapping with which the
@@ -71,32 +69,19 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     return_center_clusters_diffsums = kwargs.pop('return_center_clusters_diffsums', False)
     image_scaling = kwargs.pop('image_scaling', None)
     
-    # 1. Filter for pages with clusters whose min/max range is acceptable
-    # (i.e. the deviation from the median is below a certain threshold)
-    all_clusters_centers_range = {}
+    # 1. Align the cluster centers so that they all start with 0 and create a flat list that contains all centers
     all_clusters_centers = {}
     for p_num, clusters_w_vals in clusters.items():
-        all_clusters_centers_range[p_num], all_clusters_centers[p_num] = calc_cluster_centers_range(clusters_w_vals,
-                                                                                                    return_centers=True)
-    median_range = np.median(list(all_clusters_centers_range.values()))
+        all_clusters_centers[p_num] = calc_cluster_centers_1d(clusters_w_vals)
     
-    good_page_nums = [p_num for p_num, centers_range in all_clusters_centers_range.items()
-                      if abs(centers_range - median_range) <= max_range_deviation]
-    
-    if len(good_page_nums) < 1:
-        raise RuntimeError('At least one page with clusters that have an accaptable min/max range must be found.')
-
-    good_cluster_centers = {p_num: all_clusters_centers[p_num] for p_num in good_page_nums}
-    
-    # 2. Align the cluster centers so that they all start with 0 and create a flat list that contains all centers
     centers_norm = []
-    for p_num, centers in good_cluster_centers.items():
+    for p_num, centers in all_clusters_centers.items():
         centers = np.array(centers)
         centers_norm.extend(centers - centers[0])
     
     centers_norm = np.array(centers_norm)
 
-    # 3. Clustering second pass: Cluster aligned ("normalized") centers and filter them
+    # 2. Clustering second pass: Cluster aligned ("normalized") centers and filter them
     centers_norm_clusters_ind = find_center_clusters_method(centers_norm, **kwargs)
     centers_norm_clusters = zip_clusters_and_values(centers_norm_clusters_ind, centers_norm)
     
@@ -118,7 +103,7 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
     
     center_norm_medians = np.array(sorted(center_norm_medians))
 
-    # 4. Adjust the cluster centers by finding the best matching array to <center_norm_medians> if sizes differ
+    # 3. Adjust the cluster centers by finding the best matching array to <center_norm_medians> if sizes differ
     adjusted_centers = {}
     diffsums = {} if return_center_clusters_diffsums else None
     for p_num, centers in all_clusters_centers.items():
@@ -139,9 +124,26 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, max_range_deviat
         return adjusted_centers, diffsums
     else:
         return adjusted_centers
+
+
+def remove_empty_sections(positions, texts, direction, considered_empty_ratio):
+    if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
         
+    texts_in_secs = split_texts_by_positions(texts, positions, direction,
+                                             discard_empty_sections=False,
+                                             enrich_with_positions=True)
+    max_n_texts = max(map(len, [tup[0] for tup in texts_in_secs]))
+    n_texts_thresh = round(max_n_texts * considered_empty_ratio)
+    filtered_positions = []
+    for texts, (_, pos) in texts_in_secs:
+        if len(texts) > n_texts_thresh:
+            filtered_positions.append(pos)
+    
+    return filtered_positions
+
         
-def merge_overlapping_sections(texts_in_secs, direction, overlap_thresh):
+def merge_overlapping_sections_of_texts(texts_in_secs, direction, overlap_thresh):
     """
     Merge overlapping sections of texts in <direction> whose consecutive
     "distance" or overlap (when the distance is negative) is less than <overlap_thresh>.
@@ -184,9 +186,9 @@ def merge_overlapping_sections(texts_in_secs, direction, overlap_thresh):
     assert len(flatten_list(texts_in_secs)) == len(flatten_list(merged_secs))
     
     return merged_secs
+    
 
-
-def merge_small_sections(texts_in_secs, min_num_texts):
+def merge_small_sections_of_texts(texts_in_secs, min_num_texts):
     """
     Merge sections that are too small, i.e. have too few "content" which means that their number
     of texts is lower than or equal <min_num_texts>.

@@ -17,7 +17,6 @@ from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y, DIRECTION_HORIZONTAL,
 from pdftabextract.geom import normalize_angle, project_polarcoord_lines
 from pdftabextract.clustering import zip_clusters_and_values
 
-
 PIHLF = np.pi / 2
 PI4TH = np.pi / 4
 
@@ -87,7 +86,6 @@ class ImageProc:
         
         return self.lines_hough
 
-    
     def ab_lines_from_hough_lines(self, lines_hough):
         """
         From a list of lines <lines_hough> in polar coordinate space, generate lines in cartesian coordinate space
@@ -174,7 +172,14 @@ class ImageProc:
 
         return None, None
     
-    def find_clusters(self, direction, method, **method_kwargs):
+    def find_clusters(self, direction, method, **kwargs):
+        remove_empty_cluster_sections_use_texts = kwargs.pop('remove_empty_cluster_sections_use_texts', None)
+        if remove_empty_cluster_sections_use_texts is not None:
+            remove_empty_cluster_sections_n_texts_ratio = kwargs.pop('remove_empty_cluster_sections_n_texts_ratio')
+            remove_empty_cluster_sections_scaling = kwargs.pop('remove_empty_cluster_sections_scaling')
+            remove_empty_cluster_sections_clust_center_fn = kwargs.pop('remove_empty_cluster_sections_clust_center_fn',
+                                                                       np.median)
+        
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
@@ -186,7 +191,7 @@ class ImageProc:
         coord_idx = 0 if direction == DIRECTION_VERTICAL else 1
         positions = np.array([(l[0][coord_idx] + l[1][coord_idx]) / 2 for l in lines_ab])
         
-        clusters = method(positions, **method_kwargs)
+        clusters = method(positions, **kwargs)
         
         if type(clusters) != list:
             raise ValueError("'method' returned invalid clusters (must be list)")
@@ -194,7 +199,41 @@ class ImageProc:
         if len(clusters) > 0 and type(clusters[0]) != np.ndarray:
             raise ValueError("'method' returned invalid cluster elements (must be list of numpy.ndarray objects)")
         
-        return zip_clusters_and_values(clusters, positions)
+        clusters_w_vals = zip_clusters_and_values(clusters, positions)
+        
+        if remove_empty_cluster_sections_use_texts is not None:
+            if direction == DIRECTION_HORIZONTAL:
+                t_attr = 'top', 'bottom'
+            else:
+                t_attr = 'left', 'right'
+                
+            clusters_w_vals_and_centers = [(ind, vals, remove_empty_cluster_sections_clust_center_fn(vals) / remove_empty_cluster_sections_scaling)
+                                           for ind, vals in clusters_w_vals]
+            clusters_w_vals_and_centers = sorted(clusters_w_vals_and_centers, key=lambda x: x[2])
+            clusters_w_vals_and_n_texts = []
+            prev_center = -1
+            for ind, vals, center in clusters_w_vals_and_centers:
+                texts = [t for t in remove_empty_cluster_sections_use_texts
+                         if prev_center < t[t_attr[0]] <= center or prev_center < t[t_attr[1]] <= center]
+                clusters_w_vals_and_n_texts.append((ind, vals, len(texts)))
+                prev_center = center
+            assert len(clusters_w_vals_and_n_texts) == len(clusters_w_vals)
+                
+            max_n_texts = np.median([tup[2] for tup in clusters_w_vals_and_n_texts])
+            n_texts_thresh = round(max_n_texts * remove_empty_cluster_sections_n_texts_ratio)
+            clusters_w_vals_filtered = []
+            prev_clust = None
+            for ind, vals, n_texts in clusters_w_vals_and_n_texts:
+                if n_texts >= n_texts_thresh:
+                    if not clusters_w_vals_filtered:
+                        clusters_w_vals_filtered.append(prev_clust)
+                    
+                    clusters_w_vals_filtered.append((ind, vals))
+                prev_clust = (ind, vals)
+            assert(len(clusters_w_vals_filtered) <= len(clusters_w_vals))
+            clusters_w_vals = clusters_w_vals_filtered
+        
+        return clusters_w_vals
             
     def draw_lines(self, orig_img_as_background=True):
         lines_ab = self.ab_lines_from_hough_lines(self.lines_hough)

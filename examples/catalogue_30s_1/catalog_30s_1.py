@@ -123,7 +123,10 @@ for p_num, p in pages.items():
     # cluster the detected *vertical* lines using find_clusters_1d_break_dist as simple clustering function
     # (break on distance MIN_COL_WIDTH/2)
     vertical_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
-                                               dist_thresh=MIN_COL_WIDTH/2)
+                                                remove_empty_cluster_sections_use_texts=p['texts'],
+                                                remove_empty_cluster_sections_n_texts_ratio=0.1,
+                                                remove_empty_cluster_sections_scaling=pages_image_scaling[p_num][0],
+                                                dist_thresh=MIN_COL_WIDTH/2)
     print("> found %d clusters" % len(vertical_clusters))
     
     # draw the clusters
@@ -149,7 +152,6 @@ print("calculating column positions for all pages...")
 pages_image_scaling_x = {p_num: sx for p_num, (sx, _) in pages_image_scaling.items()}
 
 col_positions = get_adjusted_cluster_centers(vertical_lines_clusters, N_COL_BORDERS,
-                                             max_range_deviation=MIN_COL_WIDTH/2,
                                              find_center_clusters_method=find_clusters_1d_break_dist,
                                              dist_thresh=MIN_COL_WIDTH/2,
                                              image_scaling=pages_image_scaling_x)   # the positions are in "scanned
