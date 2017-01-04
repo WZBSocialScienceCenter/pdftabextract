@@ -126,21 +126,21 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
         return adjusted_centers
 
 
-def remove_empty_sections(positions, texts, direction, considered_empty_ratio):
-    if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
-        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
-        
-    texts_in_secs = split_texts_by_positions(texts, positions, direction,
-                                             discard_empty_sections=False,
-                                             enrich_with_positions=True)
-    max_n_texts = max(map(len, [tup[0] for tup in texts_in_secs]))
-    n_texts_thresh = round(max_n_texts * considered_empty_ratio)
-    filtered_positions = []
-    for texts, (_, pos) in texts_in_secs:
-        if len(texts) > n_texts_thresh:
-            filtered_positions.append(pos)
-    
-    return filtered_positions
+#def remove_empty_sections(positions, texts, direction, considered_empty_ratio):
+#    if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+#        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
+#        
+#    texts_in_secs = split_texts_by_positions(texts, positions, direction,
+#                                             discard_empty_sections=False,
+#                                             enrich_with_positions=True)
+#    max_n_texts = max(map(len, [tup[0] for tup in texts_in_secs]))
+#    n_texts_thresh = round(max_n_texts * considered_empty_ratio)
+#    filtered_positions = []
+#    for texts, (_, pos) in texts_in_secs:
+#        if len(texts) > n_texts_thresh:
+#            filtered_positions.append(pos)
+#    
+#    return filtered_positions
 
         
 def merge_overlapping_sections_of_texts(texts_in_secs, direction, overlap_thresh):
@@ -240,18 +240,18 @@ def calc_cluster_centers_1d(clusters_w_vals, method=np.median):
     return [method(vals) for _, vals in clusters_w_vals]
 
     
-def calc_cluster_centers_range(clusters_w_vals, reduce_clusters_method=np.median, return_centers=False):
-    """
-    Calculate the cluster centers of <clusters_w_vals> using calc_cluster_centers_1d and return their range, i.e.
-    max(centers) - min(centers).
-    Optionally return also the centers.
-    """
-    centers = calc_cluster_centers_1d(clusters_w_vals, method=reduce_clusters_method)
-    rng = max(centers) - min(centers)
-    if return_centers:
-        return rng, centers
-    else:
-        return rng
+#def calc_cluster_centers_range(clusters_w_vals, reduce_clusters_method=np.median, return_centers=False):
+#    """
+#    Calculate the cluster centers of <clusters_w_vals> using calc_cluster_centers_1d and return their range, i.e.
+#    max(centers) - min(centers).
+#    Optionally return also the centers.
+#    """
+#    centers = calc_cluster_centers_1d(clusters_w_vals, method=reduce_clusters_method)
+#    rng = max(centers) - min(centers)
+#    if return_centers:
+#        return rng, centers
+#    else:
+#        return rng
 
         
 def array_match_difference_1d(a, b):
