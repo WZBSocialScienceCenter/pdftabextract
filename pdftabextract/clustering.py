@@ -50,6 +50,18 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
     return clusters
 
 
+def find_clusters_1d_hierarchical(vals, t, **kwargs):    
+    from scipy.cluster.hierarchy import fclusterdata
+    
+    data = vals.reshape((len(vals), 1))
+    ind = fclusterdata(data, t, **kwargs)
+    
+    clusters = [np.where(ind == c_id)[0] for c_id in np.unique(ind)]
+    
+    assert len(vals) == sum(map(len, clusters))
+    
+    return clusters
+
 #%% Cluster adjustment
 def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clusters_method, **kwargs):
     """
@@ -89,13 +101,17 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     center_norm_medians = []
     min_n_startval = max(map(len, centers_norm_clusters_ind))
     for min_n_values in range(min_n_startval, 0, -1):
-        for _, vals in centers_norm_clusters:
-            if len(vals) >= min_n_values:
-                center_norm_medians.append(np.median(vals))
+        clust_ids_to_remove = []
+        for i, (_, vals) in enumerate(centers_norm_clusters):
+            val_median = np.median(vals)
+            if len(vals) >= min_n_values and val_median not in center_norm_medians:
+                center_norm_medians.append(val_median)
+                clust_ids_to_remove.append(i)
         
             if len(center_norm_medians) == n_required_clusters:
                 break
         else:
+            centers_norm_clusters = [c for i, c in enumerate(centers_norm_clusters) if i not in clust_ids_to_remove]
             continue
         break
     
@@ -108,9 +124,11 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     diffsums = {} if return_center_clusters_diffsums else None
     for p_num, centers in all_clusters_centers.items():
         centers = np.array(centers)
-        centers_norm = centers - centers[0]
-        corrected_centers, diffsum = find_best_matching_array(centers_norm, center_norm_medians)
-        corrected_centers += centers[0]
+        corrected_centers, diffsum = find_best_matching_array(centers, center_norm_medians)
+        #print(p_num, diffsum)
+        #print(list((center_norm_medians + centers[0]) / image_scaling[p_num]))
+        #print(list((centers_norm + centers[0]) / image_scaling[p_num]))
+        #print()
         
         if image_scaling is not None:
             scaling_for_page = image_scaling[p_num]
@@ -365,7 +383,7 @@ def find_best_matching_array(base_arr, model_arr):
         diff = array_match_difference_1d(best_arr, model_arr_w_offset)
     else:                  # number of values matches
         diff = array_match_difference_1d(base_arr, model_arr + base_arr[0])
-        best_arr = base_arr
+        best_arr = base_arr.copy()
     
     return best_arr, diff
 

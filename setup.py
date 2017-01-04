@@ -43,5 +43,9 @@ pdf2xml format using poppler utils.""",
     packages=['pdftabextract'],
     include_package_data=True,
 
-    install_requires=['numpy', 'opencv-python', 'pandas'],
+    install_requires=['numpy', 'opencv-python'],
+    extras_require = {
+        'clustering_methods_from_scipy':  ['scipy'],
+        'pandas_dataframes':  ['pandas'],
+    }
 )
