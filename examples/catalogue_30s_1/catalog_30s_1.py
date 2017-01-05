@@ -219,6 +219,7 @@ for p_num, p in pages.items():
     bottom_texts_per_line = split_texts_by_positions(bottom_texts,
                                                      pos_y + [p['height']],   # always down to the end of the page
                                                      DIRECTION_VERTICAL,
+                                                     alignment='middle',
                                                      enrich_with_positions=True)
     # go through the texts at the bottom line per line
     page_span = page_colpos[-1] - page_colpos[0]
