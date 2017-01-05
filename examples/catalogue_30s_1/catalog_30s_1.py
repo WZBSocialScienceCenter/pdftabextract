@@ -198,6 +198,7 @@ for p_num, p in pages.items():
     ### make some additional filtering of the row positions ###
     # 1. try to find the top row of the table
     texts_cols_1_2_per_line = split_texts_by_positions(texts_cols_1_2, pos_y, DIRECTION_VERTICAL,
+                                                       alignment='middle',
                                                        enrich_with_positions=True)
     
     # go through the texts line per line

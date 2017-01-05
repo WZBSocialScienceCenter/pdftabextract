@@ -52,27 +52,37 @@ def split_texts_by_positions(texts, positions, direction, alignment='high',
     Split textboxes in <texts> into sections according to <positions> either horizontally or vertically (depending on
     <direction>.)
     
+    <alignment> must be one of ('low', 'middle', 'high') and is used to determine the text box border (or center
+    for 'middle') to use for checking if this text box is inside of a section
+    
     <positions> must be sorted from low to high!
     """
     if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
         raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
         
-    if alignment not in ('low', 'high'):
+    if alignment not in ('low', 'middle', 'high'):
         raise ValueError("alignment must be  'low' or 'high'")
     
     if len(positions) == 0:
         raise ValueError("positions must be non-empty sequence")
     
-    if direction == DIRECTION_VERTICAL:
-        attr = 'bottom' if alignment == 'high' else 'top'
+    if alignment != 'middle':
+        if direction == DIRECTION_VERTICAL:
+            attr = 'bottom' if alignment == 'high' else 'top'
+        else:
+            attr = 'right' if alignment == 'high' else 'left'
+        t_in_section = lambda t, p1, p2: p1 < t[attr] <= p2
     else:
-        attr = 'right' if alignment == 'high' else 'left'
+        if direction == DIRECTION_VERTICAL:
+            t_in_section = lambda t, p1, p2: p1 < t['top'] + t['height'] / 2 <= p2
+        else:
+            t_in_section = lambda t, p1, p2: p1 < t['left'] + t['width'] / 2 <= p2
     
     prev_pos = -1
     split_texts = []
     n_added_texts = 0
     for pos in positions:
-        texts_in_section = [t for t in texts if prev_pos < t[attr] <= pos]
+        texts_in_section = [t for t in texts if t_in_section(t, prev_pos, pos)]
         
         if texts_in_section or not discard_empty_sections:
             if enrich_with_positions:
