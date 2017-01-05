@@ -225,7 +225,7 @@ class ImageProc:
             prev_clust = None
             for ind, vals, n_texts in clusters_w_vals_and_n_texts:
                 if n_texts >= n_texts_thresh:
-                    if not clusters_w_vals_filtered:
+                    if not clusters_w_vals_filtered and prev_clust is not None:
                         clusters_w_vals_filtered.append(prev_clust)
                     
                     clusters_w_vals_filtered.append((ind, vals))
