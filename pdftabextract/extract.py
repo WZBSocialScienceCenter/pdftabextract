@@ -50,7 +50,6 @@ def fit_texts_into_grid(texts, grid, return_unmatched_texts=False):
     Return a data table with the same dimensions as <grid>, each  cell containing a list of text boxes
     (or an empty list).
     """
-    # TODO: speed this function up
     n_rows = len(grid)
     
     if n_rows == 0:
@@ -70,12 +69,22 @@ def fit_texts_into_grid(texts, grid, return_unmatched_texts=False):
         # find out the cells with which this textbox rectangle intersects
         cell_isects = []
         for i, row in enumerate(grid):
-            for j, cell_rect in enumerate(row):
-                c_l, c_t = cell_rect[0]
-                c_r, c_b = cell_rect[1]
-                isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
-                if isect is not None and isect > 0:  # only "touch" is not enough
-                    cell_isects.append(((i, j), isect, rectcenter_dist(t_rect, cell_rect)))
+            first_cell_rect = row[0]
+            row_top = first_cell_rect[0][1]
+            row_bottom = first_cell_rect[1][1]
+            
+            if row_top <= t['top'] <= row_bottom \
+                    or row_top <= t['bottom'] <= row_bottom \
+                    or (t['top'] <= row_top and t['bottom'] >= row_bottom):
+                for j, cell_rect in enumerate(row):
+                    c_l, c_t = cell_rect[0]
+                    c_r, c_b = cell_rect[1]
+                    if c_l <= t['left'] <= c_r or c_l <= t['right'] <= c_r \
+                            or (t['left'] <= c_l and t['right'] >= c_r):
+                        isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+                        assert isect is not None
+                        if isect > 0:  # only "touch" is not enough
+                            cell_isects.append(((i, j), isect, rectcenter_dist(t_rect, cell_rect)))
         
         if len(cell_isects) > 0:
             # find out the cell with most overlap
