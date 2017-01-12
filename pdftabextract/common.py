@@ -112,6 +112,12 @@ def create_text_dict(t, value=None):
     return text
 
 
+def update_text_xmlnode(t, attr, val, round_float=True):
+    if round_float:
+        val = int(round(val))
+    t['xmlnode'].attrib[attr] = str(val)
+
+    
 def update_text_dict_pos(t, pos, update_node=False):
     t_top = pos[1]
     t_left = pos[0]
@@ -129,9 +135,9 @@ def update_text_dict_pos(t, pos, update_node=False):
         'bottomright': np.array((t_right, t_bottom)),
     })
 
-    if update_node:    
-        t['xmlnode'].attrib['left'] = str(int(round(pos[0])))
-        t['xmlnode'].attrib['top'] = str(int(round(pos[1])))
+    if update_node:   
+        update_text_xmlnode(t, 'left', pos[0])
+        update_text_xmlnode(t, 'top', pos[1])
 
 
 #%% string functions

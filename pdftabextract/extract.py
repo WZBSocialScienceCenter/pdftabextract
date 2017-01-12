@@ -73,13 +73,9 @@ def fit_texts_into_grid(texts, grid, return_unmatched_texts=False):
             for j, cell_rect in enumerate(row):
                 c_l, c_t = cell_rect[0]
                 c_r, c_b = cell_rect[1]
-                if (c_l <= t['left'] <= c_r or c_l <= t['right'] <= c_r) and \
-                        (c_t <= t['top'] <= c_b or c_t <= t['bottom'] <= c_b):
-                    isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
-                    assert isect is not None
-                    if isect > 0:  # only "touch" is not enough
-                        # TODO: only record the best sell intersections
-                        cell_isects.append(((i, j), isect, rectcenter_dist(t_rect, cell_rect)))
+                isect = rectintersect(cell_rect, t_rect, norm_intersect_area='b')
+                if isect is not None and isect > 0:  # only "touch" is not enough
+                    cell_isects.append(((i, j), isect, rectcenter_dist(t_rect, cell_rect)))
         
         if len(cell_isects) > 0:
             # find out the cell with most overlap
