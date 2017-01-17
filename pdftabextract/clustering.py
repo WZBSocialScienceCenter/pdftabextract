@@ -77,9 +77,13 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     be passed to this function).
     <image_scaling> is an optional parameter: dict with page number -> <scaling> mapping with which the
     final centers for each page are calculated by <center> / <scaling>.
+    <arr_matching_same_size_use_model_arr_diff_thresh> is an optional parameter. During cluster array matching,
+    this parameter defines the array difference threshold, upon which the averaged "model array" (e.g. model clusters)
+    is used instead of the detected cluster array, because the detected clusters do not fit to the model clusters.
     """
     return_center_clusters_diffsums = kwargs.pop('return_center_clusters_diffsums', False)
     image_scaling = kwargs.pop('image_scaling', None)
+    same_size_use_model_arr_diff_thresh = kwargs.pop('arr_matching_same_size_use_model_arr_diff_thresh', None)
     
     # 1. Align the cluster centers so that they all start with 0 and create a flat list that contains all centers
     all_clusters_centers = {}
@@ -124,7 +128,8 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     diffsums = {} if return_center_clusters_diffsums else None
     for p_num, centers in all_clusters_centers.items():
         centers = np.array(centers)
-        corrected_centers, diffsum = find_best_matching_array(centers, center_norm_medians)
+        corrected_centers, diffsum = find_best_matching_array(centers, center_norm_medians,
+                                                              same_size_use_model_arr_diff_thresh=same_size_use_model_arr_diff_thresh)
         #print(p_num, diffsum)
         #print(list((center_norm_medians + centers[0]) / image_scaling[p_num]))
         #print(list((centers_norm + centers[0]) / image_scaling[p_num]))
@@ -288,7 +293,7 @@ def array_match_difference_1d(a, b):
     return np.sum(np.abs(a - b))
     
 
-def find_best_matching_array(base_arr, model_arr):
+def find_best_matching_array(base_arr, model_arr, same_size_use_model_arr_diff_thresh=None):
     """
     Find an array <best_arr> based on <base_arr> that fits best to <model_arr> if their sizes differ.
     <best_arr> will have the same size as <model_arr> and either has surplus elements removed (if <base_arr> is
@@ -382,8 +387,13 @@ def find_best_matching_array(base_arr, model_arr):
         best_arr = fill_array_a_with_values_from_b(base_arr, model_arr_w_offset, add_ind)
         diff = array_match_difference_1d(best_arr, model_arr_w_offset)
     else:                  # number of values matches
-        diff = array_match_difference_1d(base_arr, model_arr + base_arr[0])
-        best_arr = base_arr.copy()
+        diff_base_arr = array_match_difference_1d(base_arr, model_arr + base_arr[0])
+        if same_size_use_model_arr_diff_thresh is not None and diff_base_arr > same_size_use_model_arr_diff_thresh:
+            best_arr = model_arr + base_arr[0]
+            diff = 0  # can only be zero
+        else:
+            diff = diff_base_arr
+            best_arr = base_arr.copy()
     
     return best_arr, diff
 

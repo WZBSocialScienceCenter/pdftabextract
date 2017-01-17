@@ -180,6 +180,8 @@ class ImageProc:
             remove_empty_cluster_sections_clust_center_fn = kwargs.pop('remove_empty_cluster_sections_clust_center_fn',
                                                                        np.median)
         
+        remove_cluster_sections_stddev_thresh = kwargs.pop('remove_cluster_sections_stddev_thresh', None)
+        
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
@@ -200,6 +202,10 @@ class ImageProc:
             raise ValueError("'method' returned invalid cluster elements (must be list of numpy.ndarray objects)")
         
         clusters_w_vals = zip_clusters_and_values(clusters, positions)
+        
+        if remove_cluster_sections_stddev_thresh is not None:
+            clusters_w_vals = [(ind, vals) for ind, vals in clusters_w_vals
+                               if np.std(vals) < remove_cluster_sections_stddev_thresh]
         
         if remove_empty_cluster_sections_use_texts is not None:
             if direction == DIRECTION_HORIZONTAL:

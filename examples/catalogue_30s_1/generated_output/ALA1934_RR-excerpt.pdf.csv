@@ -57,10 +57,10 @@ t,«b.  ^erbster- Zeitung  .   .  Siehe  Anzeige  S. 258,2 890,6,46,7,8,P,79,60,
 ,",  M orgenzeitu ng  un d  H a n d elsb la tt...........................",3  050,7,22,12,5,P,90,30,A,,420 280,5040,+,25,1
 ,'   Siehe  Anzeige  S. 12,,,,,,,,,,,,,,,1
 ,"17 0 0 0 -  B a d e n - B a d e n .  O o s ,    -A ife e m e fe e i,  -Anzeiger",,,,,,,,,,,,,,,1
-,-  f ü r . B ad en -B a d en -O os  u n d   U m gebung  .   .  .,,1,46,6,,,,,,,,,+,,1
-4 000,"- B a m m e n t a l ,    p e r   j a s e n z - J i o t c ............................",450,2,46,6,6 3,P G,90 90,12 10,A A,,432 282 445 279,2592 2670,+,30 30,1
-2 000,"B o n n d o r f ,    Bäsm ÄM fer  V o lk s b l a t t .......................",700,6,46,6,4,,90,10,A,,410 282,2460,+,,1
-,S ieh e  A n zeig e   S.  44,,,,,,,,,t,,,,,,1
+,-  f ü r . B ad en -B a d en -O os  u n d   U m gebung  .   .  .,,1,46,6,6,P,90,12,A,,432 282,2592,+,30,1
+4 000,"- B a m m e n t a l ,    p e r   j a s e n z - J i o t c ............................",450,2,46,6,3,G,90,10,A,,445 279,2670,+,30,1
+2 000,"B o n n d o r f ,    Bäsm ÄM fer  V o lk s b l a t t .......................",700,6,46,6,4,,90,10,t  A,,410 282,2460,+,,1
+,S ieh e  A n zeig e   S.  44,,,,,,,,,,,,,,,1
 r *,S e h w a rz w ö d e r-Z e itu n g   .   Siehe  A nzeige   S.  44,700,6,46,6,4,B,92,10,,,415 280,2490,+,20,1
 4   o o a,"B r e i s a c h ,   iBrcisacUer  Z e i t u n g ............................",820,4,46,6,5,G,90,20,B,,390 280,2340,O,,1
 ,"""   Siehe  A nzeige  S. 46",,,,,,,,,,,,,,,1
@@ -107,8 +107,8 @@ r *,S e h w a rz w ö d e r-Z e itu n g   .   Siehe  A nzeige   S.  44,700,6,46,
 ,P forzheim,,,,,,,,,,,,,,,2
 ,F e u d e n h e i m    siehe   M annheim -Feudenheim,,,,,,,,,,,,,,,2
 3  000,"D o r c h h e i m   h .   K a r l s r u h e ,   G em einde-A n­",,,,,,,,,,,,,,,2
-,zeiger  .............................................................................,475,2,46,4,2 8,V,93,5,A,,260 186,1040,+,54,2
-100  000,"F r e i l m r g   i .   B r . ,   o D e r   A le m a n n e ..................",36  000,12,22,13,,P,76,50,B,,465 320,6045,+,33,2
+,zeiger  .............................................................................,475,2,46,4,2,V,93,5,A,,260 186,1040,+,54,2
+100  000,"F r e i l m r g   i .   B r . ,   o D e r   A le m a n n e ..................",36  000,12,22,13,8,P,76,50,B,,465 320,6045,+,33,2
 ,Siehe  A n zeig e  S.  93,,,,,,,,,,,,,,,2
 ,F reiburger  Z eitu n g  .  .  .  Siehe  A n zeig e  S . 94,21  375,12,22,12,8,N,70,50,B,,425 280,5100,+,36,2
 ,Tagespost.  A usgabe  A   B reisgau /S chw arzw ald,7  885,7,46,6,11,P,90,25,A,,425 279,2550,+,34,2
@@ -117,8 +117,8 @@ r *,S e h w a rz w ö d e r-Z e itu n g   .   Siehe  A nzeige   S.  44,700,6,46,
 ,Siehe  A n zeig e  S .  94,,,,,,,,,,,,,,,2
 4  400,"F r i e d r i e h s f e l d ,   TTiedrichsfelder  Z eitu n g  .  .",,2,46,6,4,P,90,8,A,,430 280,2580,+,30,2
 5  000,"E u r t w a n g e n . ,  F u rtw sn g er -N achrichten  .  .  .",800,6,46,6,5,G,90,15,A,,420 280,2520,+,20,2
-,Siehe  A n zeig e  S . 98,,,,,1 3,,,,,,,,,,2
-,O S chw arz Wälder  T a gb la tt  Siehe  A n zeig e  S.  97,10  000,6,46,6,,G,68,30,A,,425 280,2550,+,30,2
+,Siehe  A n zeig e  S . 98,,,,,,,,,,,,,,,2
+,O S chw arz Wälder  T a gb la tt  Siehe  A n zeig e  S.  97,10  000,6,46,6,1 3,G,68,30,A,,425 280,2550,+,30,2
 5 000,"G a g g e n a u ,   Ga'ggeöauex  A n z e i g e r .......................",1  400,6,22,12,3,P,90,18,A,,420 280,5040,+,25,2
 3  600,"G e n g e n b a c h ,   D er  E in z i g - B o t e ...........................",1  025,3,46,6,4,P,90,12,A,,415 282,2490,,,2
 ,S t .   G e o r g e n    siehe   un ter  St.  Georgen,,,,,,,,,,,,,,,2
@@ -143,26 +143,26 @@ r *,S e h w a rz w ö d e r-Z e itu n g   .   Siehe  A nzeige   S.  44,700,6,46,
 ,H eidelberger  V olk sb latt  Siehe  A nzeige  S . 127,5  104,6,46,6,7,P,70,25,A,,420 283,2520,+,60,2
 ,OVolksgem einschaift. . . .   Siehe  A nzeige  S . 127,23 000,7,22,12,7,c,69,35,B,,410 279,4920,+,30,2
 1  621,"H e i t e r s l i e i m ,   H eitersheim er  B ote   siehe   Sulz­",,,,,,,,,,,,,,,2
-,b urg  i.  B .,,,,,,p,,,,,,,,,2
-3  200,"H e r b o l z h e i m ,   B r . ,   H erbolzheim er  Z eitu n g  .",,3,46,6,4,,67,10,A,426,283,2556,+,,2
-,Siehe  A nzeige  S. 129,,,,,5,p,,,,,,,+,,2
-9  600,"H o e k e n h c i m ,   H ocken heim er  T a geb la tt  .  .  .",480,6,46,6,,,67,8,,420,279,2520,,,2
-,'H oekenheim er  Z e i t u n g ..............................................,1  250,6,46,6 6,3,p,90,10,A A,420,279,2520,+,30,2
-3  200,"H o m b e r g ,   Schw afzw älder  C h r o n i k ..................",598,6,46,,4,G,92,12,,,415 282,2490,+,48,2
+,b urg  i.  B .,,,,,,,,,,,,,,,2
+3  200,"H e r b o l z h e i m ,   B r . ,   H erbolzheim er  Z eitu n g  .",,3,46,6,4,p,67,10,A,426,283,2556,+,,2
+,Siehe  A nzeige  S. 129,,,,,,,,,,,,,,,2
+9  600,"H o e k e n h c i m ,   H ocken heim er  T a geb la tt  .  .  .",480,6,46,6,5,p,67,8,,420,279,2520,+,,2
+,'H oekenheim er  Z e i t u n g ..............................................,1  250,6,46,6,3,p,90,10,A,420,279,2520,+,30,2
+3  200,"H o m b e r g ,   Schw afzw älder  C h r o n i k ..................",598,6,46,6,4,G,92,12,A,,415 282,2490,+,48,2
 ,Siehe  A nzeige  S. 132,,,,,,,,,,,,,,,2
 ,K ä f e r t a l    siehe   M annheim -K äfertal,,,,,,,,,,,,,,,2
 3  300,"K a p p e l r o d e c k ,   V erkün digungsblatt  fü r  die",,,,,,,,,,,,,,,2
 ,Gem einde  K a p p e l r o d e c k ....................................,,1,46,4,"2 , 5",,,,A,265,190,1060,o,48,2
-157  000,"K a r l s r u h e   i .   B . ,   B adischer  B eoba ch ter  .  .",9  125,7,22,12,,,65,30,B,420,279,5040,,30,2
-,B ei  gleicht.  A u fg .  in   den  B ezirksausg.  R a ­,,,,,6,N,,,,,,,+,,2
+157  000,"K a r l s r u h e   i .   B . ,   B adischer  B eoba ch ter  .  .",9  125,7,22,12,6,N,65,30,B,420,279,5040,+,30,2
+,B ei  gleicht.  A u fg .  in   den  B ezirksausg.  R a ­,,,,,,,,,,,,,,,2
 ,"statter  Z eitung,  N d te  Badener  Zeitung  B a ­",,,,,,,,,,,,,,,2
 ,"den-Baden,  Pforzneim er  M orgenblatt  mm",,,,,,,,,,,,,,,2
 ,"9  R p f ,   R ekl.  mm 45 R p f",,,,,,,,,,,,,,,2
 ,#  Siehe  A n zeig e  S . 1 36,,,,,,,,,,,,,,,2
-,B adische  Presse  . . . .   Siehe  A nzeige  S .  137,82  900,12,22,12,10 11,N,98,70,C,440 300,,5280,4-,25,2
-,O D er  Füh rer  .................. S iehe  A n zeig e  S . 1 38,55  000,12,22,12,,N,70,55,C,420 288,,5040,+,30,2
-157 000,"K a r l s r u h e   i .   B . ,   Generalanzeiger  für  Südw est­",,,,,,,,,,,,,+,,3
-,d eu tsch la n d   .........................................,23  300,7,22,12,7,N,90,50,c,,420 280,5040,,25,3
+,B adische  Presse  . . . .   Siehe  A nzeige  S .  137,82  900,12,22,12,10,N,98,70,C,440 300,,5280,4-,25,2
+,O D er  Füh rer  .................. S iehe  A n zeig e  S . 1 38,55  000,12,22,12,11,N,70,55,C,420 288,,5040,+,30,2
+157 000,"K a r l s r u h e   i .   B . ,   Generalanzeiger  für  Südw est­",,,,,,,,,,,,,,,3
+,d eu tsch la n d   .........................................,23  300,7,22,12,7,N,90,50,c,,420 280,5040,+,25,3
 ,B e i  gleichz.  A u fg .  in   B ez.-A u sg .  N euer  R hem -,,,,,,,,,,,,,,,3
 ,"u.  K in zig -B ote,  H ardt-Anzeiger,  K eM ,  mm",,,,,,,,,,,,,,,3
 ,"8 R p f, R ekl. mm  SO l i p f    Siehe  A nzeige  S . 137",,,,,,,,,,,,,,,3
@@ -251,8 +251,8 @@ r *,S e h w a rz w ö d e r-Z e itu n g   .   Siehe  A nzeige   S.  44,700,6,46,
 ,"K in zigtäler  Nachrichten,  Haslach  und",,,,,,,,,,,,,,,3
 ,"W otfach er  Volksblatt  m m    7  R p t,   B ekl.  mm",,,,,,,,,,,,,,,3
 ,"31  R p f    ,   Siehe  A nzeige  S . 201",,,,,,,,,,,,,,,3
-2  110,"O p p e n a u ,   V erk ü n A g n n g a H ätt , f ü r j i a s , .^ r f t h -",,,,,,,,,,,,,o,,3
-,s pieb O lfflen a u   .  .  T i r - r - r - r ...........................,,1,93,2,G,G,,,,,270 210,540,,,3
+2  110,"O p p e n a u ,   V erk ü n A g n n g a H ätt , f ü r j i a s , .^ r f t h -",,,,,,,,,,,,,,,3
+,s pieb O lfflen a u   .  .  T i r - r - r - r ...........................,,1,93,2,G,G,,,,,270 210,540,o,,3
 78  000,"P f o r z h e i m ,   B adisch er B eoba ch ter. P forzheim er",,,,,,,,,,,,,,,4
 ,M o r g e n b la t t ................................................................,1  200,7,22,12,"3 , 5",P,65,10,A,,420 279,5040,+,30,4
 ,S a.-Pr.   siehe    K arlsruhe  Siehe  A nzeige  S.  136,,,,,,,,,,,,,,,4
