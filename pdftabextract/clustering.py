@@ -387,13 +387,12 @@ def find_best_matching_array(base_arr, model_arr, same_size_use_model_arr_diff_t
         best_arr = fill_array_a_with_values_from_b(base_arr, model_arr_w_offset, add_ind)
         diff = array_match_difference_1d(best_arr, model_arr_w_offset)
     else:                  # number of values matches
-        diff_base_arr = array_match_difference_1d(base_arr, model_arr + base_arr[0])
-        if same_size_use_model_arr_diff_thresh is not None and diff_base_arr > same_size_use_model_arr_diff_thresh:
-            best_arr = model_arr + base_arr[0]
-            diff = 0  # can only be zero
-        else:
-            diff = diff_base_arr
-            best_arr = base_arr.copy()
+        diff = array_match_difference_1d(base_arr, model_arr + base_arr[0])
+        best_arr = base_arr.copy()
+        
+    if same_size_use_model_arr_diff_thresh is not None and diff > same_size_use_model_arr_diff_thresh:
+        best_arr = model_arr + base_arr[0]
+        diff = 0  # can only be zero
     
     return best_arr, diff
 
