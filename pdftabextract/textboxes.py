@@ -192,16 +192,16 @@ def deskew_textboxes(page, skew_radians, skew_direction, about_pt):
         if skew_direction == SKEW_X:
             x = t['top'] + t['height'] / 2
             ref_idx = 1
-            trigon_fn = math.cos
+            a = -1
         else:
             x = t['left'] + t['width'] / 2
             ref_idx = 0
-            trigon_fn = math.sin
+            a = 1
 
         # x, y have nothing to do with the x and y in a cartesian coord. system
         # y is the coordinate that gets changed depending on x
         d = x - about_pt[ref_idx]
-        y_diff = trigon_fn(skew_radians) * d
+        y_diff = a * math.sin(skew_radians) * d
         
         
         if skew_direction == SKEW_X:
