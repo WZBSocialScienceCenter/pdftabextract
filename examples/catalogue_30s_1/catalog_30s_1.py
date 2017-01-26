@@ -10,9 +10,9 @@ It includes the following stages:
 5. Create a grid of columns and lines for each page
 6. Match the text boxes into the grid and hence extract the tabular data, storing it into a pandas DataFrame
 
-Dec. 2016
+Dec. 2016, WZB Berlin Social Science Center - https://wzb.eu
 
-@author: mkonrad
+@author: Markus Konrad <markus.konrad@wzb.eu>
 """
 
 import os
