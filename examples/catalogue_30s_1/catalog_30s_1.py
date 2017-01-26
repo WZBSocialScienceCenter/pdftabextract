@@ -87,7 +87,7 @@ for p_num, p in pages.items():
     lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
                                          hough_rho_res=1,
                                          hough_theta_res=np.pi/500,
-                                         hough_votes_thresh_rel=0.2)
+                                         hough_votes_thresh=round(0.2 * iproc_obj.img_w))
     print("> found %d lines" % len(lines_hough))
     
     save_image_w_lines(iproc_obj, imgfilebasename, True)

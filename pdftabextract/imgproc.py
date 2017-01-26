@@ -15,7 +15,7 @@ import cv2
 
 from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL
 from pdftabextract.geom import normalize_angle, project_polarcoord_lines
-from pdftabextract.clustering import zip_clusters_and_values
+from pdftabextract.clustering import zip_clusters_and_values, find_clusters_1d_break_dist, calc_cluster_centers_1d
 
 PIHLF = np.pi / 2
 PI4TH = np.pi / 4
@@ -46,8 +46,7 @@ class ImageProc:
 
         
     def detect_lines(self, canny_low_thresh, canny_high_thresh, canny_kernel_size,
-                     hough_rho_res, hough_theta_res, hough_votes_thresh_rel,
-                     hough_votes_thresh_abs=None,
+                     hough_rho_res, hough_theta_res, hough_votes_thresh,
                      gray_conversion=cv2.COLOR_BGR2GRAY):
         """
         Detect lines in input image using hough transform.
@@ -56,14 +55,74 @@ class ImageProc:
         self.gray_img = cv2.cvtColor(self.input_img, gray_conversion)
         self.edges = cv2.Canny(self.gray_img, canny_low_thresh, canny_high_thresh, apertureSize=canny_kernel_size)
         
-        votes_thresh = hough_votes_thresh_abs if hough_votes_thresh_abs else round(self.img_w * hough_votes_thresh_rel)
-        
         # detect lines with hough transform
-        lines = cv2.HoughLines(self.edges, hough_rho_res, hough_theta_res, votes_thresh)
+        lines = cv2.HoughLines(self.edges, hough_rho_res, hough_theta_res, hough_votes_thresh)
         
         self.lines_hough = self._generate_hough_lines(lines)
         
         return self.lines_hough
+    
+    def find_pages_separator_line(self, direction=DIRECTION_VERTICAL, around_rel_position=0.5,
+                                  clustering_method=None, **clustering_kwargs):
+        if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+            raise ValueError("invalid value for 'direction': '%s'" % direction)
+        
+        if not 0 <= around_rel_position <= 1:
+            raise ValueError("invalid value for 'around_rel_position' (must be in [0, 1]): %d" % around_rel_position)
+        
+        line_clusters = self.find_clusters(direction, clustering_method or find_clusters_1d_break_dist,
+                                           **clustering_kwargs)
+        cluster_centers = np.array(calc_cluster_centers_1d(line_clusters))
+        
+        img_dim = self.img_w if direction == DIRECTION_VERTICAL else self.img_h
+        around_pos = img_dim * around_rel_position
+        
+        sep_idx = np.argmin(np.abs(cluster_centers - around_pos))
+        
+        return cluster_centers[sep_idx]
+    
+    def split_image(self, pos, direction=DIRECTION_VERTICAL):
+        if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+            raise ValueError("invalid value for 'direction': '%s'" % direction)
+        
+        img_dim = self.img_w if direction == DIRECTION_VERTICAL else self.img_h
+        
+        pos = int(round(pos))
+        
+        if not 0 <= pos <= img_dim:
+            raise ValueError("invalid value for 'pos' (must be in [0, %f], i.e. in image space): %d" % (img_dim, pos))
+        
+        img_w = int(round(self.img_w))
+        img_h = int(round(self.img_h))
+        
+        if direction == DIRECTION_VERTICAL:  # split left and right page
+            ya1 = yb1 = 0
+            ya2 = yb2 = img_h
+            xa1 = 0
+            xa2 = pos
+            xb1 = pos
+            xb2 = img_w
+        else:
+            xa1 = xb1 = 0
+            xa2 = xb2 = img_w
+            ya1 = 0
+            ya2 = pos
+            yb1 = pos
+            yb2 = img_h
+        
+        assert 0 <= xa1 <= img_w
+        assert 0 <= xa2 <= img_w
+        assert 0 <= xb1 <= img_w
+        assert 0 <= xb2 <= img_w
+        assert 0 <= ya1 <= img_h
+        assert 0 <= ya2 <= img_h
+        assert 0 <= yb1 <= img_h
+        assert 0 <= yb2 <= img_h
+        
+        img_a = self.input_img[ya1:ya2, xa1:xa2].copy()
+        img_b = self.input_img[yb1:yb2, xb1:xb2].copy()
+        
+        return img_a, img_b
         
     def apply_found_rotation_or_skew(self, rot_or_skew_type, rot_or_skew_radians):        
         if rot_or_skew_type is None or rot_or_skew_radians is None:
@@ -310,7 +369,12 @@ class ImageProc:
 
         self.img_h, self.img_w = self.input_img.shape[:2]
     
-    def _generate_hough_lines(self, lines):        
+    def _generate_hough_lines(self, lines):
+        """
+        From a list of lines in <lines> detected by cv2.HoughLines, create a list with a tuple per line
+        containing:
+        (rho, theta, normalized theta with 0 <= theta_norm < np.pi, DIRECTION_VERTICAL or DIRECTION_HORIZONTAL)
+        """
         lines_hough = []
 
         for l in lines:
