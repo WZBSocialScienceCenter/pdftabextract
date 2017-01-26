@@ -13,7 +13,8 @@ import numpy as np
 import pandas as pd
 import cv2
 
-from pdftabextract.common import (read_xml, parse_pages, save_page_grids, all_a_in_b,
+from pdftabextract.common import (read_xml, parse_pages, split_page_texts, create_split_pages_dict_structure,
+                                  save_page_grids, all_a_in_b,
                                   ROTATION, SKEW_X, SKEW_Y,
                                   DIRECTION_VERTICAL)
 from pdftabextract import imgproc
@@ -77,9 +78,16 @@ sep_line_page_x = sep_line_img_x / page_scaling_x
 print("> found pages separator line at %f (image space position) / %f (page space position)"
       % (sep_line_img_x, sep_line_page_x))
 
-img_left, img_right = iproc_obj.split_image(sep_line_img_x)
-img_left_file = os.path.join(OUTPUTPATH, '%s-%s.png' % (imgfilebasename, 'left'))
-img_right_file = os.path.join(OUTPUTPATH, '%s-%s.png' % (imgfilebasename, 'right'))
-print("> saving separated images to '%s' and '%s'" % (img_left_file, img_right_file))
-cv2.imwrite(img_left_file, img_left)
-cv2.imwrite(img_right_file, img_right)
+
+split_images = iproc_obj.split_image(sep_line_img_x)
+split_texts = split_page_texts(p, sep_line_page_x)
+
+split_pages = [
+    (p, split_texts, split_images)
+]
+
+split_pages_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.split.xml')
+print("> saving split pages XML to '%s'" % split_pages_xmlfile)
+split_tree, split_root, split_pages = create_split_pages_dict_structure(split_pages,
+                                                                        save_to_output_path=split_pages_xmlfile)
+
