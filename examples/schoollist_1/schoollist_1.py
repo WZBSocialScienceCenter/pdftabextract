@@ -13,11 +13,10 @@ import numpy as np
 import pandas as pd
 import cv2
 
-from pdftabextract.common import (read_xml, parse_pages, split_page_texts, create_split_pages_dict_structure,
-                                  save_page_grids, all_a_in_b,
-                                  ROTATION, SKEW_X, SKEW_Y,
-                                  DIRECTION_VERTICAL)
+from pdftabextract.common import (read_xml, parse_pages, save_page_grids, all_a_in_b,
+                                  ROTATION, SKEW_X, SKEW_Y, DIRECTION_VERTICAL)
 from pdftabextract import imgproc
+from pdftabextract.splitpages import split_page_texts, create_split_pages_dict_structure
 
 
 #%% Some constants
