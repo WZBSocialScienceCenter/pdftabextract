@@ -62,7 +62,7 @@ xmltree, xmlroot = read_xml(os.path.join(DATAPATH, INPUT_XML))
 # parse it and generate a dict of pages
 pages = parse_pages(xmlroot)
 
-#%% Detect clusters of vertical lines using the image processing module
+#%% Detect clusters of vertical lines using the image processing module and rotate back or deskew pages
 
 vertical_lines_clusters = {}
 pages_image_scaling = {}     # scaling of the scanned page image in relation to the OCR page dimensions for each page

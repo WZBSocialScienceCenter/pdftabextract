@@ -247,8 +247,13 @@ class ImageProc:
         if not callable(method):
             raise ValueError("'method' must be callable")
         
-        lines_ab = self.ab_lines_from_hough_lines([l for l in self.lines_hough if l[3] == direction])
+        lines_in_dir = [l for l in self.lines_hough if l[3] == direction]
         
+        if len(lines_in_dir) == 0:  # no lines in that direction
+            return []
+        
+        lines_ab = self.ab_lines_from_hough_lines(lines_in_dir)
+                
         coord_idx = 0 if direction == DIRECTION_VERTICAL else 1
         positions = np.array([(l[0][coord_idx] + l[1][coord_idx]) / 2 for l in lines_ab])
         
@@ -300,15 +305,19 @@ class ImageProc:
         
         return clusters_w_vals
             
-    def draw_lines(self, orig_img_as_background=True):
+    def draw_lines(self, orig_img_as_background=True, draw_line_num=False):
         lines_ab = self.ab_lines_from_hough_lines(self.lines_hough)
         
         baseimg = self._baseimg_for_drawing(orig_img_as_background)
         
-        for p1, p2, line_dir in lines_ab:
+        for i, (p1, p2, line_dir) in enumerate(lines_ab):
             line_color = (0, 255, 0) if line_dir == DIRECTION_HORIZONTAL else (0, 0, 255)
             
             cv2.line(baseimg, pt_to_tuple(p1), pt_to_tuple(p2), line_color, self.DRAW_LINE_WIDTH)
+            
+            if draw_line_num:
+                p_text = pt_to_tuple(p1 + (p2 - p1) * 0.5)
+                cv2.putText(baseimg, str(i), p_text, cv2.FONT_HERSHEY_SIMPLEX, 1, line_color, 3)
         
         return baseimg
 
@@ -376,7 +385,6 @@ class ImageProc:
         (rho, theta, normalized theta with 0 <= theta_norm < np.pi, DIRECTION_VERTICAL or DIRECTION_HORIZONTAL)
         """
         lines_hough = []
-
         for l in lines:
             rho, theta = l[0]  # they come like this from OpenCV's hough transform
             theta_norm = normalize_angle(theta)
@@ -385,7 +393,7 @@ class ImageProc:
                 line_dir = DIRECTION_VERTICAL
             else:
                 line_dir = DIRECTION_HORIZONTAL
-                        
+            
             lines_hough.append((rho, theta, theta_norm, line_dir))
         
         return lines_hough

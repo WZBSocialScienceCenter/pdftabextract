@@ -203,48 +203,57 @@ def project_polarcoord_lines(lines, img_w, img_h):
     Project lines in polar coordinate space <lines> (e.g. from hough transform) onto a canvas of size
     <img_w> by <img_h>.
     """
-    
+        
     lines_ab = []
-    for rho, theta in lines:        
+    for i, (rho, theta) in enumerate(lines):
         # calculate intersections with canvas dimension minima/maxima
         
         cos_theta = np.cos(theta)
         sin_theta = np.sin(theta)
                     
-        x_miny = rho / cos_theta if cos_theta != 0 else img_w
-        y_minx = rho / sin_theta if sin_theta != 0 else img_h
-        x_maxy = (rho - img_h * sin_theta) / cos_theta if cos_theta != 0 else img_w
-        y_maxx = (rho - img_w * cos_theta) / sin_theta if sin_theta != 0 else img_h
+        x_miny = rho / cos_theta if cos_theta != 0 else float("inf")  # x for a minimal y (y=0)
+        y_minx = rho / sin_theta if sin_theta != 0 else float("inf")  # y for a minimal x (x=0)
+        x_maxy = (rho - img_w * sin_theta) / cos_theta if cos_theta != 0 else float("inf")  # x for maximal y (y=img_h)
+        y_maxx = (rho - img_h * cos_theta) / sin_theta if sin_theta != 0 else float("inf")  # y for maximal x (y=img_w)
         
-        if 0 <= y_minx < img_h:
-            x1 = 0
-            if 0 <= y_minx < img_h:
-                y1 = y_minx
-            else:
-                y1 = y_maxx
-        else:
-            if 0 <= x_maxy < img_w:
-                x1 = x_maxy
-            else:
-                x1 = x_miny
-            y1 = img_h
-            
-        if 0 <= x_maxy < img_w:
-            if 0 <= x_miny < img_w:
-                x2 = x_miny
-            else:
-                x2 = x_maxy
-            y2 = 0
-        else:
-            x2 = img_w
-            if 0 <= y_maxx < img_h:
-                y2 = y_maxx
-            else:
-                y2 = y_minx
+        # because rounding errors happen, sometimes a point is counted as invalid because it
+        # is slightly out of the bounding box
+        # this is why we have to correct it like this
         
-        # create points, add to lines
-        p1 = pt(x1, y1)
-        p2 = pt(x2, y2)
+        def border_dist(v, border):
+            return v if v <= 0 else v - border
+        
+        # set the possible points
+        # some of them will be out of canvas
+        possible_pts = [
+            ([x_miny, 0], (border_dist(x_miny, img_w), 0)),
+            ([0, y_minx], (border_dist(y_minx, img_h), 1)),
+            ([x_maxy, img_h], (border_dist(x_maxy, img_w), 0)),
+            ([img_w, y_maxx], (border_dist(y_maxx, img_h), 1)),
+        ]
+        
+        # get the valid and the dismissed (out of canvas) points
+        valid_pts = []
+        dismissed_pts = []
+        for p, dist in possible_pts:
+            if 0 <= p[0] <= img_w and 0 <= p[1] <= img_h:
+                valid_pts.append(p)
+            else:
+                dismissed_pts.append((p, dist))
+        
+        # from the dismissed points, get the needed ones that are closed to the canvas       
+        n_needed_pts = 2 - len(valid_pts)
+        if n_needed_pts > 0:
+            dismissed_pts_sorted = sorted(dismissed_pts, key=lambda x: abs(x[1][0]), reverse=True)
+
+            for _ in range(n_needed_pts):
+                p, (dist, coord_idx) = dismissed_pts_sorted.pop()
+                p[coord_idx] -= dist  # correct
+                valid_pts.append(p)
+        
+        
+        p1 = pt(*valid_pts[0])
+        p2 = pt(*valid_pts[1])
         
         lines_ab.append((p1, p2))
     
