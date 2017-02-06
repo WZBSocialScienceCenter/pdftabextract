@@ -251,6 +251,10 @@ for p_num, p in pages.items():
              min(line_heights), max(line_heights)))
 
 #%% Create page grids
+
+# After you created the page grids, you should then check that they're correct using pdf2xml-viewer's 
+# loadGridFile() function
+
 print("creating page grids for all pages...")
 page_grids = {}
 for p_num, p in pages.items():

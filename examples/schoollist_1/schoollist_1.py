@@ -293,6 +293,10 @@ for p_num, p in split_pages.items():
         print("> page %d: no table found" % p_num)
     
 # save the page grids
+
+# After you created the page grids, you should then check that they're correct using pdf2xml-viewer's 
+# loadGridFile() function
+
 page_grids_file = os.path.join(OUTPUTPATH, output_files_basename + '.pagegrids.json')
 print("saving page grids JSON file to '%s'" % page_grids_file)
 save_page_grids(page_grids, page_grids_file)
