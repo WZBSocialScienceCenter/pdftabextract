@@ -195,25 +195,27 @@ class ImageProc:
 
         if hori_deviations:
             median_hori_dev = np.median(hori_deviations)
+            hori_rot_above_thresh = abs(median_hori_dev) > rot_thresh
         else:
             warning('no horizontal lines found')
-            median_hori_dev = 0
+            median_hori_dev = None
+            hori_rot_above_thresh = False
         
         if vert_deviations:
             median_vert_dev = np.median(vert_deviations)
+            vert_rot_above_thresh = abs(median_vert_dev) > rot_thresh
         else:
-            median_vert_dev = 0
             warning('no vertical lines found')
+            median_vert_dev = None
+            vert_rot_above_thresh = False
         
-        hori_rot_above_thresh = abs(median_hori_dev) > rot_thresh
-        vert_rot_above_thresh = abs(median_vert_dev) > rot_thresh
         
         if omit_on_rot_thresh is not None:
             assert len(lines_w_deviations) == len(self.lines_hough)
             lines_filtered = []
             for rho, theta, theta_norm, line_dir, deviation in lines_w_deviations:
                 dir_dev = median_hori_dev if line_dir == DIRECTION_HORIZONTAL else median_vert_dev
-                if abs(abs(dir_dev) - abs(deviation)) < omit_on_rot_thresh:
+                if dir_dev is None or abs(abs(dir_dev) - abs(deviation)) < omit_on_rot_thresh:
                     lines_filtered.append((rho, theta, theta_norm, line_dir))
             assert len(lines_filtered) <= len(self.lines_hough)
             self.lines_hough = lines_filtered

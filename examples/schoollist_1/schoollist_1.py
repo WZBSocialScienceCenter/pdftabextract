@@ -54,53 +54,51 @@ pages = parse_pages(xmlroot, require_image=True)
 
 #%% Split the scanned double pages so that we can later process the lists page-by-page
 
-split_pages = []
+split_texts_and_images = []   # list of tuples with (double page, split text boxes, split images)
 
-p_num = 1
-p = pages[p_num]
-
-# get the image file of the scanned page
-imgfilebasename = p['image'][:p['image'].rindex('.')]
-imgfile = os.path.join(DATAPATH, p['image'])
-
-print("page %d: detecting lines in image file '%s'..." % (p_num, imgfile))
-
-# create an image processing object with the scanned page
-iproc_obj = imgproc.ImageProc(imgfile)
-
-# calculate the scaling of the image file in relation to the text boxes coordinate system dimensions
-page_scaling_x = iproc_obj.img_w / p['width']
-page_scaling_y = iproc_obj.img_h / p['height']
-image_scaling = (page_scaling_x,   # scaling in X-direction
-                 page_scaling_y)   # scaling in Y-direction
-
-# detect the lines in the double pages
-lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
-                                     hough_rho_res=1,
-                                     hough_theta_res=np.pi/500,
-                                     hough_votes_thresh=350)
-print("> found %d lines" % len(lines_hough))
-
-save_image_w_lines(iproc_obj, imgfilebasename, True, 'bothpages-')
-
-# find the vertical line that separates both sides
-sep_line_img_x = iproc_obj.find_pages_separator_line(dist_thresh=MIN_COL_WIDTH/2)
-sep_line_page_x = sep_line_img_x / page_scaling_x
-print("> found pages separator line at %f (image space position) / %f (page space position)"
-      % (sep_line_img_x, sep_line_page_x))
-
-# split the scanned double page at the separator line
-split_images = iproc_obj.split_image(sep_line_img_x)
-
-# split the textboxes at the separator line
-split_texts = split_page_texts(p, sep_line_page_x)
-
-split_pages.append((p, split_texts, split_images))
-
+for p_num, p in pages.items():
+    # get the image file of the scanned page
+    imgfilebasename = p['image'][:p['image'].rindex('.')]
+    imgfile = os.path.join(DATAPATH, p['image'])
+    
+    print("page %d: detecting lines in image file '%s'..." % (p_num, imgfile))
+    
+    # create an image processing object with the scanned page
+    iproc_obj = imgproc.ImageProc(imgfile)
+    
+    # calculate the scaling of the image file in relation to the text boxes coordinate system dimensions
+    page_scaling_x = iproc_obj.img_w / p['width']
+    page_scaling_y = iproc_obj.img_h / p['height']
+    image_scaling = (page_scaling_x,   # scaling in X-direction
+                     page_scaling_y)   # scaling in Y-direction
+    
+    # detect the lines in the double pages
+    lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
+                                         hough_rho_res=1,
+                                         hough_theta_res=np.pi/500,
+                                         hough_votes_thresh=350)
+    print("> found %d lines" % len(lines_hough))
+    
+    save_image_w_lines(iproc_obj, imgfilebasename, True, 'bothpages-')
+    
+    # find the vertical line that separates both sides
+    sep_line_img_x = iproc_obj.find_pages_separator_line(dist_thresh=MIN_COL_WIDTH/2)
+    sep_line_page_x = sep_line_img_x / page_scaling_x
+    print("> found pages separator line at %f (image space position) / %f (page space position)"
+          % (sep_line_img_x, sep_line_page_x))
+    
+    # split the scanned double page at the separator line
+    split_images = iproc_obj.split_image(sep_line_img_x)
+    
+    # split the textboxes at the separator line
+    split_texts = split_page_texts(p, sep_line_page_x)
+    
+    split_texts_and_images.append((p, split_texts, split_images))
+    
 # generate a new XML and "pages" dict structure from the split pages
 split_pages_xmlfile = os.path.join(OUTPUTPATH, INPUT_XML[:INPUT_XML.rindex('.')] + '.split.xml')
 print("> saving split pages XML to '%s'" % split_pages_xmlfile)
-split_tree, split_root, split_pages = create_split_pages_dict_structure(split_pages,
+split_tree, split_root, split_pages = create_split_pages_dict_structure(split_texts_and_images,
                                                                         save_to_output_path=split_pages_xmlfile)
 
 # we don't need the original double pages any more, we'll work with 'split_pages'
