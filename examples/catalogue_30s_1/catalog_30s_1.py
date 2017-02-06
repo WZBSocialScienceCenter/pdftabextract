@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-An example script that shows how to extract tabular data from OCR-scanned pages.
+An example script that shows how to extract tabular data from OCR-scanned pages of an old catalogue of
+German newspapers.
+
 It includes the following stages:
 1. Load the XML describing the pages and text boxes (the XML was generated from the OCR scanned PDF with poppler
    utils (pdftohtml command))
@@ -42,7 +44,7 @@ OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'ALA1934_RR-excerpt.pdf.xml'
 
 N_COL_BORDERS = 17
-MIN_COL_WIDTH = 60
+MIN_COL_WIDTH = 60   # <- very important. the minimum space between two columns in pixels, measured in the scanned pages
 
 #%% Some helper functions
 def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background):
@@ -62,7 +64,7 @@ xmltree, xmlroot = read_xml(os.path.join(DATAPATH, INPUT_XML))
 # parse it and generate a dict of pages
 pages = parse_pages(xmlroot)
 
-#%% Detect clusters of vertical lines using the image processing module
+#%% Detect clusters of vertical lines using the image processing module and rotate back or deskew pages
 
 vertical_lines_clusters = {}
 pages_image_scaling = {}     # scaling of the scanned page image in relation to the OCR page dimensions for each page
@@ -87,7 +89,7 @@ for p_num, p in pages.items():
     lines_hough = iproc_obj.detect_lines(canny_low_thresh=50, canny_high_thresh=150, canny_kernel_size=3,
                                          hough_rho_res=1,
                                          hough_theta_res=np.pi/500,
-                                         hough_votes_thresh_rel=0.2)
+                                         hough_votes_thresh=round(0.2 * iproc_obj.img_w))
     print("> found %d lines" % len(lines_hough))
     
     save_image_w_lines(iproc_obj, imgfilebasename, True)
@@ -249,6 +251,10 @@ for p_num, p in pages.items():
              min(line_heights), max(line_heights)))
 
 #%% Create page grids
+
+# After you created the page grids, you should then check that they're correct using pdf2xml-viewer's 
+# loadGridFile() function
+
 print("creating page grids for all pages...")
 page_grids = {}
 for p_num, p in pages.items():
@@ -264,7 +270,7 @@ save_page_grids(page_grids, page_grids_file)
 
 #%% Create data frames (requires pandas library)
 
-# For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in der cells and
+# For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in their cells and
 # output the result.
 # Normally, at this step you will need to do some error correction / parsing as some text boxes are not correctly
 # detected during OCR (they might span over multiple columns or numbers are incorrectly detected as letters).

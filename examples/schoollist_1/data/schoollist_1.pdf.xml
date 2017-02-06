@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pdf2xml SYSTEM "pdf2xml.dtd">
+
+<pdf2xml producer="poppler" version="0.41.0">
+<page number="1" position="absolute" top="0" left="0" height="1261" width="1699">
+	<fontspec id="0" size="14" family="Times" color="#333333"/>
+	<fontspec id="1" size="13" family="Helvetica" color="#333333"/>
+	<fontspec id="2" size="15" family="Times" color="#333333"/>
+	<fontspec id="3" size="15" family="Times" color="#333333"/>
+	<fontspec id="4" size="11" family="Times" color="#333333"/>
+	<fontspec id="5" size="7" family="Times" color="#333333"/>
+	<fontspec id="6" size="11" family="Times" color="#333333"/>
+	<fontspec id="7" size="10" family="Helvetica" color="#333333"/>
+	<fontspec id="8" size="4" family="Times" color="#333333"/>
+	<fontspec id="9" size="11" family="Times" color="#484848"/>
+	<fontspec id="10" size="11" family="Times" color="#121212"/>
+<image top="0" left="0" width="1700" height="1262" src="schoollist_1.pdf-1_1.jpg"/>
+<image top="1217" left="0" width="1692" height="43" src="schoollist_1.pdf-1_2.png"/>
+<text top="102" left="412" width="5" height="15" font="0">-</text>
+<text top="102" left="434" width="37" height="15" font="0">28  -</text>
+<text top="95" left="1242" width="5" height="14" font="1">-</text>
+<text top="95" left="1263" width="37" height="14" font="1">29  -</text>
+<text top="111" left="1529" width="137" height="16" font="2"><b>Grundschulen </b></text>
+<text top="148" left="886" width="310" height="16" font="2"><b>Landkreis  Ostprignitz-Ruppin </b></text>
+<text top="165" left="886" width="395" height="16" font="3">ehemals  Kreise  Kyritz,  Neuruppin  und </text>
+<text top="164" left="1287" width="115" height="17" font="4">Wittstock~ </text>
+<text top="214" left="903" width="86" height="11" font="5">Schuln~rl </text>
+<text top="214" left="1019" width="101" height="12" font="6">Name,  Anschrift </text>
+<text top="215" left="1290" width="107" height="12" font="6">amt.  Schulleiter </text>
+<text top="215" left="1400" width="7" height="12" font="7"><i>I </i></text>
+<text top="214" left="1432" width="35" height="12" font="6">Tele· </text>
+<text top="214" left="1502" width="42" height="12" font="6">Träger </text>
+<text top="215" left="1548" width="7" height="12" font="7"><i>I </i></text>
+<text top="214" left="1586" width="62" height="12" font="6">Besondere </text>
+<text top="233" left="902" width="101" height="12" font="6">Kurzbezeichnung </text>
+<text top="234" left="1290" width="127" height="12" font="6">amt.  Stellvertreter </text>
+<text top="234" left="1432" width="23" height="12" font="6">fon-</text>
+<text top="233" left="1502" width="44" height="12" font="6">Rechts-</text>
+<text top="233" left="1587" width="55" height="12" font="6">Hinweise </text>
+<text top="256" left="1431" width="51" height="9" font="8">n~r </text>
+<text top="253" left="1502" width="44" height="12" font="6">status </text>
+<text top="292" left="898" width="41" height="12" font="6">100298 </text>
+<text top="292" left="1016" width="172" height="12" font="6">Käthe-Kollwitz-Grundschule </text>
+<text top="293" left="1289" width="73" height="12" font="6">Frau  Kolrep </text>
+<text top="293" left="1431" width="41" height="12" font="6">033911 </text>
+<text top="292" left="1503" width="15" height="12" font="6">06 </text>
+<text top="311" left="898" width="13" height="12" font="6">G </text>
+<text top="311" left="1016" width="154" height="12" font="6">Käthe-Kollwitz-Straße  2 </text>
+<text top="312" left="1289" width="73" height="12" font="6">Frau  Dabitz </text>
+<text top="312" left="1431" width="29" height="12" font="6">2726 </text>
+<text top="331" left="1015" width="121" height="12" font="6">0  - 1950  Neuruppin </text>
+<text top="370" left="898" width="41" height="12" font="6">100304 </text>
+<text top="370" left="1016" width="147" height="12" font="6">Karl·Liebknecht·Schule </text>
+<text top="370" left="1289" width="65" height="12" font="6">Frau  Hecht </text>
+<text top="370" left="1431" width="41" height="12" font="6">033911 </text>
+<text top="370" left="1503" width="15" height="12" font="6">06 </text>
+<text top="389" left="898" width="13" height="12" font="6">G </text>
+<text top="389" left="1015" width="126" height="12" font="6">A.-Becker-Straße  23 </text>
+<text top="389" left="1289" width="66" height="12" font="6">Herr  Rougk </text>
+<text top="389" left="1430" width="28" height="12" font="6">5203 </text>
+<text top="389" left="1503" width="10" height="12" font="9">1 </text>
+<text top="409" left="1015" width="121" height="12" font="6">0  - 1950  Neuruppin </text>
+<text top="447" left="898" width="41" height="12" font="6">100316 </text>
+<text top="447" left="1015" width="172" height="12" font="6">Ernst-Thälmann-Grundschule </text>
+<text top="447" left="1289" width="65" height="12" font="6">Frau  Kunow </text>
+<text top="448" left="1431" width="41" height="12" font="6">033911 </text>
+<text top="447" left="1503" width="15" height="12" font="6">06 </text>
+<text top="466" left="898" width="13" height="12" font="6">G </text>
+<text top="466" left="1015" width="178" height="12" font="6">Gerhart-Hauptmann-Straße  38 </text>
+<text top="466" left="1289" width="85" height="12" font="6">Frau  Schimmat </text>
+<text top="466" left="1430" width="28" height="12" font="6">2804 </text>
+<text top="485" left="1015" width="121" height="12" font="6">0  - 1950  Neuruppin </text>
+<text top="524" left="898" width="41" height="12" font="6">100328 </text>
+<text top="524" left="1015" width="153" height="12" font="6">Gustav-Kühn-Grundschule </text>
+<text top="524" left="1288" width="87" height="12" font="6">Herr  Jörissen </text>
+<text top="524" left="1430" width="41" height="12" font="6">033911 </text>
+<text top="524" left="1502" width="15" height="12" font="6">06 </text>
+<text top="544" left="897" width="13" height="12" font="6">G </text>
+<text top="543" left="1016" width="159" height="13" font="6">Franz-Mehring-Straße  1  a </text>
+<text top="543" left="1288" width="93" height="12" font="6">Herr  Bartholdt </text>
+<text top="544" left="1430" width="29" height="12" font="6">5319 </text>
+<text top="563" left="1015" width="121" height="12" font="6">0  - 1950  Neuruppin </text>
+<text top="601" left="897" width="41" height="12" font="6">100330 </text>
+<text top="601" left="1014" width="133" height="12" font="6">Grundschule  Wildberg </text>
+<text top="601" left="1288" width="93" height="12" font="6">Frau  Schindler </text>
+<text top="602" left="1430" width="47" height="12" font="6">0339281 </text>
+<text top="602" left="1502" width="15" height="12" font="6">06 </text>
+<text top="621" left="897" width="13" height="12" font="6">G </text>
+<text top="620" left="1014" width="83" height="12" font="6">Werdersteg  4 </text>
+<text top="621" left="1288" width="65" height="12" font="6">Frau  Bröhl </text>
+<text top="621" left="1429" width="22" height="12" font="6">382 </text>
+<text top="640" left="1014" width="114" height="12" font="6">0- 1901  Wildberg </text>
+<text top="679" left="897" width="40" height="12" font="6">100353 </text>
+<text top="679" left="1014" width="147" height="12" font="6">Max-Martin·Grundschule </text>
+<text top="679" left="1287" width="85" height="12" font="6">Frau  Makowiak </text>
+<text top="679" left="1429" width="48" height="12" font="6">0339261 </text>
+<text top="679" left="1501" width="15" height="12" font="6">06 </text>
+<text top="698" left="896" width="13" height="12" font="6">G </text>
+<text top="697" left="1014" width="199" height="12" font="6">Rudolf-Breitscheid-Straße  30  a </text>
+<text top="697" left="1288" width="78" height="12" font="6">Frau  NelA!lann </text>
+<text top="698" left="1429" width="22" height="12" font="6">207 </text>
+<text top="716" left="1014" width="114" height="12" font="6">0  - 1951  Herzberg </text>
+<text top="756" left="897" width="40" height="12" font="6">100365 </text>
+<text top="756" left="1014" width="75" height="12" font="6">Grundschule </text>
+<text top="756" left="1287" width="65" height="12" font="6">Herr  Kikel </text>
+<text top="756" left="1429" width="47" height="12" font="6">0339321 </text>
+<text top="756" left="1501" width="16" height="12" font="6">06 </text>
+<text top="756" left="1588" width="36" height="12" font="6">Filial</text>
+<text top="756" left="1626" width="10" height="12" font="10">e </text>
+<text top="775" left="896" width="13" height="12" font="6">G </text>
+<text top="775" left="1014" width="184" height="12" font="6">Geschwister-Scholl-Straße  14 </text>
+<text top="775" left="1287" width="78" height="12" font="6">Frau  Nemecek </text>
+<text top="776" left="1429" width="21" height="12" font="6">235 </text>
+<text top="794" left="1013" width="128" height="12" font="6">0  - 1953  Fehrbellin </text>
+<text top="833" left="896" width="41" height="12" font="6">100377 </text>
+<text top="833" left="1014" width="153" height="12" font="6">Grundschule  Königshorst </text>
+<text top="833" left="1287" width="73" height="12" font="6">Frau  Hansen </text>
+<text top="834" left="1428" width="48" height="12" font="6">033922/ </text>
+<text top="834" left="1500" width="15" height="12" font="6">06 </text>
+<text top="852" left="896" width="13" height="12" font="6">G </text>
+<text top="852" left="1014" width="88" height="12" font="6">Hauptstraße  4 </text>
+<text top="852" left="1287" width="72" height="12" font="6">Frau  Pradel </text>
+<text top="853" left="1428" width="22" height="12" font="6">812 </text>
+<text top="871" left="1013" width="133" height="12" font="6">0  - 1951  Königshorst </text>
+<text top="910" left="896" width="41" height="12" font="6">100389 </text>
+<text top="910" left="1013" width="128" height="12" font="6">Grundschule  Protzen </text>
+<text top="910" left="1286" width="73" height="12" font="6">Herr  Lettow </text>
+<text top="910" left="1428" width="47" height="12" font="6">0339321 </text>
+<text top="911" left="1500" width="15" height="12" font="6">06 </text>
+<text top="929" left="896" width="13" height="12" font="6">G </text>
+<text top="929" left="1013" width="107" height="12" font="6">Dorfstraße  73-75 </text>
+<text top="929" left="1428" width="20" height="12" font="6">261 </text>
+<text top="948" left="1013" width="109" height="12" font="6">0  - 1951  Protzen </text>
+<text top="987" left="896" width="40" height="12" font="6">100390 </text>
+<text top="987" left="1013" width="146" height="12" font="6">Grundschule  Gildenhall </text>
+<text top="987" left="1286" width="65" height="12" font="6">Herr  Engel </text>
+<text top="987" left="1428" width="41" height="12" font="6">033911 </text>
+<text top="987" left="1500" width="15" height="12" font="6">06 </text>
+<text top="1005" left="896" width="13" height="12" font="6">G </text>
+<text top="1006" left="1013" width="116" height="12" font="6">Hermsdorfer  Weg  1 </text>
+<text top="1006" left="1286" width="72" height="12" font="6">Herr  Flügel </text>
+<text top="1006" left="1428" width="28" height="12" font="6">2393 </text>
+<text top="1025" left="1013" width="121" height="12" font="6">0  - 1950  Neuruppin </text>
+<text top="1125" left="937" width="72" height="17" font="4">~siehe </text>
+<text top="1126" left="1011" width="133" height="16" font="3">auch  Seite  7 </text>
+</page>
+<page number="2" position="absolute" top="0" left="0" height="1261" width="1699">
+	<fontspec id="11" size="13" family="Times" color="#333333"/>
+	<fontspec id="12" size="10" family="Times" color="#333333"/>
+	<fontspec id="13" size="10" family="Helvetica" color="#333333"/>
+	<fontspec id="14" size="11" family="Times" color="#959595"/>
+	<fontspec id="15" size="11" family="Times" color="#4a4a4a"/>
+	<fontspec id="16" size="12" family="Times" color="#333333"/>
+	<fontspec id="17" size="11" family="Times" color="#5b5b5b"/>
+	<fontspec id="18" size="8" family="Helvetica" color="#333333"/>
+<image top="0" left="0" width="1700" height="1262" src="schoollist_1.pdf-2_1.jpg"/>
+<image top="1168" left="0" width="1696" height="92" src="schoollist_1.pdf-2_2.png"/>
+<text top="91" left="401" width="5" height="14" font="11">-</text>
+<text top="91" left="422" width="37" height="14" font="11">30  -</text>
+<text top="86" left="1241" width="6" height="15" font="0">-</text>
+<text top="86" left="1263" width="38" height="15" font="0">31  -</text>
+<text top="106" left="47" width="136" height="16" font="2"><b>Grundschulen </b></text>
+<text top="102" left="1529" width="136" height="16" font="2"><b>Grundschulen </b></text>
+<text top="208" left="63" width="83" height="11" font="5">Schuln~mnerl </text>
+<text top="208" left="180" width="101" height="12" font="6">Name,  Anschrift </text>
+<text top="209" left="451" width="107" height="13" font="6">amt.  Schulleiter </text>
+<text top="210" left="560" width="7" height="12" font="7"><i>I </i></text>
+<text top="210" left="592" width="30" height="12" font="6">Tele-</text>
+<text top="210" left="663" width="42" height="12" font="6">Träger </text>
+<text top="210" left="709" width="7" height="12" font="7"><i>I </i></text>
+<text top="209" left="747" width="61" height="12" font="6">Besondere </text>
+<text top="208" left="901" width="82" height="12" font="6">Schulmmnerl </text>
+<text top="208" left="1018" width="101" height="12" font="6">Name,  Anschrift </text>
+<text top="209" left="1289" width="107" height="12" font="6">amt.  Schulleiter </text>
+<text top="209" left="1399" width="7" height="12" font="7"><i>I </i></text>
+<text top="208" left="1431" width="30" height="12" font="6">Tele-</text>
+<text top="208" left="1501" width="43" height="12" font="6">Träger </text>
+<text top="209" left="1547" width="7" height="12" font="7"><i>I </i></text>
+<text top="208" left="1586" width="62" height="12" font="6">Besondere </text>
+<text top="227" left="63" width="100" height="12" font="6">Kurzbezeichnung </text>
+<text top="229" left="451" width="126" height="12" font="6">amt.  Stellvertreter </text>
+<text top="229" left="592" width="23" height="12" font="6">fon-</text>
+<text top="229" left="663" width="44" height="12" font="6">Rechts-</text>
+<text top="228" left="748" width="55" height="12" font="6">Hinweise </text>
+<text top="227" left="901" width="101" height="12" font="6">Kurzbezeichnung </text>
+<text top="228" left="1289" width="127" height="12" font="6">amt.  Stellvertreter </text>
+<text top="228" left="1431" width="23" height="12" font="6">fon-</text>
+<text top="227" left="1501" width="44" height="12" font="6">Rechts-</text>
+<text top="227" left="1586" width="55" height="12" font="6">Hinweise </text>
+<text top="251" left="592" width="44" height="8" font="8">n~mner </text>
+<text top="248" left="663" width="43" height="12" font="6">status </text>
+<text top="250" left="1431" width="45" height="9" font="8">n~mner </text>
+<text top="247" left="1502" width="43" height="12" font="6">status </text>
+<text top="285" left="59" width="42" height="12" font="6">100407 </text>
+<text top="286" left="177" width="218" height="13" font="6">Grundschule  &#34;Schule  des  Friedens&#34; </text>
+<text top="287" left="450" width="73" height="12" font="6">Herr  Klawin </text>
+<text top="288" left="592" width="41" height="12" font="6">033911 </text>
+<text top="288" left="664" width="15" height="12" font="6">06 </text>
+<text top="287" left="898" width="42" height="12" font="6">102817 </text>
+<text top="288" left="1015" width="75" height="12" font="6">Grundschule </text>
+<text top="288" left="1289" width="85" height="12" font="6">Frau  Wernicke </text>
+<text top="288" left="1431" width="48" height="12" font="6">0339711 </text>
+<text top="288" left="1503" width="15" height="12" font="6">06 </text>
+<text top="306" left="59" width="12" height="11" font="12">G </text>
+<text top="306" left="176" width="102" height="12" font="6">OdF-Platz  11!12 </text>
+<text top="307" left="450" width="59" height="12" font="6">Frau  Görn </text>
+<text top="307" left="591" width="28" height="12" font="6">2612 </text>
+<text top="307" left="897" width="13" height="12" font="6">G </text>
+<text top="307" left="1015" width="135" height="12" font="6">Ammerländer  Straße  3 </text>
+<text top="307" left="1288" width="59" height="12" font="6">Herr  Mohr </text>
+<text top="307" left="1430" width="29" height="12" font="6">3312 </text>
+<text top="325" left="176" width="121" height="12" font="6">0  - 1950  Neuruppin </text>
+<text top="325" left="1015" width="102" height="12" font="6">0  - 1910  Kyritz </text>
+<text top="364" left="59" width="41" height="12" font="6">101606 </text>
+<text top="364" left="176" width="147" height="12" font="6">Diesterweg-Grundschule </text>
+<text top="365" left="328" width="19" height="11" font="13">111 </text>
+<text top="365" left="450" width="79" height="12" font="6">Herr  Bratsch </text>
+<text top="365" left="591" width="41" height="12" font="6">033941 </text>
+<text top="365" left="663" width="15" height="12" font="6">06 </text>
+<text top="364" left="897" width="41" height="12" font="6">102829 </text>
+<text top="364" left="1015" width="75" height="12" font="6">Grundschule </text>
+<text top="364" left="1288" width="79" height="12" font="6">Frau  Ladewig </text>
+<text top="364" left="1430" width="47" height="12" font="6">0339711 </text>
+<text top="364" left="1503" width="15" height="12" font="6">06 </text>
+<text top="383" left="59" width="13" height="12" font="6">G </text>
+<text top="383" left="176" width="123" height="12" font="6">Auf  der  Freiheit  7 </text>
+<text top="384" left="450" width="94" height="12" font="6">Frau  Parnitzky </text>
+<text top="384" left="591" width="29" height="12" font="6">3419 </text>
+<text top="383" left="897" width="13" height="12" font="6">G </text>
+<text top="383" left="1016" width="146" height="13" font="6">Holzhausener  Straße  29 </text>
+<text top="383" left="1288" width="86" height="12" font="6">Frau  Herrmann </text>
+<text top="384" left="1427" width="3" height="12" font="14">.</text>
+<text top="384" left="1430" width="29" height="12" font="6">2229 </text>
+<text top="402" left="176" width="121" height="12" font="6">0  - 1930  Wittstock </text>
+<text top="403" left="1014" width="102" height="12" font="6">0  - 1910  Kyritz </text>
+<text top="441" left="59" width="41" height="12" font="6">101618 </text>
+<text top="441" left="176" width="94" height="12" font="6">Grundschule  IV </text>
+<text top="442" left="449" width="125" height="12" font="6">Frau  llojciechowiecz </text>
+<text top="442" left="591" width="41" height="12" font="6">033941 </text>
+<text top="442" left="663" width="15" height="12" font="6">06 </text>
+<text top="441" left="897" width="41" height="12" font="6">102830 </text>
+<text top="441" left="1014" width="114" height="12" font="6">Grundschule  Lögow </text>
+<text top="442" left="1288" width="74" height="12" font="6">Frau  Rettig </text>
+<text top="442" left="1430" width="48" height="12" font="6">0339741 </text>
+<text top="442" left="1502" width="15" height="12" font="6">06 </text>
+<text top="460" left="58" width="13" height="12" font="6">G </text>
+<text top="460" left="175" width="75" height="12" font="6">Waldring  27 </text>
+<text top="461" left="449" width="65" height="12" font="6">Frau  Lehms </text>
+<text top="461" left="590" width="28" height="12" font="6">3595 </text>
+<text top="461" left="663" width="10" height="12" font="15">1 </text>
+<text top="461" left="897" width="13" height="12" font="6">G </text>
+<text top="461" left="1014" width="93" height="12" font="6">Schulstraße  21 </text>
+<text top="461" left="1430" width="21" height="12" font="6">752 </text>
+<text top="479" left="175" width="122" height="12" font="6">0  - 1930  llittstock </text>
+<text top="480" left="1014" width="94" height="12" font="6">0  •  1901  Lögow </text>
+<text top="517" left="58" width="41" height="12" font="6">101620 </text>
+<text top="517" left="175" width="75" height="12" font="6">Grundschule </text>
+<text top="517" left="254" width="12" height="13" font="16"><i>V </i></text>
+<text top="518" left="449" width="80" height="12" font="6">Frau  Fickler </text>
+<text top="519" left="591" width="41" height="12" font="6">033941 </text>
+<text top="519" left="663" width="15" height="12" font="6">06 </text>
+<text top="519" left="897" width="41" height="12" font="6">102842 </text>
+<text top="519" left="1014" width="107" height="12" font="6">Grundschule  Lohm </text>
+<text top="519" left="1288" width="99" height="12" font="6">Herr  Schumacher </text>
+<text top="519" left="1430" width="47" height="12" font="6">0339731 </text>
+<text top="519" left="1502" width="15" height="12" font="6">06 </text>
+<text top="538" left="58" width="12" height="11" font="12">G </text>
+<text top="537" left="175" width="120" height="12" font="6">Polthier  Straße  19 </text>
+<text top="537" left="449" width="98" height="12" font="6">Frau  Gerbendorf </text>
+<text top="538" left="590" width="28" height="12" font="6">2229 </text>
+<text top="538" left="896" width="13" height="12" font="6">G </text>
+<text top="538" left="1014" width="88" height="12" font="6">DorfstraBe  38 </text>
+<text top="538" left="1288" width="68" height="12" font="6">Frau  Selle </text>
+<text top="538" left="1429" width="21" height="12" font="6">825 </text>
+<text top="556" left="175" width="122" height="12" font="6">0  - 1930  llittstock </text>
+<text top="557" left="1014" width="88" height="12" font="6">0  - 1901  Lohm </text>
+<text top="595" left="58" width="39" height="12" font="6">101631 </text>
+<text top="595" left="175" width="91" height="12" font="6">Grundschule  VI </text>
+<text top="595" left="448" width="79" height="12" font="6">Frau  Rickert </text>
+<text top="596" left="590" width="41" height="12" font="6">033941 </text>
+<text top="596" left="662" width="15" height="12" font="6">06 </text>
+<text top="596" left="896" width="41" height="12" font="6">102854 </text>
+<text top="596" left="1014" width="119" height="12" font="6">Grundschule  Nackel </text>
+<text top="595" left="1287" width="60" height="13" font="6">Herr  Senn </text>
+<text top="596" left="1429" width="47" height="12" font="6">0339781 </text>
+<text top="596" left="1501" width="15" height="12" font="6">06 </text>
+<text top="614" left="57" width="13" height="12" font="6">G </text>
+<text top="614" left="175" width="83" height="12" font="6">Jahnstraße  1 </text>
+<text top="615" left="448" width="86" height="12" font="6">Herr  Behrendt </text>
+<text top="616" left="589" width="29" height="12" font="6">3872 </text>
+<text top="616" left="896" width="13" height="12" font="6">G </text>
+<text top="615" left="1014" width="90" height="12" font="6">Schulstraße  1 </text>
+<text top="615" left="1287" width="80" height="12" font="6">Herr  Boerger </text>
+<text top="615" left="1429" width="23" height="12" font="6">447 </text>
+<text top="634" left="174" width="121" height="12" font="6">0  - 1930  Wittstock </text>
+<text top="635" left="1014" width="99" height="12" font="6">0  - 1901  Nackel </text>
+<text top="672" left="57" width="41" height="12" font="6">101643 </text>
+<text top="672" left="174" width="75" height="12" font="6">Wald-Schule </text>
+<text top="673" left="447" width="66" height="12" font="6">Herr  Reese </text>
+<text top="673" left="589" width="41" height="12" font="6">033941 </text>
+<text top="674" left="662" width="15" height="12" font="6">06 </text>
+<text top="674" left="896" width="41" height="12" font="6">102866 </text>
+<text top="673" left="1014" width="75" height="12" font="6">Grundschule </text>
+<text top="673" left="1287" width="79" height="12" font="6">Frau  Lehwald </text>
+<text top="674" left="1429" width="47" height="12" font="6">0339701 </text>
+<text top="674" left="1501" width="15" height="12" font="6">06 </text>
+<text top="674" left="1588" width="49" height="12" font="6">Filiale </text>
+<text top="691" left="57" width="13" height="12" font="6">G </text>
+<text top="691" left="174" width="95" height="13" font="6">Draußenberg  18 </text>
+<text top="692" left="448" width="85" height="12" font="6">Frau  Beindorf </text>
+<text top="692" left="589" width="29" height="12" font="6">3769 </text>
+<text top="693" left="896" width="13" height="12" font="6">G </text>
+<text top="693" left="1014" width="95" height="12" font="6">Lindenstraße  6 </text>
+<text top="693" left="1287" width="79" height="12" font="6">Frau  Schmidt </text>
+<text top="693" left="1429" width="21" height="12" font="6">293 </text>
+<text top="693" left="1501" width="10" height="12" font="15">1 </text>
+<text top="710" left="173" width="101" height="12" font="6">0  - 1931  Dossow </text>
+<text top="712" left="1013" width="154" height="12" font="6">0  - 1900  NeustadtiDosse </text>
+<text top="749" left="57" width="40" height="12" font="6">101655 </text>
+<text top="749" left="173" width="148" height="12" font="6">Grundschule  Berlinchen </text>
+<text top="750" left="447" width="74" height="12" font="6">Frau  Berlin </text>
+<text top="751" left="589" width="48" height="12" font="6">0339661 </text>
+<text top="751" left="661" width="16" height="12" font="6">06 </text>
+<text top="751" left="896" width="41" height="12" font="6">102878 </text>
+<text top="751" left="1014" width="211" height="12" font="6">Grundschule  &#34;Geschwister  Scholl&#34; </text>
+<text top="751" left="1287" width="66" height="12" font="6">Herr  Pöhls </text>
+<text top="751" left="1429" width="47" height="12" font="6">0339701 </text>
+<text top="751" left="1501" width="15" height="12" font="6">06 </text>
+<text top="769" left="56" width="13" height="12" font="6">G </text>
+<text top="769" left="173" width="86" height="12" font="6">Dorfstraße  21 </text>
+<text top="769" left="447" width="59" height="12" font="6">Frau  Zech </text>
+<text top="770" left="589" width="21" height="12" font="6">255 </text>
+<text top="771" left="896" width="13" height="12" font="6">G </text>
+<text top="770" left="1014" width="75" height="12" font="6">Im  Zingel  3 </text>
+<text top="770" left="1287" width="86" height="12" font="6">Frau  Seel iger </text>
+<text top="770" left="1428" width="22" height="12" font="6">519 </text>
+<text top="771" left="1501" width="10" height="12" font="6">1 </text>
+<text top="788" left="173" width="128" height="12" font="6">0- 1931  Berlinchen </text>
+<text top="789" left="1013" width="134" height="12" font="6">0  - 1901  Sieversdorf </text>
+<text top="826" left="56" width="41" height="12" font="6">102740 </text>
+<text top="826" left="173" width="137" height="12" font="6">Grundschule  Blumentha</text>
+<text top="826" left="312" width="7" height="12" font="17">l </text>
+<text top="827" left="447" width="73" height="12" font="6">Frau  Stasch </text>
+<text top="828" left="588" width="47" height="12" font="6">0339841 </text>
+<text top="828" left="660" width="16" height="12" font="6">06 </text>
+<text top="828" left="896" width="39" height="12" font="6">102891 </text>
+<text top="828" left="1013" width="160" height="12" font="6">Grundschule  Wusterhausen </text>
+<text top="828" left="1286" width="79" height="12" font="6">Herr  Lugauer </text>
+<text top="828" left="1428" width="47" height="12" font="6">0339791 </text>
+<text top="829" left="1500" width="15" height="12" font="6">06 </text>
+<text top="846" left="55" width="13" height="12" font="6">G </text>
+<text top="845" left="173" width="63" height="12" font="6">Parkweg  2 </text>
+<text top="846" left="446" width="80" height="12" font="6">Herr  Häusler </text>
+<text top="847" left="588" width="23" height="12" font="6">237 </text>
+<text top="847" left="661" width="10" height="12" font="15">1 </text>
+<text top="849" left="895" width="11" height="10" font="18">G </text>
+<text top="847" left="1013" width="90" height="12" font="6">SchulstraBe  1 </text>
+<text top="847" left="1287" width="93" height="12" font="6">Frau  Schreiber </text>
+<text top="847" left="1428" width="22" height="12" font="6">246 </text>
+<text top="864" left="173" width="127" height="12" font="6">0  - 1921  Blumenthal </text>
+<text top="866" left="1013" width="140" height="12" font="6">0  - 1903  Wusterhausen </text>
+<text top="903" left="55" width="42" height="12" font="6">102787 </text>
+<text top="903" left="173" width="128" height="12" font="6">Grundschule  Breddin </text>
+<text top="903" left="446" width="86" height="12" font="6">Herr  Ratschke </text>
+<text top="904" left="588" width="47" height="12" font="6">0339721 </text>
+<text top="905" left="660" width="16" height="12" font="6">06 </text>
+<text top="905" left="747" width="49" height="12" font="6">Filiale </text>
+<text top="906" left="896" width="41" height="12" font="6">105703 </text>
+<text top="905" left="1013" width="146" height="12" font="6">Grundschule  Königsberg </text>
+<text top="905" left="1286" width="67" height="12" font="6">Frau  Stock </text>
+<text top="906" left="1428" width="47" height="12" font="6">0339651 </text>
+<text top="906" left="1500" width="15" height="12" font="6">06 </text>
+<text top="922" left="55" width="13" height="12" font="6">G </text>
+<text top="922" left="173" width="89" height="12" font="6">SchulstraBe  3 </text>
+<text top="922" left="446" width="84" height="12" font="6">Frau  Westphal </text>
+<text top="923" left="588" width="22" height="12" font="6">237 </text>
+<text top="924" left="660" width="10" height="12" font="6">1 </text>
+<text top="925" left="895" width="13" height="12" font="6">G </text>
+<text top="925" left="1013" width="88" height="12" font="6">DorfstraBe  48 </text>
+<text top="924" left="1286" width="78" height="12" font="6">Herr  Wegwart </text>
+<text top="924" left="1428" width="21" height="12" font="6">280 </text>
+<text top="941" left="172" width="109" height="12" font="6">0  - 1901  Breddin </text>
+<text top="943" left="1013" width="127" height="12" font="6">0  - 1931  Königsberg </text>
+<text top="981" left="55" width="40" height="12" font="6">102805 </text>
+<text top="980" left="172" width="121" height="12" font="6">Grundschule  Dreetz </text>
+<text top="981" left="445" width="67" height="12" font="6">Herr  Beetz </text>
+<text top="982" left="587" width="48" height="12" font="6">0339701 </text>
+<text top="982" left="660" width="15" height="12" font="6">06 </text>
+<text top="1000" left="55" width="13" height="12" font="6">G </text>
+<text top="999" left="172" width="89" height="12" font="6">SchulstraBe  2 </text>
+<text top="1000" left="445" width="84" height="12" font="6">Herr  Hebekerl </text>
+<text top="1000" left="587" width="23" height="12" font="6">647 </text>
+<text top="1001" left="660" width="10" height="12" font="6">1 </text>
+<text top="1018" left="172" width="102" height="12" font="6">0  - 1901  Dreetz </text>
+</page>
+<page number="3" position="absolute" top="0" left="0" height="1261" width="1699">
+	<fontspec id="19" size="13" family="Times" color="#313131"/>
+	<fontspec id="20" size="13" family="Times" color="#525252"/>
+	<fontspec id="21" size="15" family="Times" color="#313131"/>
+	<fontspec id="22" size="11" family="Times" color="#313131"/>
+	<fontspec id="23" size="10" family="Helvetica" color="#313131"/>
+	<fontspec id="24" size="12" family="Times" color="#313131"/>
+	<fontspec id="25" size="11" family="Times" color="#1c1c1c"/>
+	<fontspec id="26" size="11" family="Times" color="#525252"/>
+	<fontspec id="27" size="8" family="Helvetica" color="#313131"/>
+<image top="0" left="0" width="1700" height="1262" src="schoollist_1.pdf-3_1.jpg"/>
+<image top="1220" left="0" width="1692" height="40" src="schoollist_1.pdf-3_2.png"/>
+<text top="105" left="414" width="5" height="14" font="19">-</text>
+<text top="105" left="436" width="25" height="14" font="19">26 </text>
+<text top="105" left="468" width="5" height="14" font="20">-</text>
+<text top="98" left="1236" width="5" height="14" font="19">-</text>
+<text top="98" left="1258" width="37" height="14" font="19">27  -</text>
+<text top="116" left="61" width="136" height="16" font="21"><b>Grundschulen </b></text>
+<text top="113" left="1523" width="137" height="16" font="21"><b>Grundschulen </b></text>
+<text top="217" left="76" width="81" height="12" font="22">SchulnYTmerl </text>
+<text top="219" left="192" width="101" height="12" font="22">Name,  Anschrift </text>
+<text top="223" left="464" width="107" height="13" font="22">amt.  Schulleiter </text>
+<text top="224" left="573" width="11" height="12" font="23"><i>1 </i></text>
+<text top="225" left="605" width="34" height="12" font="22">Tele· </text>
+<text top="226" left="675" width="42" height="12" font="22">Träger </text>
+<text top="226" left="721" width="7" height="12" font="23"><i>I </i></text>
+<text top="226" left="760" width="62" height="12" font="22">Besondere </text>
+<text top="236" left="75" width="101" height="12" font="22">Kurzbezeichnung </text>
+<text top="243" left="463" width="127" height="13" font="22">amt.  Stellvertreter </text>
+<text top="244" left="605" width="27" height="12" font="22">fon· </text>
+<text top="245" left="675" width="48" height="12" font="22">Rechts· </text>
+<text top="245" left="760" width="55" height="12" font="22">Hinweise </text>
+<text top="219" left="897" width="81" height="12" font="22">SchulnYTmerl </text>
+<text top="219" left="1014" width="101" height="12" font="22">Name,  Anschrift </text>
+<text top="219" left="1285" width="107" height="12" font="22">amt.  Schulleiter </text>
+<text top="219" left="1394" width="7" height="12" font="23"><i>I </i></text>
+<text top="219" left="1426" width="35" height="12" font="22">Tele· </text>
+<text top="218" left="1497" width="42" height="12" font="22">Träger </text>
+<text top="219" left="1543" width="7" height="12" font="23"><i>I </i></text>
+<text top="218" left="1581" width="62" height="12" font="22">Besondere </text>
+<text top="238" left="897" width="101" height="12" font="22">Kurzbezeichnung </text>
+<text top="239" left="1285" width="126" height="12" font="22">amt.  Stellvertreter </text>
+<text top="238" left="1427" width="27" height="12" font="22">fon· </text>
+<text top="238" left="1497" width="48" height="12" font="22">Rechts· </text>
+<text top="238" left="1581" width="55" height="12" font="22">Hinweise </text>
+<text top="263" left="604" width="41" height="12" font="22">nYTmer </text>
+<text top="264" left="674" width="44" height="12" font="22">status </text>
+<text top="258" left="1426" width="40" height="12" font="22">nYTmer </text>
+<text top="257" left="1497" width="43" height="12" font="22">status </text>
+<text top="296" left="97" width="42" height="12" font="22">103986 </text>
+<text top="299" left="214" width="159" height="12" font="22">Grundschule  Bad  Wilsnack </text>
+<text top="302" left="487" width="67" height="12" font="22">Herr  Bieck </text>
+<text top="304" left="630" width="47" height="12" font="22">0384911 </text>
+<text top="304" left="702" width="15" height="12" font="22">06 </text>
+<text top="298" left="919" width="41" height="12" font="22">104085 </text>
+<text top="298" left="1037" width="147" height="12" font="22">Anne·Frank·Grundschule </text>
+<text top="298" left="1310" width="68" height="12" font="22">Herr  Hirte </text>
+<text top="298" left="1452" width="48" height="12" font="22">038788/ </text>
+<text top="298" left="1524" width="16" height="12" font="22">06 </text>
+<text top="315" left="96" width="13" height="12" font="22">G </text>
+<text top="318" left="215" width="105" height="12" font="22">Jahnstraße  10111 </text>
+<text top="322" left="487" width="93" height="12" font="22">Frau  Spielmann </text>
+<text top="323" left="629" width="27" height="12" font="22">2271 </text>
+<text top="318" left="919" width="13" height="12" font="22">G </text>
+<text top="318" left="1037" width="120" height="12" font="22">Berliner  Straße  29 </text>
+<text top="318" left="1310" width="67" height="12" font="22">Frau  Botte </text>
+<text top="317" left="1452" width="20" height="12" font="22">201 </text>
+<text top="337" left="213" width="140" height="12" font="22">0- 2902  Bad  Wilsnack </text>
+<text top="337" left="1037" width="132" height="12" font="22">0  ·  2911  Groß  Warnow </text>
+<text top="374" left="96" width="41" height="12" font="22">103998 </text>
+<text top="376" left="213" width="93" height="12" font="22">Grundschule  II </text>
+<text top="380" left="486" width="99" height="12" font="22">Frau  Kirschnick </text>
+<text top="381" left="628" width="41" height="13" font="24"><i>038771 </i></text>
+<text top="382" left="700" width="16" height="12" font="22">06 </text>
+<text top="376" left="919" width="44" height="12" font="22">104097 </text>
+<text top="376" left="1037" width="75" height="12" font="22">Grundschule </text>
+<text top="375" left="1310" width="73" height="12" font="22">Frau  Schutz </text>
+<text top="375" left="1452" width="48" height="12" font="22">038789/ </text>
+<text top="375" left="1524" width="15" height="12" font="22">06 </text>
+<text top="392" left="95" width="13" height="12" font="22">G </text>
+<text top="394" left="213" width="95" height="12" font="22">Schulplatz  4·5 </text>
+<text top="398" left="486" width="59" height="12" font="22">Frau  Paul </text>
+<text top="400" left="628" width="29" height="12" font="22">3817 </text>
+<text top="395" left="919" width="13" height="12" font="22">G </text>
+<text top="395" left="1037" width="105" height="12" font="22">Dorfstraße  10  A </text>
+<text top="394" left="1452" width="20" height="12" font="22">231 </text>
+<text top="394" left="1524" width="10" height="12" font="22">1 </text>
+<text top="414" left="212" width="134" height="12" font="22">0  - 2900  Wittenberge </text>
+<text top="414" left="1037" width="127" height="12" font="22">0  ·  2911  Wolfshagen </text>
+<text top="450" left="94" width="41" height="12" font="22">104000 </text>
+<text top="452" left="212" width="94" height="12" font="22">Grundschule  IV </text>
+<text top="456" left="485" width="58" height="12" font="22">Frau  Kühl </text>
+<text top="457" left="627" width="42" height="12" font="22">03877/ </text>
+<text top="458" left="699" width="15" height="12" font="22">06 </text>
+<text top="453" left="919" width="42" height="12" font="22">105077 </text>
+<text top="453" left="1037" width="139" height="12" font="22">Rosa-Luxemburg-Schule </text>
+<text top="452" left="1310" width="74" height="12" font="22">Frau  Wol tff </text>
+<text top="452" left="1451" width="41" height="12" font="22">038771 </text>
+<text top="452" left="1524" width="15" height="12" font="22">06 </text>
+<text top="469" left="93" width="13" height="12" font="22">G </text>
+<text top="472" left="211" width="159" height="12" font="22">Or.·S.·Allende-Straße  62 </text>
+<text top="475" left="485" width="85" height="12" font="22">Frau  Kaufmann </text>
+<text top="477" left="626" width="28" height="12" font="22">2084 </text>
+<text top="473" left="919" width="13" height="12" font="22">G </text>
+<text top="472" left="1037" width="82" height="12" font="22">Lüchstraße  9 </text>
+<text top="472" left="1310" width="86" height="12" font="22">Frau  Heinrich </text>
+<text top="472" left="1451" width="29" height="12" font="22">3863 </text>
+<text top="472" left="1524" width="10" height="12" font="22">1 </text>
+<text top="491" left="211" width="134" height="12" font="22">0  - 2900  Wittenberge </text>
+<text top="491" left="1036" width="102" height="12" font="22">0  - 2901  Breese </text>
+<text top="528" left="93" width="41" height="12" font="22">104012 </text>
+<text top="529" left="210" width="99" height="12" font="22">Grundschule  111 </text>
+<text top="533" left="483" width="66" height="12" font="22">Herr  Gutke </text>
+<text top="535" left="626" width="42" height="12" font="22">03877/ </text>
+<text top="536" left="698" width="15" height="12" font="22">06 </text>
+<text top="531" left="919" width="42" height="12" font="22">105089 </text>
+<text top="530" left="1036" width="114" height="12" font="22">Grundschule  Berge </text>
+<text top="530" left="1309" width="80" height="12" font="22">Frau  Reinike </text>
+<text top="529" left="1451" width="48" height="12" font="22">038785/ </text>
+<text top="529" left="1524" width="15" height="12" font="22">06 </text>
+<text top="547" left="92" width="13" height="12" font="22">G </text>
+<text top="549" left="210" width="87" height="12" font="22">Elsternweg  15 </text>
+<text top="553" left="483" width="93" height="12" font="22">Herr  Straßburg </text>
+<text top="554" left="625" width="28" height="12" font="22">2058 </text>
+<text top="555" left="698" width="10" height="12" font="22">1 </text>
+<text top="550" left="918" width="13" height="12" font="22">G </text>
+<text top="550" left="1036" width="125" height="12" font="22">Schulstraße  PF  191 </text>
+<text top="550" left="1167" width="10" height="13" font="25">2 </text>
+<text top="549" left="1309" width="67" height="12" font="22">Frau  llper </text>
+<text top="549" left="1451" width="23" height="12" font="22">318 </text>
+<text top="568" left="209" width="134" height="12" font="22">0  ·  2900  Wittenberge </text>
+<text top="569" left="1036" width="94" height="12" font="22">0  - 2911  Berge </text>
+<text top="605" left="92" width="41" height="12" font="22">104024 </text>
+<text top="607" left="209" width="160" height="12" font="22">2.  Grundschule  Perleberg </text>
+<text top="610" left="482" width="80" height="12" font="22">Frau  Richter </text>
+<text top="612" left="624" width="42" height="12" font="22">03876/ </text>
+<text top="613" left="697" width="15" height="12" font="22">06 </text>
+<text top="608" left="918" width="41" height="12" font="22">105090 </text>
+<text top="607" left="1037" width="94" height="12" font="22">1.  Grundschule </text>
+<text top="607" left="1309" width="73" height="12" font="22">Frau  Felsch </text>
+<text top="607" left="1451" width="41" height="12" font="22">03876/ </text>
+<text top="607" left="1524" width="15" height="12" font="22">06 </text>
+<text top="624" left="91" width="13" height="12" font="22">G </text>
+<text top="626" left="209" width="107" height="12" font="22">Beguinenwiese  10 </text>
+<text top="630" left="482" width="80" height="12" font="22">Frau  Dreifke </text>
+<text top="631" left="624" width="28" height="12" font="22">2656 </text>
+<text top="627" left="918" width="13" height="12" font="22">G </text>
+<text top="626" left="1036" width="146" height="12" font="22">Oergenthiner  Straße  29 </text>
+<text top="626" left="1309" width="60" height="12" font="22">Frau  Böwe </text>
+<text top="626" left="1451" width="27" height="12" font="22">2681 </text>
+<text top="626" left="1524" width="10" height="12" font="26">1 </text>
+<text top="645" left="208" width="121" height="12" font="22">0  ·  2910  Perleberg </text>
+<text top="646" left="1036" width="121" height="12" font="22">0  - 2910  Perleberg </text>
+<text top="682" left="90" width="42" height="12" font="22">104036 </text>
+<text top="684" left="208" width="160" height="12" font="22">3.  Grundschule  Perleberg </text>
+<text top="688" left="481" width="74" height="12" font="22">Herr  Peters </text>
+<text top="689" left="623" width="42" height="12" font="22">03876/ </text>
+<text top="690" left="695" width="15" height="12" font="22">06 </text>
+<text top="685" left="918" width="40" height="12" font="22">105831 </text>
+<text top="685" left="1036" width="106" height="12" font="22">Grundschule  Lanz </text>
+<text top="684" left="1309" width="93" height="12" font="22">Frau  Bludovsky </text>
+<text top="684" left="1451" width="41" height="12" font="22">03876/ </text>
+<text top="684" left="1523" width="15" height="12" font="22">06 </text>
+<text top="703" left="89" width="11" height="10" font="27">G </text>
+<text top="703" left="207" width="139" height="12" font="22">Oobberziner  Straße  28 </text>
+<text top="707" left="481" width="67" height="12" font="22">Frau  Zigan </text>
+<text top="708" left="622" width="29" height="12" font="22">3387 </text>
+<text top="706" left="918" width="11" height="10" font="27">G </text>
+<text top="704" left="1036" width="75" height="12" font="22">Hopfenweg  8 </text>
+<text top="704" left="1309" width="65" height="12" font="22">Frau  Wendt </text>
+<text top="704" left="1451" width="22" height="12" font="22">304 </text>
+<text top="722" left="207" width="121" height="12" font="22">0  ·  2910  Perleberg </text>
+<text top="723" left="1036" width="87" height="12" font="22">0  - 2801  Lanz </text>
+<text top="760" left="89" width="41" height="12" font="22">104048 </text>
+<text top="761" left="207" width="75" height="12" font="22">Grundschule </text>
+<text top="765" left="479" width="79" height="12" font="22">Herr  Semnler </text>
+<text top="767" left="622" width="48" height="12" font="22">038782! </text>
+<text top="767" left="694" width="15" height="12" font="22">06 </text>
+<text top="763" left="918" width="41" height="12" font="22">105843 </text>
+<text top="762" left="1036" width="120" height="12" font="22">Grundschule  Lenzen </text>
+<text top="762" left="1309" width="59" height="12" font="22">Frau  Kühn </text>
+<text top="762" left="1451" width="42" height="12" font="22">03874/ </text>
+<text top="762" left="1523" width="15" height="12" font="22">06 </text>
+<text top="779" left="88" width="13" height="12" font="22">G </text>
+<text top="780" left="207" width="88" height="12" font="22">Hauptstraße  5 </text>
+<text top="786" left="621" width="22" height="12" font="22">567 </text>
+<text top="782" left="918" width="13" height="12" font="22">G </text>
+<text top="781" left="1036" width="166" height="12" font="22">Rudi·Breitscheid·Straße  8 </text>
+<text top="781" left="1309" width="79" height="12" font="22">Frau  Zückert </text>
+<text top="781" left="1450" width="22" height="12" font="22">453 </text>
+<text top="799" left="206" width="87" height="12" font="22">0  - 2911  Baek </text>
+<text top="800" left="1036" width="10" height="12" font="22">0 </text>
+<text top="800" left="1050" width="5" height="12" font="26">-</text>
+<text top="800" left="1062" width="74" height="12" font="22">2805  Lenzen </text>
+<text top="836" left="88" width="41" height="12" font="22">104050 </text>
+<text top="838" left="205" width="127" height="12" font="22">Grundschule  Dallmin </text>
+<text top="842" left="478" width="87" height="12" font="22">Herr  Schwerin </text>
+<text top="843" left="620" width="49" height="12" font="22">038783/ </text>
+<text top="844" left="693" width="16" height="12" font="22">06 </text>
+<text top="855" left="87" width="13" height="12" font="22">G </text>
+<text top="856" left="205" width="95" height="12" font="22">Marktplatz  8  a </text>
+<text top="862" left="620" width="22" height="12" font="22">244 </text>
+<text top="864" left="693" width="10" height="12" font="22">1 </text>
+<text top="876" left="205" width="108" height="12" font="22">0  ·  2911  Dallmin </text>
+<text top="914" left="87" width="40" height="12" font="22">104061 </text>
+<text top="915" left="204" width="75" height="12" font="22">Grundschule </text>
+<text top="918" left="477" width="60" height="12" font="22">Herr  Böhm </text>
+<text top="920" left="619" width="48" height="12" font="22">038784/ </text>
+<text top="922" left="691" width="15" height="12" font="22">06 </text>
+<text top="935" left="86" width="11" height="10" font="27">G </text>
+<text top="934" left="204" width="94" height="12" font="22">Hauptstraße  40 </text>
+<text top="937" left="477" width="58" height="12" font="22">Frau  Röhl </text>
+<text top="940" left="618" width="23" height="12" font="22">306 </text>
+<text top="954" left="203" width="107" height="12" font="22">0  - 2911  Kleinow </text>
+<text top="991" left="85" width="41" height="12" font="22">104073 </text>
+<text top="992" left="203" width="127" height="12" font="22">Grundschule  Kletzke </text>
+<text top="996" left="475" width="79" height="12" font="22">Herr  Schmidt </text>
+<text top="998" left="618" width="48" height="13" font="24"><i>0387961 </i></text>
+<text top="999" left="690" width="16" height="12" font="22">06 </text>
+<text top="1010" left="85" width="13" height="12" font="22">G </text>
+<text top="1011" left="202" width="88" height="12" font="22">Dorfstraße  56 </text>
+<text top="1017" left="617" width="21" height="12" font="22">275 </text>
+<text top="1031" left="202" width="108" height="12" font="22">0  ·  2901  Kletzke </text>
+</page>
+</pdf2xml>

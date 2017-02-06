@@ -53,7 +53,15 @@ def save_page_grids(page_grids, output_file):
 
 #%% XML parsing / text box dict handling
 
-def parse_pages(root, load_page_nums=None):
+def parse_pages(root, load_page_nums=None, require_image=False, only_load_topleft_image=True):
+    """
+    Parses an XML structure in pdf2xml format to extract the pages with their text boxes.
+    <root> is the XML tree root
+    <load_page_nums> allows to define a sequence of page numbers that should be loaded (by default, all pages
+    will be loaded).
+    <only_load_topleft_image> if there's more than one background image per page, use the one with top="0" and left="0"
+    position.
+    """
     pages = OrderedDict()
     
     for p in root.findall('page'):
@@ -62,13 +70,24 @@ def parse_pages(root, load_page_nums=None):
         if load_page_nums is not None and p_num not in load_page_nums:
             continue
         
-        p_image = p.findall('image')
-        if p_image:
-            if len(p_image) != 1:
-                raise ValueError("invalid number of image tags on page %d" % p_num)
-            imgfile = p_image[0].attrib['src']
+        p_images = p.findall('image')
+        if p_images:            
+            if len(p_images) == 1:
+                imgfile = p_images[0].attrib['src']
+            else:
+                if not only_load_topleft_image:
+                    raise ValueError("multiple images on page %d but only_load_topleft_image was set to False" % p_num)
+                for imgtag in p_images:
+                    if int(imgtag.attrib['top']) == 0 and int(imgtag.attrib['left']) == 0:
+                        imgfile = imgtag.attrib['src']
+                        break
+                else:
+                    raise ValueError("multiple images on page %d but none of it is in the top left corner" % p_num)
         else:
-            imgfile = None
+            if require_image:
+                raise ValueError("no image given on page %d but require_image was set to True" % p_num)
+            else:
+                imgfile = None
         
         page = {
             'number': p_num,
