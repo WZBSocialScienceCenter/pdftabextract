@@ -106,9 +106,9 @@ split_tree, split_root, split_pages = create_split_pages_dict_structure(split_pa
 # we don't need the original double pages any more, we'll work with 'split_pages'
 del pages
 
-#%% Detect clusters of vertical lines using the image processing module and rotate back or deskew pages
+#%% Detect clusters of horizontal lines using the image processing module and rotate back or deskew pages
 
-vertical_lines_clusters = {}
+hori_lines_clusters = {}
 pages_image_scaling = {}     # scaling of the scanned page image in relation to the OCR page dimensions for each page
 
 for p_num, p in split_pages.items():
@@ -166,25 +166,25 @@ for p_num, p in split_pages.items():
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
-    # cluster the detected *vertical* lines using find_clusters_1d_break_dist as simple clustering function
+    # cluster the detected *horizontal* lines using find_clusters_1d_break_dist as simple clustering function
     # (break on distance MIN_COL_WIDTH/2)
     # additionaly, remove all cluster sections that are considered empty
     # a cluster is considered empty when the number of text boxes in it is below 10% of the median number of text boxes
     # per cluster section
-    vertical_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
-                                                remove_empty_cluster_sections_use_texts=p['texts'], # use this page's textboxes
-                                                remove_empty_cluster_sections_n_texts_ratio=0.1,    # 10% rule
-                                                remove_empty_cluster_sections_scaling=page_scaling_x,  # the positions are in "scanned image space" -> we scale them to "text box space"
-                                                dist_thresh=MIN_COL_WIDTH/2)
-    print("> found %d clusters" % len(vertical_clusters))
+    hori_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_HORIZONTAL, find_clusters_1d_break_dist,
+                                            remove_empty_cluster_sections_use_texts=p['texts'], # use this page's textboxes
+                                            remove_empty_cluster_sections_n_texts_ratio=0.1,    # 10% rule
+                                            remove_empty_cluster_sections_scaling=page_scaling_y,  # the positions are in "scanned image space" -> we scale them to "text box space"
+                                            dist_thresh=MIN_COL_WIDTH/2)
+    print("> found %d clusters" % len(hori_clusters))
     
-    if len(vertical_clusters) > 0:
+    if len(hori_clusters) > 0:
         # draw the clusters
-        img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_VERTICAL, vertical_clusters)
-        save_img_file = os.path.join(OUTPUTPATH, '%s-vertical-clusters.png' % imgfilebasename)
-        print("> saving image with detected vertical clusters to '%s'" % save_img_file)
+        img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_HORIZONTAL, hori_clusters)
+        save_img_file = os.path.join(OUTPUTPATH, '%s-hori-clusters.png' % imgfilebasename)
+        print("> saving image with detected horizontal clusters to '%s'" % save_img_file)
         cv2.imwrite(save_img_file, img_w_clusters)
         
-        vertical_lines_clusters[p_num] = vertical_clusters
+        hori_lines_clusters[p_num] = hori_clusters
     else:
-        print("> no vertical line clusters found")
+        print("> no horizontal line clusters found")
