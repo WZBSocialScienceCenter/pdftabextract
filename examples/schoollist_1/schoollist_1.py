@@ -283,9 +283,35 @@ for p_num, p in split_pages.items():
     else:  # this happens for the first page as there's no table on that
         print("> page %d: no table found" % p_num)
     
-    
-
 # save the page grids
 page_grids_file = os.path.join(OUTPUTPATH, output_files_basename + '.pagegrids.json')
 print("saving page grids JSON file to '%s'" % page_grids_file)
 save_page_grids(page_grids, page_grids_file)
+
+#%% Create data frames (requires pandas library)
+
+# For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in their cells (splitting text
+# boxes to separate lines if necessary) and output the result. Normally, you would do some more parsing here, e.g.
+# extracting the adress components from the second column.
+
+full_df = pd.DataFrame()
+print("fitting text boxes into page grids and generating final output...")
+for p_num, p in split_pages.items():
+    if p_num not in page_grids: continue  # happens when no table was detected
+
+    print("> page %d" % p_num)
+    datatable, unmatched_texts = fit_texts_into_grid(p['texts'], page_grids[p_num], return_unmatched_texts=True)
+    
+    df = datatable_to_dataframe(datatable, split_texts_in_lines=True)
+    df['from_page'] = p_num
+    full_df = full_df.append(df, ignore_index=True)
+
+print("extracted %d rows from %d pages" % (len(full_df), len(split_pages)))
+
+csv_output_file = os.path.join(OUTPUTPATH, output_files_basename + '.csv')
+print("saving extracted data to '%s'" % csv_output_file)
+full_df.to_csv(csv_output_file, index=False)
+
+excel_output_file = os.path.join(OUTPUTPATH, output_files_basename + '.xlsx')
+print("saving extracted data to '%s'" % excel_output_file)
+full_df.to_excel(excel_output_file, index=False)

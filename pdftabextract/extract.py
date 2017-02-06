@@ -12,7 +12,7 @@ Created on Wed Dec 21 11:28:32 2016
 from collections import defaultdict, OrderedDict
 
 from pdftabextract.geom import pt, rect, rect_from_text, rectintersect, rectcenter_dist
-from pdftabextract.textboxes import join_texts
+from pdftabextract.textboxes import join_texts, create_text_from_lines, put_texts_in_lines
 
 
 def make_grid_from_positions(colpos, rowpos):
@@ -117,7 +117,7 @@ def fit_texts_into_grid(texts, grid, return_unmatched_texts=False):
         return table
 
 
-def datatable_to_dataframe(table, **join_texts_kwargs):
+def datatable_to_dataframe(table, split_texts_in_lines=False, **kwargs):
     """
     Create a pandas dataframe using datatable <table> and joining all texts in the individual cells.
     """
@@ -134,7 +134,15 @@ def datatable_to_dataframe(table, **join_texts_kwargs):
     col_series = OrderedDict()
     zfill_n = len(str(n_cols + 1))
     for i in range(n_cols):
-        col_data = [join_texts(table[j][i], join_texts_kwargs) for j in range(n_rows)]
+        col_data = []
+        for j in range(n_rows):
+            if split_texts_in_lines:
+                cell_str = create_text_from_lines(put_texts_in_lines(table[j][i]), **kwargs)
+            else:
+                cell_str = join_texts(table[j][i], **kwargs)
+                
+            col_data.append(cell_str)
+        
         ser = pd.Series(col_data)
         ser.name = 'col' + str(i + 1).zfill(zfill_n)
         col_series[ser.name] = ser

@@ -264,7 +264,7 @@ save_page_grids(page_grids, page_grids_file)
 
 #%% Create data frames (requires pandas library)
 
-# For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in der cells and
+# For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in their cells and
 # output the result.
 # Normally, at this step you will need to do some error correction / parsing as some text boxes are not correctly
 # detected during OCR (they might span over multiple columns or numbers are incorrectly detected as letters).
