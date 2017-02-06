@@ -18,12 +18,13 @@ from pdftabextract.geom import pt
 from pdftabextract.common import (read_xml, parse_pages, save_page_grids, all_a_in_b,
                                   ROTATION, SKEW_X, SKEW_Y, DIRECTION_VERTICAL)
 from pdftabextract.textboxes import (border_positions_from_texts, split_texts_by_positions, join_texts,
-                                     rotate_textboxes, deskew_textboxes)
+                                     rotate_textboxes, deskew_textboxes, sorted_by_attr)
 from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
                                       zip_clusters_and_values,
                                       get_adjusted_cluster_centers)
 from pdftabextract.splitpages import split_page_texts, create_split_pages_dict_structure
+from pdftabextract.extract import make_grid_from_positions, fit_texts_into_grid, datatable_to_dataframe
 
 
 #%% Some constants
@@ -187,3 +188,104 @@ repaired_xmlfile = os.path.join(OUTPUTPATH, output_files_basename + '.split.repa
 
 print("saving split and repaired XML file to '%s'..." % repaired_xmlfile)
 split_tree.write(repaired_xmlfile)
+
+
+#%% Determine the rows and columns of the table
+
+pttrn_schoolnum = re.compile(r'^\d{6}$')   # a valid school number indicates a table row
+page_grids = {}
+
+print("detecting rows and columns...")
+for p_num, p in split_pages.items():
+    scaling_x, scaling_y = pages_image_scaling[p_num]
+    
+    # try to find out the table rows in this page using the horizontal lines that were detected before
+    hori_lines = list(np.array(calc_cluster_centers_1d(hori_lines_clusters[p_num])) / scaling_y)
+    hori_lines.append(p['height'])  # last line: page bottom
+    
+    prev_line_y = 0
+    row_texts = []
+    row_positions = []
+    in_table = False   # is True when the current segment is a real table row (not a table header or surrounding text)
+    for line_y in hori_lines:
+        # get all texts in this row
+        segment_texts = [t for t in p['texts'] if prev_line_y < t['bottom'] <= line_y]
+        
+        if not segment_texts: continue  # skip empty rows
+        
+        # try to find the start and the end of the table
+        for t in segment_texts:
+            t_val = t['value'].strip()
+            if pttrn_schoolnum.search(t_val):   # if this matches, we found the start of the table
+                if not in_table:
+                    in_table = True
+                    row_positions.append(prev_line_y)
+                break
+        else:
+            if in_table:   # we found the end of the table
+                in_table = False
+        
+        if in_table:  # this is a table row, so add the texts and row positions to the respective lists
+            row_texts.append(segment_texts)
+            row_positions.append(line_y)
+        
+        prev_line_y = line_y
+    
+    # try to find out the table columns in this page using the distribution of x-coordinates of the left position of
+    # each text box in all rows
+    text_xs = []
+    for texts in row_texts:
+        text_xs.extend([t['left'] for t in texts])
+    
+    text_xs = np.array(text_xs)
+    
+    # make clusters of x positions
+    text_xs_clusters = find_clusters_1d_break_dist(text_xs, dist_thresh=MIN_COL_WIDTH/2/scaling_x)
+    text_xs_clusters_w_values = zip_clusters_and_values(text_xs_clusters, text_xs)
+    col_positions = calc_cluster_centers_1d(text_xs_clusters_w_values)
+    
+    # remove falsely identified columns (i.e. merge columns with only a few text boxes)
+    filtered_col_positions = []
+    n_rows = len(row_positions)
+    n_cols = len(col_positions)
+    if n_cols > 1 and n_rows > 1:
+        top_y = row_positions[0]
+        bottom_y = row_positions[-1]
+        
+        # append the rightmost text's right border as the last column border
+        rightmost_pos = sorted_by_attr(p['texts'], 'right')[-1]['right']
+        col_positions.append(rightmost_pos)
+        
+        # merge columns with few text boxes
+        texts_in_table = [t for t in p['texts'] if top_y < t['top'] + t['height']/2 <= bottom_y]
+        prev_col_x = col_positions[0]
+        for col_x in col_positions[1:]:
+            col_texts = [t for t in texts_in_table if prev_col_x < t['left'] + t['width']/2 <= col_x]
+
+            if len(col_texts) >= n_rows:   # there should be at least one text box per row
+                filtered_col_positions.append(prev_col_x)
+                last_col_x = col_x
+            prev_col_x = col_x
+        
+        # manually add border for the last column because it has very few or no text boxes
+        filtered_col_positions.append(filtered_col_positions[-1] + (rightmost_pos - filtered_col_positions[-1]) / 2)
+        filtered_col_positions.append(rightmost_pos)
+
+    # create the grid
+    if filtered_col_positions:
+        grid = make_grid_from_positions(filtered_col_positions, row_positions)
+        
+        n_rows = len(grid)
+        n_cols = len(grid[0])
+        print("> page %d: grid with %d rows, %d columns" % (p_num, n_rows, n_cols))
+        
+        page_grids[p_num] = grid
+    else:  # this happens for the first page as there's no table on that
+        print("> page %d: no table found" % p_num)
+    
+    
+
+# save the page grids
+page_grids_file = os.path.join(OUTPUTPATH, output_files_basename + '.pagegrids.json')
+print("saving page grids JSON file to '%s'" % page_grids_file)
+save_page_grids(page_grids, page_grids_file)
