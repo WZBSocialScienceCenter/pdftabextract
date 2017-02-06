@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-An example script that shows how to extract tabular data from OCR-scanned pages.
+An example script that shows how to extract tabular data from OCR-scanned pages of an old catalogue of
+German newspapers.
+
 It includes the following stages:
 1. Load the XML describing the pages and text boxes (the XML was generated from the OCR scanned PDF with poppler
    utils (pdftohtml command))
@@ -42,7 +44,7 @@ OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'ALA1934_RR-excerpt.pdf.xml'
 
 N_COL_BORDERS = 17
-MIN_COL_WIDTH = 60
+MIN_COL_WIDTH = 60   # <- very important. the minimum space between two columns in pixels, measured in the scanned pages
 
 #%% Some helper functions
 def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background):

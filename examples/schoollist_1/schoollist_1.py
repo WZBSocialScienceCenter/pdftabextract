@@ -1,6 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Dec. 2016, WZB Berlin Social Science Center - https://wzb.eu
+An example script that shows how to extract tabular data from OCR-scanned *double* pages with lists of public
+schools in Germany.
+
+It includes the following stages:
+1. Load the XML describing the pages and text boxes (the XML was generated from the OCR scanned PDF with poppler
+   utils (pdftohtml command))
+2. Split the scanned double pages so that we can later process the lists page-by-page
+3. Detect clusters of horizontal lines using the image processing module and repair rotated pages
+4. Get column and line positions of all pages
+5. Create a grid of columns and lines for each page
+6. Match the text boxes into the grid and hence extract the tabular data, storing it into a pandas DataFrame
+
+Feb. 2017, WZB Berlin Social Science Center - https://wzb.eu
 
 @author: Markus Konrad <markus.konrad@wzb.eu>
 """
@@ -15,14 +27,11 @@ import cv2
 
 from pdftabextract import imgproc
 from pdftabextract.geom import pt
-from pdftabextract.common import (read_xml, parse_pages, save_page_grids, all_a_in_b,
-                                  ROTATION, SKEW_X, SKEW_Y, DIRECTION_VERTICAL)
-from pdftabextract.textboxes import (border_positions_from_texts, split_texts_by_positions, join_texts,
-                                     rotate_textboxes, deskew_textboxes, sorted_by_attr)
+from pdftabextract.common import read_xml, parse_pages, save_page_grids
+from pdftabextract.textboxes import rotate_textboxes, sorted_by_attr
 from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
-                                      zip_clusters_and_values,
-                                      get_adjusted_cluster_centers)
+                                      zip_clusters_and_values)
 from pdftabextract.splitpages import split_page_texts, create_split_pages_dict_structure
 from pdftabextract.extract import make_grid_from_positions, fit_texts_into_grid, datatable_to_dataframe
 
@@ -190,7 +199,7 @@ print("saving split and repaired XML file to '%s'..." % repaired_xmlfile)
 split_tree.write(repaired_xmlfile)
 
 
-#%% Determine the rows and columns of the table
+#%% Determine the rows and columns of the tables
 
 pttrn_schoolnum = re.compile(r'^\d{6}$')   # a valid school number indicates a table row
 page_grids = {}
