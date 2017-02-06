@@ -41,8 +41,7 @@ DATAPATH = 'data/'
 OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'schoollist_1.pdf.xml'
 
-N_COL_BORDERS = 7
-MIN_COL_WIDTH = 194
+MIN_COL_WIDTH = 194  # <- very important. the minimum space between two columns in pixels, measured in the scanned pages
 
 #%% Some helper functions
 def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background, file_suffix_prefix=''):
