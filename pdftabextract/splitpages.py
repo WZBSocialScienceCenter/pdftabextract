@@ -75,12 +75,15 @@ def create_split_pages_dict_structure(split_pages, save_to_output_path=None):
         base_page_elem = base_p['xmlnode']
         
         for (texts, p_w, p_h), img in zip(texts_pair, image_pair):
+            # deep copy text boxes
+            new_texts = [deepcopy(t) for t in texts]
+            
             # create page dict
             new_p_dict = {
                 'number': page_num,
                 'width': int(round(p_w)),
                 'height': int(round(p_h)),
-                'texts': texts,
+                'texts': new_texts,
             }
             
             # create <page>
@@ -113,7 +116,7 @@ def create_split_pages_dict_structure(split_pages, save_to_output_path=None):
                 imgfile = None
             
             # add <text>s
-            new_page_elem.extend([deepcopy(t['xmlnode']) for t in texts])
+            new_page_elem.extend([t['xmlnode'] for t in new_texts])
             
             # add to root
             new_root.append(new_page_elem)

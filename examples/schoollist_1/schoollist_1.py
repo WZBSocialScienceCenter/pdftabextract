@@ -145,20 +145,14 @@ for p_num, p in split_pages.items():
                                                                             radians(1),
                                                                             omit_on_rot_thresh=radians(0.5))
     
-    # rotate back or deskew text boxes
-    needs_fix = True
-    if rot_or_skew_type == ROTATION:
+    # rotate back text boxes
+    # since often no vertical lines can be detected and hence it cannot be determined if the page is rotated or skewed,
+    # we assume that it's always rotated
+    if rot_or_skew_type is not None:
         print("> rotating back by %f°" % -degrees(rot_or_skew_radians))
         rotate_textboxes(p, -rot_or_skew_radians, pt(0, 0))
-    elif rot_or_skew_type in (SKEW_X, SKEW_Y):
-        print("> deskewing in direction '%s' by %f°" % (rot_or_skew_type, -degrees(rot_or_skew_radians)))
-        deskew_textboxes(p, -rot_or_skew_radians, rot_or_skew_type, pt(0, 0))
-    else:
-        needs_fix = False
-        print("> no page rotation / skew found")
     
-    if needs_fix:
-        # rotate back or deskew detected lines
+        # rotate back detected lines
         lines_hough = iproc_obj.apply_found_rotation_or_skew(rot_or_skew_type, -rot_or_skew_radians)
         
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
@@ -186,3 +180,10 @@ for p_num, p in split_pages.items():
         hori_lines_clusters[p_num] = hori_clusters
     else:
         print("> no horizontal line clusters found")
+
+# save split and repaired XML (i.e. XML with deskewed textbox positions)
+output_files_basename = INPUT_XML[:INPUT_XML.rindex('.')]
+repaired_xmlfile = os.path.join(OUTPUTPATH, output_files_basename + '.split.repaired.xml')
+
+print("saving split and repaired XML file to '%s'..." % repaired_xmlfile)
+split_tree.write(repaired_xmlfile)
