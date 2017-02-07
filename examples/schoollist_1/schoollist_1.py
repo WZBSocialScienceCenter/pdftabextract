@@ -41,7 +41,8 @@ DATAPATH = 'data/'
 OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'schoollist_1.pdf.xml'
 
-MIN_COL_WIDTH = 194  # <- very important. the minimum space between two columns in pixels, measured in the scanned pages
+MIN_ROW_HEIGHT = 260  # <- very important. the minimum height of a row in pixels, measured in the scanned pages
+MIN_COL_WIDTH = 194   # <- very important. the minimum width of a column in pixels, measured in the scanned pages
 
 #%% Some helper functions
 def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background, file_suffix_prefix=''):
@@ -168,7 +169,7 @@ for p_num, p in split_pages.items():
         save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
     
     # cluster the detected *horizontal* lines using find_clusters_1d_break_dist as simple clustering function
-    # (break on distance MIN_COL_WIDTH/2)
+    # (break on distance MIN_ROW_HEIGHT/2)
     # additionaly, remove all cluster sections that are considered empty
     # a cluster is considered empty when the number of text boxes in it is below 10% of the median number of text boxes
     # per cluster section
@@ -176,7 +177,7 @@ for p_num, p in split_pages.items():
                                             remove_empty_cluster_sections_use_texts=p['texts'], # use this page's textboxes
                                             remove_empty_cluster_sections_n_texts_ratio=0.1,    # 10% rule
                                             remove_empty_cluster_sections_scaling=page_scaling_y,  # the positions are in "scanned image space" -> we scale them to "text box space"
-                                            dist_thresh=MIN_COL_WIDTH/2)
+                                            dist_thresh=MIN_ROW_HEIGHT/2)
     print("> found %d clusters" % len(hori_clusters))
     
     if len(hori_clusters) > 0:

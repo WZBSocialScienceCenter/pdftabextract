@@ -292,131 +292,131 @@
 	<fontspec color="#a2a2a2" family="Times" id="14" size="12" />
 	<fontspec color="#000000" family="Times" id="15" size="12" />
 	<fontspec color="#3a3a3a" family="Times" id="16" size="11" />
-<image height="3515" left="0" src="schoollist_2.pdf.split_4.png" top="0" width="2483" /><text font="7" height="13" left="125" top="63" width="222">Anschrift  des  Schulamtes </text>
-<text font="7" height="13" left="126" top="157" width="249">Landkreis  Ribnitz-Damgarten </text>
-<text font="7" height="13" left="127" top="173" width="284">Schulamt  - untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="127" top="190" width="284">Damgartener  Chaussee  48/  PF  133 </text>
-<text font="7" height="13" left="127" top="206" width="212">18311  Ribnitz-Damgarten </text>
-<text font="7" height="13" left="127" top="256" width="138">Landkreis  R&#246;be1 </text>
-<text font="7" height="13" left="127" top="271" width="284">Schulamt  - untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="127" top="288" width="148">Bahnhofstra&#223;e  13 </text>
-<text font="7" height="13" left="127" top="304" width="166">17207  R&#246;bel/M&#252;ritz </text>
-<text font="7" height="13" left="128" top="354" width="167">Kreis  Rostock-Land </text>
-<text font="7" height="13" left="127" top="369" width="284">Schulamt  - untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="127" top="386" width="247">Tessiner  Stra&#223;e  12/  PF  2017 </text>
-<text font="7" height="13" left="128" top="403" width="121">18055  Rosteck </text>
-<text font="7" height="13" left="127" top="452" width="167">Hansestadt  Rosteck </text>
-<text font="7" height="13" left="128" top="467" width="86">Schulamt  -</text>
-<text font="7" height="13" left="227" top="467" width="184">untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="128" top="484" width="157">Schillingallee  71 </text>
-<text font="7" height="13" left="129" top="501" width="121">18057  Rosteck </text>
-<text font="7" height="13" left="128" top="550" width="139">Landkreis  R&#252;gen </text>
-<text font="7" height="13" left="128" top="565" width="86">Schulamt  -</text>
-<text font="7" height="13" left="228" top="565" width="184">untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="128" top="583" width="147">Billrothstra&#223;e  5 </text>
-<text font="7" height="13" left="129" top="599" width="167">18528  Bergen/R&#252;gen </text>
-<text font="7" height="13" left="129" top="648" width="167">Landkreis  Schwerin </text>
-<text font="7" height="13" left="129" top="664" width="86">Schulamt  -</text>
-<text font="7" height="13" left="228" top="664" width="184">untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="128" top="680" width="293">Wismarsche  Stra&#223;e  132/  PF  011051 </text>
-<text font="7" height="13" left="130" top="697" width="131">19053  Schwerin </text>
-<text font="7" height="13" left="129" top="746" width="230">Landeshauptstadt  Schwerin </text>
-<text font="7" height="13" left="130" top="762" width="86">Schulamt  -</text>
-<text font="7" height="13" left="229" top="762" width="184">untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="130" top="779" width="156">Schusterstra&#223;e  17 </text>
-<text font="7" height="13" left="130" top="796" width="131">19055  Schwerin </text>
-<text font="7" height="13" left="130" top="844" width="176">Landkreis  Sternberg </text>
-<text font="7" height="13" left="131" top="860" width="283">Schulamt  - untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="130" top="877" width="122">Kreisschulrat </text>
-<text font="8" height="11" left="129" top="895" width="23">Am </text>
-<text font="7" height="13" left="158" top="894" width="65">Berge  3 </text>
-<text font="7" height="13" left="131" top="909" width="140">19406  Sternberg </text>
-<text font="7" height="13" left="131" top="958" width="177">Landkreis  Stralsund </text>
-<text font="7" height="13" left="131" top="974" width="283">Schulamt  - untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="131" top="991" width="149">Tribseer  Damm  1a </text>
-<text font="7" height="13" left="131" top="1007" width="141">18437  Stralsund </text>
-<text font="7" height="13" left="132" top="1055" width="187">Hansestadt  Stralsund </text>
-<text font="7" height="13" left="132" top="1071" width="283">Schulamt  - untere  Landesbeh&#246;rde </text>
-<text font="7" height="13" left="133" top="1088" width="201">Frankendamm  5  od.  PF  1 </text>
-<text font="7" height="13" left="133" top="1104" width="141">18408  Stralsund </text>
-<text font="7" height="13" left="468" top="59" width="266">Name  des(r)  Schulrates/-r&#228;tin </text>
-<text font="7" height="13" left="468" top="70" width="283">Ortsnetzkennzahl/Telefonnummmer </text>
-<text font="7" height="13" left="468" top="153" width="146">Schulrat/-r&#228;tin: </text>
-<text font="7" height="13" left="468" top="170" width="74">Telefon: </text>
-<text font="7" height="13" left="469" top="251" width="146">Schulrat/-r&#228;tin: </text>
-<text font="7" height="13" left="468" top="268" width="74">Telefon: </text>
-<text font="7" height="13" left="469" top="349" width="146">Schulrat/-r&#228;tin: </text>
-<text font="7" height="13" left="468" top="366" width="74">Telefon: </text>
-<text font="7" height="13" left="625" top="152" width="112">Frau  Richter </text>
-<text font="7" height="13" left="626" top="168" width="47">03821 </text>
-<text font="11" height="13" left="679" top="168" width="5">-</text>
-<text font="7" height="13" left="697" top="168" width="86">2204  oder </text>
-<text font="7" height="13" left="697" top="184" width="48">59214 </text>
-<text font="7" height="13" left="625" top="250" width="172">Frau  Podszus  (amt.) </text>
-<text font="7" height="13" left="626" top="266" width="56">039931 </text>
-<text font="11" height="13" left="688" top="266" width="5">-</text>
-<text font="7" height="13" left="706" top="266" width="48">54411 </text>
-<text font="7" height="13" left="625" top="348" width="113">Herr  Scherer </text>
-<text font="7" height="13" left="626" top="364" width="39">0381 </text>
-<text font="11" height="13" left="670" top="364" width="5">-</text>
-<text font="7" height="13" left="688" top="364" width="48">22562 </text>
-<text font="7" height="13" left="469" top="447" width="342">Schulrat/-r&#228;tin:  Fr.Kunze,  Herr  Grimm </text>
-<text font="7" height="13" left="625" top="462" width="110">Herr  Brandt, </text>
-<text font="7" height="13" left="626" top="479" width="130">Frau  v.  Fircks </text>
-<text font="7" height="13" left="469" top="496" width="74">Telefon: </text>
-<text font="7" height="13" left="626" top="496" width="38">0381 </text>
-<text font="11" height="13" left="670" top="496" width="5">-</text>
-<text font="7" height="13" left="689" top="496" width="75">4922357/ </text>
-<text font="7" height="13" left="689" top="511" width="66">4923695 </text>
-<text font="7" height="13" left="470" top="545" width="274">Schulrat/-r&#228;tin:  Herr  Baumann, </text>
-<text font="7" height="13" left="625" top="560" width="80">Herr  Goer</text>
-<text font="11" height="13" left="707" top="560" width="23">tz </text>
-<text font="7" height="13" left="469" top="578" width="74">Telefon: </text>
-<text font="7" height="13" left="626" top="578" width="47">03838 </text>
-<text font="11" height="13" left="680" top="578" width="5">-</text>
-<text font="7" height="13" left="698" top="578" width="48">21111 </text>
-<text font="7" height="13" left="470" top="644" width="78">Schulrat/</text>
-<text font="11" height="13" left="550" top="644" width="5">-</text>
-<text font="7" height="13" left="560" top="644" width="55">r&#228;tin: </text>
-<text font="7" height="13" left="470" top="661" width="74">Telefon: </text>
-<text font="7" height="13" left="470" top="742" width="79">Schulrat/</text>
-<text font="12" height="13" left="550" top="742" width="5">-</text>
-<text font="7" height="13" left="560" top="742" width="56">r&#228;tin: </text>
-<text font="7" height="13" left="470" top="776" width="74">Telefon: </text>
-<text font="7" height="13" left="471" top="840" width="145">Schulrat/-r&#228;tin: </text>
-<text font="7" height="13" left="471" top="857" width="74">Telefon: </text>
-<text font="7" height="13" left="472" top="954" width="145">Schulrat/-r&#228;tin: </text>
-<text font="7" height="13" left="471" top="971" width="74">Telefon: </text>
-<text font="7" height="13" left="473" top="1052" width="79">Schulrat/</text>
-<text font="11" height="13" left="553" top="1052" width="5">-</text>
-<text font="7" height="13" left="563" top="1052" width="55">r&#228;tin: </text>
-<text font="7" height="13" left="472" top="1084" width="74">Telefon: </text>
-<text font="16" height="12" left="469" top="1151" width="10">9 </text>
-<text font="7" height="13" left="626" top="642" width="104">Herr  M&#252;ller </text>
-<text font="7" height="13" left="627" top="659" width="39">0385 </text>
-<text font="11" height="13" left="671" top="659" width="5">-</text>
-<text font="7" height="13" left="689" top="659" width="78">5732505/ </text>
-<text font="7" height="13" left="689" top="675" width="66">5732579 </text>
-<text font="7" height="13" left="626" top="741" width="110">Herr  Schulz, </text>
-<text font="7" height="13" left="627" top="757" width="139">Frau  Goltermann </text>
-<text font="7" height="13" left="627" top="774" width="38">0385 </text>
-<text font="11" height="13" left="671" top="774" width="5">-</text>
-<text font="7" height="13" left="690" top="774" width="57">559236 </text>
-<text font="7" height="13" left="627" top="839" width="130">Herr  Dr.  Papke </text>
-<text font="7" height="13" left="628" top="855" width="47">03847 </text>
-<text font="11" height="13" left="681" top="855" width="5">-</text>
-<text font="7" height="13" left="699" top="855" width="57">20196/ </text>
-<text font="7" height="13" left="699" top="871" width="57">20195/ </text>
-<text font="7" height="13" left="699" top="887" width="48">20194 </text>
-<text font="7" height="13" left="628" top="953" width="74">Herr  Kob </text>
-<text font="7" height="13" left="629" top="969" width="47">03831 </text>
-<text font="11" height="13" left="682" top="969" width="5">-</text>
-<text font="7" height="13" left="700" top="969" width="57">256453 </text>
-<text font="7" height="13" left="629" top="1050" width="118">Frau  Paprott, </text>
-<text font="7" height="13" left="628" top="1066" width="85">Herr  Bork </text>
-<text font="7" height="13" left="629" top="1082" width="47">03831 </text>
-<text font="11" height="13" left="683" top="1082" width="5">-</text>
-<text font="7" height="13" left="701" top="1082" width="58">254416 </text>
+<image height="3515" left="0" src="schoollist_2.pdf.split_4.png" top="0" width="2483" /><text font="7" height="13" left="125" top="64" width="222">Anschrift  des  Schulamtes </text>
+<text font="7" height="13" left="125" top="158" width="249">Landkreis  Ribnitz-Damgarten </text>
+<text font="7" height="13" left="126" top="174" width="284">Schulamt  - untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="126" top="191" width="284">Damgartener  Chaussee  48/  PF  133 </text>
+<text font="7" height="13" left="126" top="207" width="212">18311  Ribnitz-Damgarten </text>
+<text font="7" height="13" left="125" top="257" width="138">Landkreis  R&#246;be1 </text>
+<text font="7" height="13" left="125" top="272" width="284">Schulamt  - untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="125" top="289" width="148">Bahnhofstra&#223;e  13 </text>
+<text font="7" height="13" left="125" top="305" width="166">17207  R&#246;bel/M&#252;ritz </text>
+<text font="7" height="13" left="125" top="355" width="167">Kreis  Rostock-Land </text>
+<text font="7" height="13" left="124" top="370" width="284">Schulamt  - untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="124" top="387" width="247">Tessiner  Stra&#223;e  12/  PF  2017 </text>
+<text font="7" height="13" left="125" top="404" width="121">18055  Rosteck </text>
+<text font="7" height="13" left="123" top="453" width="167">Hansestadt  Rosteck </text>
+<text font="7" height="13" left="124" top="468" width="86">Schulamt  -</text>
+<text font="7" height="13" left="223" top="469" width="184">untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="124" top="485" width="157">Schillingallee  71 </text>
+<text font="7" height="13" left="125" top="502" width="121">18057  Rosteck </text>
+<text font="7" height="13" left="123" top="551" width="139">Landkreis  R&#252;gen </text>
+<text font="7" height="13" left="123" top="566" width="86">Schulamt  -</text>
+<text font="7" height="13" left="223" top="567" width="184">untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="123" top="584" width="147">Billrothstra&#223;e  5 </text>
+<text font="7" height="13" left="124" top="600" width="167">18528  Bergen/R&#252;gen </text>
+<text font="7" height="13" left="123" top="649" width="167">Landkreis  Schwerin </text>
+<text font="7" height="13" left="123" top="665" width="86">Schulamt  -</text>
+<text font="7" height="13" left="222" top="666" width="184">untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="122" top="681" width="293">Wismarsche  Stra&#223;e  132/  PF  011051 </text>
+<text font="7" height="13" left="124" top="698" width="131">19053  Schwerin </text>
+<text font="7" height="13" left="122" top="747" width="230">Landeshauptstadt  Schwerin </text>
+<text font="7" height="13" left="123" top="763" width="86">Schulamt  -</text>
+<text font="7" height="13" left="222" top="764" width="184">untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="123" top="780" width="156">Schusterstra&#223;e  17 </text>
+<text font="7" height="13" left="123" top="797" width="131">19055  Schwerin </text>
+<text font="7" height="13" left="123" top="845" width="176">Landkreis  Sternberg </text>
+<text font="7" height="13" left="123" top="861" width="283">Schulamt  - untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="122" top="878" width="122">Kreisschulrat </text>
+<text font="8" height="11" left="121" top="896" width="23">Am </text>
+<text font="7" height="13" left="150" top="895" width="65">Berge  3 </text>
+<text font="7" height="13" left="123" top="910" width="140">19406  Sternberg </text>
+<text font="7" height="13" left="122" top="959" width="177">Landkreis  Stralsund </text>
+<text font="7" height="13" left="122" top="975" width="283">Schulamt  - untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="122" top="992" width="149">Tribseer  Damm  1a </text>
+<text font="7" height="13" left="122" top="1008" width="141">18437  Stralsund </text>
+<text font="7" height="13" left="123" top="1056" width="187">Hansestadt  Stralsund </text>
+<text font="7" height="13" left="122" top="1072" width="283">Schulamt  - untere  Landesbeh&#246;rde </text>
+<text font="7" height="13" left="123" top="1089" width="201">Frankendamm  5  od.  PF  1 </text>
+<text font="7" height="13" left="123" top="1105" width="141">18408  Stralsund </text>
+<text font="7" height="13" left="468" top="63" width="266">Name  des(r)  Schulrates/-r&#228;tin </text>
+<text font="7" height="13" left="468" top="74" width="283">Ortsnetzkennzahl/Telefonnummmer </text>
+<text font="7" height="13" left="467" top="157" width="146">Schulrat/-r&#228;tin: </text>
+<text font="7" height="13" left="467" top="174" width="74">Telefon: </text>
+<text font="7" height="13" left="467" top="255" width="146">Schulrat/-r&#228;tin: </text>
+<text font="7" height="13" left="466" top="272" width="74">Telefon: </text>
+<text font="7" height="13" left="466" top="353" width="146">Schulrat/-r&#228;tin: </text>
+<text font="7" height="13" left="465" top="370" width="74">Telefon: </text>
+<text font="7" height="13" left="624" top="158" width="112">Frau  Richter </text>
+<text font="7" height="13" left="625" top="174" width="47">03821 </text>
+<text font="11" height="13" left="678" top="174" width="5">-</text>
+<text font="7" height="13" left="696" top="175" width="86">2204  oder </text>
+<text font="7" height="13" left="696" top="191" width="48">59214 </text>
+<text font="7" height="13" left="623" top="256" width="172">Frau  Podszus  (amt.) </text>
+<text font="7" height="13" left="624" top="272" width="56">039931 </text>
+<text font="11" height="13" left="686" top="272" width="5">-</text>
+<text font="7" height="13" left="704" top="273" width="48">54411 </text>
+<text font="7" height="13" left="622" top="354" width="113">Herr  Scherer </text>
+<text font="7" height="13" left="623" top="370" width="39">0381 </text>
+<text font="11" height="13" left="667" top="370" width="5">-</text>
+<text font="7" height="13" left="685" top="370" width="48">22562 </text>
+<text font="7" height="13" left="465" top="451" width="342">Schulrat/-r&#228;tin:  Fr.Kunze,  Herr  Grimm </text>
+<text font="7" height="13" left="621" top="468" width="110">Herr  Brandt, </text>
+<text font="7" height="13" left="622" top="485" width="130">Frau  v.  Fircks </text>
+<text font="7" height="13" left="465" top="500" width="74">Telefon: </text>
+<text font="7" height="13" left="622" top="502" width="38">0381 </text>
+<text font="11" height="13" left="666" top="502" width="5">-</text>
+<text font="7" height="13" left="685" top="502" width="75">4922357/ </text>
+<text font="7" height="13" left="685" top="517" width="66">4923695 </text>
+<text font="7" height="13" left="465" top="549" width="274">Schulrat/-r&#228;tin:  Herr  Baumann, </text>
+<text font="7" height="13" left="620" top="566" width="80">Herr  Goer</text>
+<text font="11" height="13" left="702" top="567" width="23">tz </text>
+<text font="7" height="13" left="464" top="582" width="74">Telefon: </text>
+<text font="7" height="13" left="621" top="584" width="47">03838 </text>
+<text font="11" height="13" left="675" top="584" width="5">-</text>
+<text font="7" height="13" left="693" top="585" width="48">21111 </text>
+<text font="7" height="13" left="464" top="648" width="78">Schulrat/</text>
+<text font="11" height="13" left="544" top="649" width="5">-</text>
+<text font="7" height="13" left="554" top="649" width="55">r&#228;tin: </text>
+<text font="7" height="13" left="464" top="665" width="74">Telefon: </text>
+<text font="7" height="13" left="463" top="746" width="79">Schulrat/</text>
+<text font="12" height="13" left="543" top="747" width="5">-</text>
+<text font="7" height="13" left="553" top="747" width="56">r&#228;tin: </text>
+<text font="7" height="13" left="463" top="780" width="74">Telefon: </text>
+<text font="7" height="13" left="464" top="844" width="145">Schulrat/-r&#228;tin: </text>
+<text font="7" height="13" left="463" top="861" width="74">Telefon: </text>
+<text font="7" height="13" left="463" top="958" width="145">Schulrat/-r&#228;tin: </text>
+<text font="7" height="13" left="462" top="975" width="74">Telefon: </text>
+<text font="7" height="13" left="464" top="1056" width="79">Schulrat/</text>
+<text font="11" height="13" left="544" top="1057" width="5">-</text>
+<text font="7" height="13" left="554" top="1057" width="55">r&#228;tin: </text>
+<text font="7" height="13" left="462" top="1088" width="74">Telefon: </text>
+<text font="16" height="12" left="459" top="1155" width="10">9 </text>
+<text font="7" height="13" left="620" top="648" width="104">Herr  M&#252;ller </text>
+<text font="7" height="13" left="621" top="665" width="39">0385 </text>
+<text font="11" height="13" left="665" top="665" width="5">-</text>
+<text font="7" height="13" left="683" top="665" width="78">5732505/ </text>
+<text font="7" height="13" left="683" top="681" width="66">5732579 </text>
+<text font="7" height="13" left="619" top="747" width="110">Herr  Schulz, </text>
+<text font="7" height="13" left="620" top="763" width="139">Frau  Goltermann </text>
+<text font="7" height="13" left="620" top="780" width="38">0385 </text>
+<text font="11" height="13" left="664" top="780" width="5">-</text>
+<text font="7" height="13" left="683" top="780" width="57">559236 </text>
+<text font="7" height="13" left="620" top="845" width="130">Herr  Dr.  Papke </text>
+<text font="7" height="13" left="620" top="861" width="47">03847 </text>
+<text font="11" height="13" left="673" top="861" width="5">-</text>
+<text font="7" height="13" left="691" top="862" width="57">20196/ </text>
+<text font="7" height="13" left="691" top="878" width="57">20195/ </text>
+<text font="7" height="13" left="691" top="894" width="48">20194 </text>
+<text font="7" height="13" left="619" top="959" width="74">Herr  Kob </text>
+<text font="7" height="13" left="620" top="975" width="47">03831 </text>
+<text font="11" height="13" left="673" top="975" width="5">-</text>
+<text font="7" height="13" left="691" top="976" width="57">256453 </text>
+<text font="7" height="13" left="620" top="1056" width="118">Frau  Paprott, </text>
+<text font="7" height="13" left="618" top="1072" width="85">Herr  Bork </text>
+<text font="7" height="13" left="619" top="1088" width="47">03831 </text>
+<text font="11" height="13" left="673" top="1088" width="5">-</text>
+<text font="7" height="13" left="691" top="1089" width="58">254416 </text>
 </page><page height="1265" left="0" number="5" position="absolute" top="0" width="894"><fontspec color="#3d3d3d" family="Times" id="17" size="13" />
 	<fontspec color="#3d3d3d" family="Times" id="18" size="10" />
 	<fontspec color="#3d3d3d" family="Times" id="19" size="12" />
