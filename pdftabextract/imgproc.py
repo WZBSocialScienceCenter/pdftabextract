@@ -156,7 +156,7 @@ class ImageProc:
         projected = project_polarcoord_lines([l[:2] for l in lines_hough], self.img_w, self.img_h)
         return [(p1, p2, line_dir) for (p1, p2), (_, _, _, line_dir) in zip(projected, lines_hough)]
     
-    def find_rotation_or_skew(self, rot_thresh, rot_same_dir_thresh, omit_on_rot_thresh=None):
+    def find_rotation_or_skew(self, rot_thresh, rot_same_dir_thresh, omit_on_rot_thresh=None, only_direction=None):
         """
         Find page rotation or horizontal/vertical skew using detected lines in <lines>. The lines list must consist
         of arrays with the line rotation "theta" at array index 1 like the returned list from detect_lines().
@@ -165,9 +165,14 @@ class ImageProc:
         rotation.
         <omit_on_rot_thresh> is an optional threshold to filter out "stray" lines whose angle is too far apart from
         the median angle of all other lines that go in the same direction.
+        <only_direction> optional parameter: only use lines in this direction to find out the rotation/skew
         """
         if not self.lines_hough:
             raise ValueError("no lines present. did you run detect_lines()?")
+        
+        if only_direction is not None:
+            if only_direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+                raise ValueError("invalid value for 'only_direction': '%s'" % only_direction)
         
         # get the deviations
         
@@ -177,19 +182,20 @@ class ImageProc:
         lines_w_deviations = [] if omit_on_rot_thresh is not None else None
         
         for rho, theta, theta_norm, line_dir in self.lines_hough:                        
-            if line_dir == DIRECTION_VERTICAL:
+            if line_dir == DIRECTION_VERTICAL and (only_direction is None or only_direction == DIRECTION_VERTICAL):
                 deviation = -theta_norm
                 if deviation < -PIHLF:
                     deviation += np.pi
                 vert_deviations.append(-deviation)
-            else:
+            elif line_dir == DIRECTION_HORIZONTAL and (only_direction is None or only_direction == DIRECTION_HORIZONTAL):
                 deviation = PIHLF - theta_norm
                 hori_deviations.append(-deviation)
+            else:
+                deviation = None
             
-            if omit_on_rot_thresh is not None:
+            if omit_on_rot_thresh is not None and deviation is not None:
+                assert abs(deviation) <= PI4TH
                 lines_w_deviations.append((rho, theta, theta_norm, line_dir, -deviation))
-            
-            assert abs(deviation) <= PI4TH
 
         # get the medians
 
@@ -197,7 +203,8 @@ class ImageProc:
             median_hori_dev = np.median(hori_deviations)
             hori_rot_above_thresh = abs(median_hori_dev) > rot_thresh
         else:
-            warning('no horizontal lines found')
+            if only_direction is None:
+                warning('no horizontal lines found')
             median_hori_dev = None
             hori_rot_above_thresh = False
         
@@ -205,13 +212,17 @@ class ImageProc:
             median_vert_dev = np.median(vert_deviations)
             vert_rot_above_thresh = abs(median_vert_dev) > rot_thresh
         else:
-            warning('no vertical lines found')
+            if only_direction is None:
+                warning('no vertical lines found')
             median_vert_dev = None
             vert_rot_above_thresh = False
         
         
         if omit_on_rot_thresh is not None:
-            assert len(lines_w_deviations) == len(self.lines_hough)
+            if only_direction is None:
+                assert len(lines_w_deviations) == len(self.lines_hough)
+            else:
+                assert len(lines_w_deviations) == len([l for l in self.lines_hough if l[3] == only_direction])
             lines_filtered = []
             for rho, theta, theta_norm, line_dir, deviation in lines_w_deviations:
                 dir_dev = median_hori_dev if line_dir == DIRECTION_HORIZONTAL else median_vert_dev

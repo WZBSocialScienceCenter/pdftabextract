@@ -16,7 +16,7 @@ from pdftabextract.common import (update_text_dict_pos, sorted_by_attr,
 from pdftabextract.geom import pt, vecrotate
 
 
-def border_positions_from_texts(texts, direction):
+def border_positions_from_texts(texts, direction, only_attr=None):
     """
     From a list of textboxes in <texts>, get the border positions for the respective direction.
     For vertical direction, return the text boxes' top and bottom border positions.
@@ -24,10 +24,16 @@ def border_positions_from_texts(texts, direction):
     
     <direction> must be DIRECTION_HORIZONTAL or DIRECTION_VERTICAL from pdftabextract.common.
     
+    optional <only_attr> must be either 'low' (only return 'top' or 'left' borders) or 'high' (only return 'bottom' or
+    'right').
+    
     Border positions are returned as sorted NumPy array.
     """
     if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
-        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
+        raise ValueError("direction must be DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
+        
+    if only_attr is not None and only_attr not in ('low', 'high'):
+        raise ValueError("only_attr must be either 'low' or 'high' if not set to None (default)")
     
     if direction == DIRECTION_VERTICAL:
         attr_lo = 'top'
@@ -38,9 +44,10 @@ def border_positions_from_texts(texts, direction):
     
     positions = []
     for t in texts:
-        val_lo = t[attr_lo]
-        val_hi = t[attr_hi]
-        positions.extend((val_lo, val_hi))
+        if only_attr is None or only_attr == 'low':
+            positions.append(t[attr_lo])
+        if only_attr is None or only_attr == 'high':
+            positions.append(t[attr_hi])
     
     return np.array(sorted(positions))
 
