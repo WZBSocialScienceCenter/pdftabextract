@@ -34,6 +34,7 @@ N_COLS = 3              # number of columns
 HEADER_ROW_HEIGHT = 90  # space between the two header row horizontal lines in pixels, measured in the scanned pages
 MIN_ROW_GAP = 80        # minimum space between two rows in pixels, measured in the scanned pages
 MIN_COL_WIDTH = 410     # minimum space between two columns in pixels, measured in the scanned pages
+SMALLTEXTS_WIDTH = 15
 
 
 #%% Some helper functions
@@ -182,69 +183,71 @@ split_tree.write(repaired_xmlfile)
 
 page_grids = {}
 
-p_num = 2
-p = split_pages[p_num]
-
-#print("detecting rows and columns...")
-#for p_num, p in split_pages.items():
-scaling_x, scaling_y = pages_image_scaling[p_num]
-
-# try to find out the table header using the horizontal lines that were detected before
-hori_lines = list(np.array(calc_cluster_centers_1d(hori_lines_clusters[p_num])) / scaling_y)
-
-possible_header_lines = [y for y in hori_lines if y < p['height'] * 0.25]   # all line clusters in the top quarter of the page
-
-if len(possible_header_lines) < 2:
-    print("> page %d: no table found" % p_num)  # TODO: no table header -> continue
-
-table_top_y = sorted(possible_header_lines)[-1]
-
-table_texts = [t for t in p['texts'] if t['top'] >= table_top_y]
-
-texts_ys = border_positions_from_texts(table_texts, DIRECTION_VERTICAL)
-row_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(texts_ys, dist_thresh=MIN_ROW_GAP/2/scaling_y),
-                                       texts_ys)
-
-row_positions = []
-prev_row_bottom = None
-for _, row_ys in row_clusters:
-    row_top = np.min(row_ys)
-    row_bottom = np.max(row_ys)
+print("detecting rows and columns...")
+for p_num, p in split_pages.items():
+    scaling_x, scaling_y = pages_image_scaling[p_num]
     
-    if not row_positions:
-        row_positions.append(row_top)
-    else:
-        row_positions.append(row_top - (row_top - prev_row_bottom)/2)
+    # try to find out the table header using the horizontal lines that were detected before
+    hori_lines = list(np.array(calc_cluster_centers_1d(hori_lines_clusters[p_num])) / scaling_y)
     
-    prev_row_bottom = row_bottom
+    possible_header_lines = [y for y in hori_lines if y < p['height'] * 0.25]   # all line clusters in the top quarter of the page
     
-#row_positions.append(prev_row_bottom)
+    if len(possible_header_lines) < 2:
+        print("> page %d: no table found" % p_num)
+        continue
+    
+    table_top_y = sorted(possible_header_lines)[-1]
+    
+    table_texts = [t for t in p['texts'] if t['top'] >= table_top_y]
+    
+    texts_ys = border_positions_from_texts(table_texts, DIRECTION_VERTICAL)
+    row_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(texts_ys, dist_thresh=MIN_ROW_GAP/2/scaling_y),
+                                           texts_ys)
+    
+    row_positions = []
+    prev_row_bottom = None
+    for _, row_ys in row_clusters:
+        row_top = np.min(row_ys)
+        row_bottom = np.max(row_ys)
+        
+        if not row_positions:
+            row_positions.append(row_top)
+        else:
+            row_positions.append(row_top - (row_top - prev_row_bottom)/2)
+        
+        prev_row_bottom = row_bottom
+    
+    in_rows_texts = [t for t in table_texts if t['bottom'] <= row_positions[-1]]
+    in_rows_bigtexts = [t for t in in_rows_texts if t['width'] >= SMALLTEXTS_WIDTH]
+    texts_xs = border_positions_from_texts(in_rows_bigtexts, DIRECTION_HORIZONTAL, only_attr='low')  # left borders of text boxes
+    
+    col_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(texts_xs, dist_thresh=SMALLTEXTS_WIDTH),
+                                           texts_xs)
+    col_cluster_sizes = map(lambda x: len(x[0]), col_clusters)
+    col_clusters_by_size = sorted(zip(col_clusters, col_cluster_sizes), key=lambda x: x[1], reverse=True)
+    
+    col_positions = []
+    for (_, col_xs), _ in col_clusters_by_size[:N_COLS]:
+        col_positions.append(np.min(col_xs))
+    col_positions = sorted(col_positions)
+    
+    last_col_texts = [t for t in in_rows_texts if col_positions[-1] <= t['left'] < p['width']]
+    col_positions.append(max([t['right'] for t in last_col_texts]))
+    
+    # create the grid
+    grid = make_grid_from_positions(col_positions, row_positions)
+    
+    n_rows = len(grid)
+    n_cols = len(grid[0])
+    print("> page %d: grid with %d rows, %d columns" % (p_num, n_rows, n_cols))
+    
+    page_grids[p_num] = grid
 
-in_rows_texts = [t for t in table_texts if t['bottom'] <= row_positions[-1]]
-texts_xs = border_positions_from_texts(in_rows_texts, DIRECTION_HORIZONTAL, only_attr='low')  # left borders of text boxes
+# save the page grids
 
-col_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(texts_xs, dist_thresh=15),
-                                       texts_xs)
-col_cluster_sizes = map(lambda x: len(x[0]), col_clusters)
-col_clusters_by_size = sorted(zip(col_clusters, col_cluster_sizes), key=lambda x: x[1], reverse=True)
-
-col_positions = []
-for (_, col_xs), _ in col_clusters_by_size[:N_COLS]:
-    col_positions.append(np.min(col_xs))
-col_positions = sorted(col_positions)
-
-last_col_texts = [t for t in in_rows_texts if col_positions[-1] <= t['left'] < p['width']]
-col_positions.append(max([t['right'] for t in last_col_texts]))
-
-# create the grid
-grid = make_grid_from_positions(col_positions, row_positions)
-
-n_rows = len(grid)
-n_cols = len(grid[0])
-print("> page %d: grid with %d rows, %d columns" % (p_num, n_rows, n_cols))
-
-page_grids[p_num] = grid
-
+# After you created the page grids, you should then check that they're correct using pdf2xml-viewer's 
+# loadGridFile() function
+    
 page_grids_file = os.path.join(OUTPUTPATH, output_files_basename + '.pagegrids.json')
 print("saving page grids JSON file to '%s'" % page_grids_file)
 save_page_grids(page_grids, page_grids_file)
