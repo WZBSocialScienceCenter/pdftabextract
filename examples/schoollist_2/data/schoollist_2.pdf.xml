@@ -2,677 +2,737 @@
 <!DOCTYPE pdf2xml SYSTEM "pdf2xml.dtd">
 
 <pdf2xml producer="poppler" version="0.41.0">
-<page number="1" position="absolute" top="0" left="0" height="1272" width="1792">
-	<fontspec id="0" size="12" family="Times" color="#393939"/>
-	<fontspec id="1" size="13" family="Times" color="#393939"/>
-	<fontspec id="2" size="14" family="Helvetica" color="#393939"/>
-	<fontspec id="3" size="12" family="Times" color="#121212"/>
-	<fontspec id="4" size="12" family="Times" color="#040404"/>
-	<fontspec id="5" size="12" family="Times" color="#707070"/>
-	<fontspec id="6" size="11" family="Times" color="#393939"/>
-<image top="0" left="0" width="1793" height="1272" src="schoollist_2.pdf-1_1.jpg"/>
-<image top="1" left="12" width="143" height="179" src="schoollist_2.pdf-1_2.png"/>
-<image top="203" left="59" width="10" height="73" src="schoollist_2.pdf-1_3.png"/>
-<image top="611" left="55" width="24" height="48" src="schoollist_2.pdf-1_4.png"/>
-<image top="755" left="55" width="10" height="71" src="schoollist_2.pdf-1_5.png"/>
-<text top="68" left="1036" width="222" height="13" font="0">Anschrift  des  Schulamtes </text>
-<text top="163" left="1037" width="205" height="13" font="0">Landkreis  Altentreptow </text>
-<text top="179" left="1037" width="86" height="13" font="0">Schulamt  -</text>
-<text top="179" left="1137" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="195" left="1037" width="185" height="13" font="0">Teetzlebener  Str.  15 </text>
-<text top="212" left="1037" width="168" height="13" font="0">17087  Altentreptow </text>
-<text top="261" left="1037" width="150" height="13" font="0">Landkreis  Anklam </text>
-<text top="277" left="1036" width="86" height="13" font="0">Schulamt  -</text>
-<text top="277" left="1136" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="294" left="1036" width="193" height="13" font="0">Demminer  Straße  71/74 </text>
-<text top="310" left="1037" width="114" height="13" font="0">17389  Anklam </text>
-<text top="359" left="1036" width="194" height="13" font="0">Landkreis  Bad  Doberan </text>
-<text top="375" left="1036" width="86" height="13" font="0">Schulamt  -</text>
-<text top="375" left="1136" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="392" left="1036" width="138" height="13" font="0">Severinstraße  6 </text>
-<text top="408" left="1036" width="158" height="13" font="0">18209  Bad  Doberan </text>
-<text top="457" left="1036" width="150" height="13" font="0">Landkreis  Bützow </text>
-<text top="473" left="1036" width="86" height="13" font="0">Schulamt  -</text>
-<text top="473" left="1135" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="490" left="1036" width="120" height="13" font="0">Schloßplatz  1 </text>
-<text top="506" left="1036" width="113" height="13" font="0">18246  Bützow </text>
-<text top="555" left="1036" width="148" height="13" font="0">Landkreis  Demmin </text>
-<text top="571" left="1036" width="86" height="13" font="0">Schulamt  -</text>
-<text top="571" left="1135" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="588" left="1034" width="222" height="13" font="0">Adolf-Pompe-Straße  12-15 </text>
-<text top="604" left="1036" width="112" height="13" font="0">17109  Demmin </text>
-<text top="654" left="1035" width="176" height="13" font="0">Landkreis  Gadebusch </text>
-<text top="670" left="1035" width="86" height="13" font="0">Schulamt  -</text>
-<text top="670" left="1135" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="685" left="1034" width="22" height="14" font="1">Am </text>
-<text top="686" left="1062" width="103" height="13" font="0">Volkspark  7 </text>
-<text top="703" left="1036" width="140" height="13" font="0">19205  Gadebusch </text>
-<text top="752" left="1035" width="195" height="13" font="0">Hansestadt  Greifswald </text>
-<text top="768" left="1035" width="86" height="13" font="0">Schulamt  -</text>
-<text top="768" left="1135" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="784" left="1035" width="140" height="13" font="0">Goethestraße  2a </text>
-<text top="782" left="1181" width="9" height="15" font="2"><i>I </i></text>
-<text top="784" left="1199" width="56" height="13" font="0">PF  253 </text>
-<text top="801" left="1036" width="150" height="13" font="0">17461  Greifswald </text>
-<text top="849" left="1035" width="186" height="13" font="0">Landkreis  Greifswald </text>
-<text top="865" left="1035" width="86" height="13" font="0">Schulamt  -</text>
-<text top="865" left="1134" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="882" left="1034" width="257" height="13" font="0">Martin-Andersen-Nexö-Platz  1 </text>
-<text top="898" left="1035" width="150" height="13" font="0">17463  Greifswald </text>
-<text top="947" left="1035" width="204" height="13" font="0">Landkreis  Grevesmühlen </text>
-<text top="963" left="1035" width="86" height="13" font="0">Schulamt  -</text>
-<text top="963" left="1134" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="980" left="1035" width="129" height="13" font="0">Börzower  Weg  1 </text>
-<text top="996" left="1035" width="167" height="13" font="0">23932  Grevesmühlen </text>
-<text top="1045" left="1035" width="158" height="13" font="0">Landkreis  Grimmen </text>
-<text top="1060" left="1035" width="86" height="13" font="0">Schulamt  -</text>
-<text top="1060" left="1134" width="185" height="13" font="0">untere  Landesbehörde </text>
-<text top="1077" left="1035" width="239" height="13" font="0">Dr.  Kurt-Fischer-Straße  13 </text>
-<text top="1093" left="1035" width="121" height="13" font="0">18507  Grimmen </text>
-<text top="68" left="1379" width="268" height="13" font="0">Name  des(r)  Schulrates/-rätin </text>
-<text top="80" left="1379" width="276" height="13" font="0">Ortsnetzkennzahl/Telefonnummer </text>
-<text top="163" left="1379" width="146" height="13" font="0">Schulrat/-rätin: </text>
-<text top="179" left="1379" width="74" height="13" font="0">Telefon: </text>
-<text top="261" left="1379" width="79" height="13" font="0">Schulrat/</text>
-<text top="261" left="1459" width="5" height="13" font="3">-</text>
-<text top="261" left="1469" width="55" height="13" font="0">rätin: </text>
-<text top="277" left="1379" width="74" height="13" font="0">Telefon: </text>
-<text top="358" left="1378" width="79" height="13" font="0">Schulrat/</text>
-<text top="358" left="1459" width="5" height="13" font="3">-</text>
-<text top="358" left="1468" width="55" height="13" font="0">rätin: </text>
-<text top="375" left="1378" width="74" height="13" font="0">Telefon: </text>
-<text top="456" left="1378" width="146" height="13" font="0">Schulrat/-rätin: </text>
-<text top="489" left="1377" width="74" height="13" font="0">Telefon: </text>
-<text top="555" left="1378" width="146" height="13" font="0">Schulrat/-rätin: </text>
-<text top="571" left="1377" width="74" height="13" font="0">Telefon: </text>
-<text top="653" left="1377" width="146" height="13" font="0">Schulrat/-rätin: </text>
-<text top="669" left="1377" width="74" height="13" font="0">Telefon: </text>
-<text top="751" left="1377" width="79" height="13" font="0">Schulrat/</text>
-<text top="751" left="1458" width="5" height="13" font="4">-</text>
-<text top="751" left="1467" width="55" height="13" font="0">rätin: </text>
-<text top="784" left="1376" width="74" height="13" font="0">Telefon: </text>
-<text top="848" left="1377" width="79" height="13" font="0">Schulrat/</text>
-<text top="848" left="1457" width="5" height="13" font="5">-</text>
-<text top="848" left="1467" width="55" height="13" font="0">rätin: </text>
-<text top="865" left="1376" width="74" height="13" font="0">Telefon: </text>
-<text top="946" left="1377" width="146" height="13" font="0">Schulrat/-rätin: </text>
-<text top="963" left="1376" width="74" height="13" font="0">Telefon: </text>
-<text top="1044" left="1377" width="79" height="13" font="0">Schulrat/</text>
-<text top="1044" left="1457" width="5" height="13" font="3">-</text>
-<text top="1044" left="1467" width="55" height="13" font="0">rätin: </text>
-<text top="1060" left="1376" width="74" height="13" font="0">Telefon: </text>
-<text top="1158" left="1372" width="10" height="13" font="6">7 </text>
-<text top="163" left="1537" width="121" height="13" font="0">Frau  Kositzki </text>
-<text top="179" left="1537" width="48" height="13" font="0">03961 </text>
-<text top="179" left="1590" width="5" height="13" font="3">-</text>
-<text top="179" left="1608" width="67" height="13" font="0">210698/ </text>
-<text top="195" left="1608" width="58" height="13" font="0">210699 </text>
-<text top="261" left="1535" width="95" height="13" font="0">Herr  Meier </text>
-<text top="277" left="1536" width="47" height="13" font="0">03971 </text>
-<text top="277" left="1590" width="5" height="13" font="4">-</text>
-<text top="277" left="1609" width="103" height="13" font="0">842037/2038 </text>
-<text top="358" left="1535" width="122" height="13" font="0">Herr  Albrecht </text>
-<text top="375" left="1536" width="57" height="13" font="0">038203 </text>
-<text top="375" left="1598" width="5" height="13" font="4">-</text>
-<text top="375" left="1617" width="39" height="13" font="0">6265 </text>
-<text top="456" left="1535" width="131" height="13" font="0">Herr  Dr.  Papke </text>
-<text top="473" left="1538" width="51" height="13" font="0">(amt.) </text>
-<text top="489" left="1535" width="56" height="13" font="0">038461 </text>
-<text top="489" left="1598" width="5" height="13" font="4">-</text>
-<text top="489" left="1616" width="47" height="13" font="0">49258 </text>
-<text top="554" left="1534" width="95" height="13" font="0">Herr  Bluhm </text>
-<text top="570" left="1535" width="47" height="13" font="0">03998 </text>
-<text top="570" left="1589" width="5" height="13" font="3">-</text>
-<text top="570" left="1607" width="57" height="13" font="0">222119 </text>
-<text top="653" left="1534" width="148" height="13" font="0">Frau  Dr.  Kollatz </text>
-<text top="669" left="1535" width="58" height="13" font="0">03886  -</text>
-<text top="669" left="1606" width="48" height="13" font="0">20224 </text>
-<text top="750" left="1533" width="128" height="13" font="0">Herr  Reinhold, </text>
-<text top="767" left="1534" width="94" height="13" font="0">Herr  Maron </text>
-<text top="783" left="1534" width="58" height="13" font="0">03834  -</text>
-<text top="783" left="1606" width="111" height="13" font="0">68400/  68404 </text>
-<text top="848" left="1534" width="84" height="13" font="0">Frau  Köhn </text>
-<text top="865" left="1534" width="47" height="13" font="0">03834 </text>
-<text top="865" left="1587" width="5" height="13" font="3">-</text>
-<text top="865" left="1606" width="48" height="13" font="0">74392 </text>
-<text top="946" left="1533" width="112" height="13" font="0">Herr  Schmidt </text>
-<text top="962" left="1534" width="48" height="13" font="0">03881 </text>
-<text top="962" left="1587" width="5" height="13" font="3">-</text>
-<text top="962" left="1606" width="39" height="13" font="0">7220 </text>
-<text top="1044" left="1533" width="131" height="13" font="0">Herr  Alexander </text>
-<text top="1060" left="1534" width="57" height="13" font="0">038326 </text>
-<text top="1060" left="1596" width="5" height="13" font="4">-</text>
-<text top="1060" left="1615" width="39" height="13" font="0">2828 </text>
+<page number="1" position="absolute" top="0" left="0" height="1265" width="1787">
+	<fontspec id="0" size="11" family="Times" color="#383838"/>
+	<fontspec id="1" size="11" family="Times" color="#383838"/>
+	<fontspec id="2" size="11" family="Times" color="#111111"/>
+	<fontspec id="3" size="11" family="Times" color="#252525"/>
+	<fontspec id="4" size="21" family="Times" color="#111111"/>
+	<fontspec id="5" size="21" family="Times" color="#252525"/>
+	<fontspec id="6" size="11" family="Times" color="#6b6b6b"/>
+	<fontspec id="7" size="11" family="Times" color="#000000"/>
+<image top="0" left="0" width="1787" height="1265" src="schoollist_2.pdf-1_1.jpg"/>
+<image top="4" left="4" width="82" height="226" src="schoollist_2.pdf-1_2.png"/>
+<image top="255" left="52" width="10" height="99" src="schoollist_2.pdf-1_3.png"/>
+<image top="822" left="53" width="33" height="323" src="schoollist_2.pdf-1_4.png"/>
+<text top="66" left="187" width="205" height="12" font="0">Kreis/Organisationsform/ </text>
+<text top="80" left="186" width="172" height="12" font="0">Anschrift  der  Schule </text>
+<text top="124" left="187" width="286" height="12" font="0">Grundschule  &#34;Martin  Andersen  Nexö&#34; </text>
+<text top="138" left="186" width="155" height="12" font="0">Warschauer  Str.  16 </text>
+<text top="153" left="188" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="196" left="187" width="179" height="12" font="0">Karl-Marx-Grundschule </text>
+<text top="211" left="187" width="120" height="12" font="0">Rigaer  Str.  30 </text>
+<text top="225" left="187" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="269" left="186" width="237" height="12" font="0">Grundschule  Friedrich  Engels </text>
+<text top="283" left="186" width="121" height="12" font="0">Rigaer  Str.  29 </text>
+<text top="297" left="187" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="341" left="186" width="288" height="12" font="0">Caspar-David-Friedrich-Grundschule </text>
+<text top="355" left="185" width="120" height="12" font="0">Usedomer  Weg  1 </text>
+<text top="370" left="186" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="413" left="185" width="205" height="12" font="0">Grundschule  Grete  Walter </text>
+<text top="428" left="185" width="96" height="12" font="0">Hainstr.  16 </text>
+<text top="443" left="186" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="501" left="184" width="247" height="12" font="1"><b>Realschule  mit  Hauptschul tei1 </b></text>
+<text top="545" left="185" width="212" height="12" font="0">Realschule  Käthe  Kollwitz </text>
+<text top="560" left="185" width="129" height="12" font="0">Knopfstr.  25/26 </text>
+<text top="574" left="185" width="138" height="12" font="0">17489  Greifswald </text>
+<text top="618" left="184" width="246" height="12" font="0">Realschule  Ernst  Moritz  Arndt </text>
+<text top="632" left="183" width="104" height="12" font="0">Arndtstr.  37 </text>
+<text top="647" left="185" width="138" height="12" font="0">17489  Greifswald </text>
+<text top="690" left="184" width="179" height="12" font="0">Realschule  Karl  Krull </text>
+<text top="705" left="184" width="112" height="12" font="0">Bleichstr.  36 </text>
+<text top="719" left="185" width="138" height="12" font="0">17489  Greifswald </text>
+<text top="763" left="183" width="204" height="12" font="0">Erwin-Fischer-Realschule </text>
+<text top="778" left="184" width="95" height="12" font="0">Feldstr.  86 </text>
+<text top="792" left="184" width="138" height="12" font="0">17489  Greifswald </text>
+<text top="835" left="184" width="196" height="12" font="0">Fritz-Reuter-Realschule </text>
+<text top="850" left="183" width="137" height="12" font="0">Max-Hagen-Weg  13 </text>
+<text top="864" left="184" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="908" left="184" width="120" height="12" font="0">11.  Realschule </text>
+<text top="922" left="183" width="145" height="12" font="0">Max-Planck-Str.  7 </text>
+<text top="936" left="184" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="980" left="184" width="120" height="12" font="0">13.  Realschule </text>
+<text top="994" left="182" width="145" height="12" font="0">Max-Planck-Str.  9 </text>
+<text top="1009" left="183" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="1052" left="183" width="204" height="12" font="0">Erich-Weinert-Realschule </text>
+<text top="1066" left="182" width="137" height="12" font="0">Makarenkostr.  53 </text>
+<text top="1080" left="183" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="1124" left="183" width="196" height="12" font="0">Realschule  Pablo  Neruda </text>
+<text top="1138" left="183" width="186" height="12" font="0">Ernst-Thälmann-Ring  15 </text>
+<text top="1152" left="183" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="66" left="496" width="179" height="12" font="0">Name  des  Schulleiters </text>
+<text top="80" left="496" width="226" height="12" font="0">Ortsnetzkennzahl/Telefonnr. </text>
+<text top="138" left="505" width="103" height="12" font="0">Frau  Lehmann </text>
+<text top="152" left="505" width="54" height="12" font="0">03834  -</text>
+<text top="152" left="571" width="52" height="12" font="0">840189 </text>
+<text top="211" left="504" width="110" height="12" font="0">Frau  Matthews </text>
+<text top="225" left="504" width="54" height="12" font="0">03834  -</text>
+<text top="225" left="570" width="52" height="12" font="0">840801 </text>
+<text top="283" left="504" width="86" height="12" font="0">Frau  Dedow </text>
+<text top="297" left="504" width="53" height="12" font="0">03834  -</text>
+<text top="297" left="570" width="51" height="12" font="0">840698 </text>
+<text top="356" left="503" width="111" height="12" font="0">Frau  Reinhold </text>
+<text top="370" left="503" width="54" height="12" font="0">03834  -</text>
+<text top="370" left="569" width="52" height="12" font="0">811150 </text>
+<text top="428" left="502" width="94" height="12" font="0">Frau  Preuße </text>
+<text top="442" left="502" width="43" height="12" font="0">03834 </text>
+<text top="442" left="552" width="4" height="12" font="2">-</text>
+<text top="442" left="569" width="51" height="12" font="0">840075 </text>
+<text top="560" left="501" width="86" height="12" font="0">Herr  Grewe </text>
+<text top="574" left="502" width="101" height="12" font="0">03834  - 3255 </text>
+<text top="632" left="501" width="95" height="12" font="0">Frau  Leddin </text>
+<text top="646" left="501" width="54" height="12" font="0">03834  -</text>
+<text top="646" left="567" width="52" height="12" font="0">500062 </text>
+<text top="704" left="500" width="87" height="12" font="0">Herr  Feske </text>
+<text top="719" left="501" width="54" height="12" font="0">03834  -</text>
+<text top="719" left="568" width="43" height="12" font="0">68423 </text>
+<text top="777" left="500" width="85" height="12" font="0">Frau  Kagel </text>
+<text top="792" left="500" width="117" height="12" font="0">03834  - 500775 </text>
+<text top="850" left="500" width="118" height="12" font="0">Frau  Borowicki </text>
+<text top="864" left="500" width="54" height="12" font="0">03834  -</text>
+<text top="864" left="566" width="52" height="12" font="0">814053 </text>
+<text top="922" left="500" width="102" height="12" font="0">Frau  Schmidt </text>
+<text top="936" left="500" width="53" height="12" font="0">03834  -</text>
+<text top="936" left="566" width="52" height="12" font="0">812071 </text>
+<text top="994" left="499" width="128" height="12" font="0">Herr  Dr.  Hübner </text>
+<text top="1008" left="500" width="54" height="12" font="0">03834  -</text>
+<text top="1008" left="566" width="51" height="12" font="0">812063 </text>
+<text top="1066" left="500" width="103" height="12" font="0">Frau  Hetming </text>
+<text top="1080" left="500" width="54" height="12" font="0">03834  -</text>
+<text top="1080" left="566" width="51" height="12" font="0">812022 </text>
+<text top="1138" left="499" width="103" height="12" font="0">Frau  Hartung </text>
+<text top="1152" left="500" width="53" height="12" font="0">03834  -</text>
+<text top="1152" left="566" width="52" height="12" font="0">812021 </text>
+<text top="1199" left="500" width="4" height="12" font="2">-</text>
+<text top="1199" left="516" width="19" height="12" font="0">12 </text>
+<text top="1199" left="541" width="4" height="12" font="2">-</text>
+<text top="66" left="745" width="40" height="12" font="0">Schü-</text>
+<text top="66" left="803" width="35" height="12" font="0">dar: </text>
+<text top="80" left="745" width="30" height="12" font="0">ler </text>
+<text top="80" left="802" width="53" height="12" font="0">weibl. </text>
+<text top="138" left="753" width="27" height="12" font="0">224 </text>
+<text top="138" left="811" width="28" height="12" font="0">103 </text>
+<text top="211" left="752" width="27" height="12" font="0">207 </text>
+<text top="211" left="811" width="28" height="12" font="0">103 </text>
+<text top="283" left="752" width="27" height="12" font="3">237 </text>
+<text top="283" left="810" width="28" height="12" font="0">117 </text>
+<text top="355" left="751" width="28" height="12" font="0">333 </text>
+<text top="356" left="809" width="28" height="12" font="0">172 </text>
+<text top="428" left="751" width="27" height="12" font="0">115 </text>
+<text top="428" left="817" width="20" height="12" font="0">59 </text>
+<text top="559" left="750" width="27" height="12" font="3">245 </text>
+<text top="560" left="808" width="28" height="12" font="0">101 </text>
+<text top="632" left="749" width="28" height="12" font="0">186 </text>
+<text top="632" left="816" width="19" height="12" font="0">89 </text>
+<text top="704" left="749" width="28" height="12" font="0">199 </text>
+<text top="705" left="816" width="20" height="12" font="0">86 </text>
+<text top="777" left="748" width="27" height="12" font="0">184 </text>
+<text top="777" left="815" width="19" height="12" font="3">58 </text>
+<text top="849" left="748" width="28" height="12" font="0">170 </text>
+<text top="849" left="815" width="18" height="12" font="0">88 </text>
+<text top="921" left="748" width="28" height="12" font="0">306 </text>
+<text top="922" left="807" width="28" height="12" font="0">146 </text>
+<text top="994" left="748" width="27" height="12" font="3">253 </text>
+<text top="994" left="806" width="28" height="12" font="0">121 </text>
+<text top="1066" left="748" width="28" height="12" font="3">312 </text>
+<text top="1066" left="806" width="27" height="12" font="0">134 </text>
+<text top="1137" left="747" width="28" height="12" font="0">289 </text>
+<text top="1138" left="806" width="27" height="12" font="0">145 </text>
+<text top="43" left="1020" width="680" height="21" font="4">----------------------------------------------------------------------------------</text>
+<text top="64" left="1020" width="204" height="12" font="0">Kreis/Organisationsform/ </text>
+<text top="79" left="1019" width="172" height="12" font="0">Anschrift  der  Schule </text>
+<text top="61" left="1328" width="178" height="12" font="0">Name  des  Schulleiters </text>
+<text top="76" left="1328" width="226" height="12" font="0">Ortsnetzkennzahl/Telefonnr. </text>
+<text top="60" left="1576" width="40" height="12" font="0">Schü-</text>
+<text top="60" left="1635" width="35" height="12" font="0">dar: </text>
+<text top="74" left="1577" width="30" height="12" font="0">ler </text>
+<text top="74" left="1634" width="53" height="12" font="0">weibl. </text>
+<text top="86" left="1021" width="680" height="21" font="5">----------------------------------------------------------------------------------</text>
+<text top="122" left="1021" width="224" height="12" font="0">Realschule  &#34;Martin  Andersen</text>
+<text top="122" left="1245" width="7" height="12" font="6">. </text>
+<text top="122" left="1254" width="44" height="12" font="0">Nexö&#34; </text>
+<text top="137" left="1019" width="155" height="12" font="0">Warschauer  Str.  16 </text>
+<text top="152" left="1021" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="195" left="1021" width="170" height="12" font="0">Karl-Marx-Realschule </text>
+<text top="210" left="1021" width="120" height="12" font="0">Rigaer  Str.  30 </text>
+<text top="224" left="1021" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="267" left="1021" width="228" height="12" font="0">Realschule  Friedrich  Engels </text>
+<text top="282" left="1021" width="120" height="12" font="0">Rigaer  Str.  29 </text>
+<text top="297" left="1022" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="340" left="1021" width="279" height="12" font="0">Realschule  Caspar  David  Friedrich </text>
+<text top="355" left="1021" width="119" height="12" font="0">Usedomer  Weg  1 </text>
+<text top="369" left="1022" width="138" height="12" font="0">17493  Greifswald </text>
+<text top="413" left="1021" width="138" height="12" font="0">Hanse-Realschule </text>
+<text top="427" left="1021" width="158" height="12" font="0">Albert-Einstein-Str</text>
+<text top="427" left="1182" width="7" height="12" font="6">. </text>
+<text top="427" left="1198" width="10" height="12" font="0">6 </text>
+<text top="442" left="1022" width="137" height="12" font="0">17491  Greifswald </text>
+<text top="486" left="1022" width="112" height="12" font="0">8.  Realschule </text>
+<text top="500" left="1022" width="154" height="12" font="0">Karl-Krull-Str.  19 </text>
+<text top="515" left="1022" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="574" left="1022" width="80" height="12" font="1"><b>Gymnasium </b></text>
+<text top="617" left="1022" width="280" height="12" font="0">Johann-Gottfried-Herder-Gymnasium </text>
+<text top="632" left="1022" width="145" height="12" font="0">Max-Planck-Str.  8 </text>
+<text top="646" left="1023" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="689" left="1022" width="272" height="12" font="0">Alexander-von-Humboldt-Gymnasium </text>
+<text top="704" left="1022" width="137" height="12" font="0">Makarenkostr.  54 </text>
+<text top="719" left="1023" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="762" left="1023" width="262" height="12" font="0">Gymnasium  Friedrich  Ludwig  Jahn </text>
+<text top="777" left="1023" width="185" height="12" font="0">Ernst-Thälmann-Platz  1 </text>
+<text top="791" left="1024" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="835" left="1024" width="262" height="12" font="1"><b>Sonderschule  für  Lernbehinderte </b></text>
+<text top="879" left="1024" width="137" height="12" font="0">Pestalozzischule </text>
+<text top="879" left="1166" width="4" height="12" font="2">-</text>
+<text top="879" left="1183" width="26" height="12" font="0">LBS </text>
+<text top="879" left="1216" width="4" height="12" font="2">-</text>
+<text top="894" left="1023" width="145" height="12" font="0">Wolgaster  Str.  62 </text>
+<text top="909" left="1025" width="138" height="12" font="0">17489  Greifswald </text>
+<text top="952" left="1025" width="287" height="12" font="1"><b>Sonderschule  für  Geistigbehinderte </b></text>
+<text top="996" left="1025" width="221" height="12" font="0">Johanna-Odebrecht-Stiftung </text>
+<text top="1010" left="1025" width="237" height="12" font="0">Schule  für  Geistigbehinderte </text>
+<text top="1025" left="1025" width="144" height="12" font="0">Loissiner  Wende  5 </text>
+<text top="1039" left="1026" width="138" height="12" font="0">17491  Greifswald </text>
+<text top="1083" left="1025" width="122" height="12" font="1"><b>Abendgymnasium </b></text>
+<text top="1126" left="1025" width="122" height="12" font="0">Abendgymnasium </text>
+<text top="1140" left="1026" width="185" height="12" font="0">Ernst-Thälmann-Platz  1 </text>
+<text top="1155" left="1027" width="138" height="12" font="0">17489  Greifswald </text>
+<text top="134" left="1337" width="95" height="12" font="0">Frau  Müller </text>
+<text top="148" left="1337" width="54" height="12" font="0">03834  -</text>
+<text top="148" left="1403" width="52" height="12" font="0">840189 </text>
+<text top="206" left="1336" width="86" height="12" font="0">Herr  Menge </text>
+<text top="220" left="1337" width="54" height="12" font="0">03834  -</text>
+<text top="220" left="1404" width="52" height="12" font="0">840801 </text>
+<text top="279" left="1337" width="103" height="12" font="0">Herr  Reinelt </text>
+<text top="293" left="1338" width="54" height="12" font="0">03834  -</text>
+<text top="293" left="1404" width="51" height="12" font="0">840698 </text>
+<text top="351" left="1337" width="103" height="12" font="0">Frau  Voßberg </text>
+<text top="366" left="1338" width="54" height="12" font="0">03834  -</text>
+<text top="366" left="1404" width="52" height="12" font="0">811150 </text>
+<text top="424" left="1337" width="95" height="12" font="0">Herr  Meinke </text>
+<text top="438" left="1338" width="119" height="12" font="0">03834  - 812059 </text>
+<text top="497" left="1338" width="103" height="12" font="0">Frau  Kallies </text>
+<text top="511" left="1338" width="44" height="12" font="0">03834 </text>
+<text top="511" left="1388" width="4" height="12" font="2">-</text>
+<text top="511" left="1404" width="52" height="12" font="0">814051 </text>
+<text top="629" left="1338" width="57" height="12" font="0">Frau  Dr</text>
+<text top="629" left="1398" width="7" height="12" font="6">. </text>
+<text top="628" left="1413" width="54" height="12" font="0">Sikora </text>
+<text top="643" left="1339" width="119" height="12" font="0">03834  - 812066 </text>
+<text top="701" left="1339" width="152" height="12" font="0">Frau  Dr.  Scherpelz </text>
+<text top="715" left="1339" width="54" height="12" font="0">03834  -</text>
+<text top="715" left="1406" width="52" height="12" font="0">812029 </text>
+<text top="774" left="1338" width="152" height="12" font="0">Herr  Dr.  Zschäckel </text>
+<text top="788" left="1339" width="44" height="12" font="0">03834 </text>
+<text top="788" left="1389" width="4" height="12" font="7">-</text>
+<text top="788" left="1406" width="52" height="12" font="0">500043 </text>
+<text top="891" left="1339" width="78" height="12" font="0">Herr  Wolf </text>
+<text top="906" left="1340" width="43" height="12" font="0">03834 </text>
+<text top="906" left="1390" width="4" height="12" font="7">-</text>
+<text top="906" left="1406" width="36" height="12" font="0">3909 </text>
+<text top="1022" left="1341" width="104" height="12" font="0">Herr  Skladny </text>
+<text top="1036" left="1342" width="43" height="12" font="0">03834 </text>
+<text top="1036" left="1391" width="4" height="12" font="7">-</text>
+<text top="1036" left="1407" width="77" height="12" font="0">500645-47 </text>
+<text top="1138" left="1342" width="111" height="12" font="0">Frau  Aumüller </text>
+<text top="1152" left="1342" width="118" height="12" font="0">03834  - 501640 </text>
+<text top="1196" left="1343" width="4" height="12" font="2">-</text>
+<text top="1196" left="1360" width="20" height="12" font="0">13 </text>
+<text top="1196" left="1384" width="4" height="12" font="6">-</text>
+<text top="132" left="1585" width="28" height="12" font="0">296 </text>
+<text top="131" left="1644" width="28" height="12" font="0">132 </text>
+<text top="204" left="1585" width="27" height="12" font="0">250 </text>
+<text top="204" left="1644" width="27" height="12" font="0">112 </text>
+<text top="277" left="1586" width="27" height="12" font="0">314 </text>
+<text top="276" left="1644" width="28" height="12" font="0">143 </text>
+<text top="349" left="1585" width="27" height="12" font="0">278 </text>
+<text top="349" left="1644" width="28" height="12" font="0">140 </text>
+<text top="422" left="1586" width="27" height="12" font="0">280 </text>
+<text top="421" left="1644" width="28" height="12" font="3">129 </text>
+<text top="494" left="1586" width="27" height="12" font="0">207 </text>
+<text top="494" left="1652" width="19" height="12" font="0">78 </text>
+<text top="626" left="1586" width="27" height="12" font="0">877 </text>
+<text top="626" left="1644" width="27" height="12" font="3">552 </text>
+<text top="699" left="1587" width="27" height="12" font="0">901 </text>
+<text top="698" left="1646" width="26" height="12" font="0">458 </text>
+<text top="772" left="1579" width="36" height="12" font="0">1194 </text>
+<text top="771" left="1645" width="27" height="12" font="0">712 </text>
+<text top="889" left="1587" width="28" height="12" font="3">522 </text>
+<text top="888" left="1646" width="28" height="12" font="3">195 </text>
+<text top="1020" left="1597" width="19" height="12" font="0">81 </text>
+<text top="1019" left="1655" width="19" height="12" font="3">35 </text>
+<text top="1136" left="1598" width="18" height="12" font="3">72 </text>
+<text top="1135" left="1656" width="18" height="12" font="0">42 </text>
 </page>
-<page number="2" position="absolute" top="0" left="0" height="1265" width="1787">
-	<fontspec id="7" size="12" family="Times" color="#3a3a3a"/>
-	<fontspec id="8" size="10" family="Times" color="#3a3a3a"/>
-	<fontspec id="9" size="12" family="Times" color="#525252"/>
-	<fontspec id="10" size="7" family="Times" color="#3a3a3a"/>
-	<fontspec id="11" size="12" family="Times" color="#151515"/>
-	<fontspec id="12" size="12" family="Times" color="#6d6d6d"/>
-	<fontspec id="13" size="8" family="Times" color="#3a3a3a"/>
-	<fontspec id="14" size="12" family="Times" color="#a2a2a2"/>
-	<fontspec id="15" size="12" family="Times" color="#000000"/>
-	<fontspec id="16" size="11" family="Times" color="#3a3a3a"/>
-<image top="0" left="0" width="1787" height="1265" src="schoollist_2.pdf-2_1.jpg"/>
-<image top="4" left="4" width="56" height="39" src="schoollist_2.pdf-2_2.png"/>
-<image top="55" left="52" width="10" height="184" src="schoollist_2.pdf-2_3.png"/>
-<image top="546" left="56" width="6" height="46" src="schoollist_2.pdf-2_4.png"/>
-<image top="822" left="53" width="22" height="321" src="schoollist_2.pdf-2_5.png"/>
-<text top="65" left="184" width="222" height="13" font="7">Anschrift  des  Schulamtes </text>
-<text top="159" left="185" width="159" height="13" font="7">Landkreis  Güstrow </text>
-<text top="175" left="185" width="86" height="13" font="7">Schulamt  -</text>
-<text top="175" left="284" width="185" height="13" font="7">untere  Landesbehörde </text>
-<text top="192" left="185" width="111" height="13" font="7">Klosterhof  1 </text>
-<text top="208" left="184" width="123" height="13" font="7">18273  Güstrow </text>
-<text top="258" left="184" width="158" height="13" font="7">Landkreis  Hagenow </text>
-<text top="274" left="184" width="86" height="13" font="7">Schulamt  -</text>
-<text top="274" left="283" width="185" height="13" font="7">untere  Landesbehörde </text>
-<text top="290" left="182" width="141" height="13" font="7">Augustenstr.  10 </text>
-<text top="306" left="184" width="122" height="13" font="7">19230  Hagenow </text>
-<text top="355" left="183" width="130" height="13" font="7">Landkreis  Lübz </text>
-<text top="371" left="183" width="86" height="13" font="7">Schulamt  -</text>
-<text top="371" left="283" width="185" height="13" font="7">untere  Landesbehörde </text>
-<text top="387" left="182" width="113" height="13" font="7">Gartenstraße </text>
-<text top="404" left="183" width="93" height="13" font="7">19386  Lübz </text>
-<text top="453" left="182" width="195" height="13" font="7">Landkreis  Ludwigslust </text>
-<text top="469" left="182" width="86" height="13" font="7">Schulamt  -</text>
-<text top="469" left="282" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="485" left="181" width="196" height="13" font="7">Alexandrinenplatz  5/6 </text>
-<text top="502" left="182" width="158" height="13" font="7">19288  Ludwigslust </text>
-<text top="551" left="181" width="158" height="13" font="7">Landkreis  Malehin </text>
-<text top="567" left="181" width="86" height="13" font="7">Schulamt  -</text>
-<text top="567" left="281" width="185" height="13" font="7">untere  Landesbehörde </text>
-<text top="583" left="181" width="184" height="13" font="7">Fritz-Reuter-Platz  9 </text>
-<text top="600" left="181" width="122" height="13" font="7">17139  Malehin </text>
-<text top="649" left="180" width="222" height="13" font="7">Landkreis  Neubrandenburg </text>
-<text top="665" left="180" width="86" height="13" font="7">Schulamt  -</text>
-<text top="665" left="280" width="185" height="13" font="7">untere  Landesbehörde </text>
-<text top="682" left="180" width="220" height="13" font="7">Große  Krauthöferstraße  8 </text>
-<text top="698" left="181" width="185" height="13" font="7">17034  Neubrandenburg </text>
-<text top="747" left="180" width="185" height="13" font="7">Stadt  Neubrandenburg </text>
-<text top="764" left="180" width="86" height="13" font="7">Schulamt  -</text>
-<text top="764" left="279" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="780" left="180" width="301" height="13" font="7">Friedrich-Engels-Ring  53/  PF  1814 </text>
-<text top="796" left="179" width="185" height="13" font="7">17033  Neubrandenburg </text>
-<text top="845" left="179" width="195" height="13" font="7">Landkreis  Neustrelitz </text>
-<text top="861" left="179" width="86" height="13" font="7">Schulamt  -</text>
-<text top="861" left="279" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="877" left="178" width="193" height="13" font="7">Woldegker  Chaussee  65 </text>
-<text top="894" left="179" width="158" height="13" font="7">17235  Neustrelitz </text>
-<text top="942" left="179" width="159" height="13" font="7">Landkreis  Parchim </text>
-<text top="959" left="179" width="86" height="13" font="7">Schulamt  -</text>
-<text top="959" left="278" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="975" left="179" width="220" height="13" font="7">Ziegendorfer  Chaussee  11 </text>
-<text top="991" left="178" width="123" height="13" font="7">19370  Parchim </text>
-<text top="1040" left="178" width="168" height="13" font="7">Landkreis  Pasewalk </text>
-<text top="1056" left="178" width="86" height="13" font="7">Schulamt  -</text>
-<text top="1056" left="278" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="1074" left="177" width="23" height="11" font="8">Am </text>
-<text top="1073" left="204" width="67" height="13" font="7">Markt  1 </text>
-<text top="1088" left="178" width="48" height="13" font="9">17309 </text>
-<text top="1088" left="232" width="77" height="13" font="7">Pasewalk </text>
-<text top="65" left="527" width="267" height="13" font="7">Name  des(r)  Schulrates/-rätin </text>
-<text top="77" left="527" width="275" height="13" font="7">Ortsnetzkennzahl/Telefonnummer </text>
-<text top="160" left="527" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="176" left="526" width="74" height="13" font="7">Telefon: </text>
-<text top="159" left="683" width="42" height="12" font="10">Her~ </text>
-<text top="159" left="728" width="39" height="13" font="7">Maaß </text>
-<text top="175" left="684" width="47" height="13" font="7">03843 </text>
-<text top="175" left="737" width="5" height="13" font="11">-</text>
-<text top="175" left="756" width="49" height="13" font="7">260-0 </text>
-<text top="258" left="526" width="294" height="13" font="7">Schulrat/-rätin:  Frau  Steinmann, </text>
-<text top="274" left="682" width="84" height="13" font="7">Herr  Koop </text>
-<text top="290" left="525" width="74" height="13" font="7">Telefon: </text>
-<text top="290" left="683" width="58" height="13" font="7">03883  -</text>
-<text top="290" left="755" width="112" height="13" font="7">39780/  39781 </text>
-<text top="355" left="525" width="287" height="13" font="7">Schulrat/-rätin:  Herr  Zwerschke </text>
-<text top="371" left="685" width="51" height="13" font="7">(amt.) </text>
-<text top="388" left="524" width="74" height="13" font="7">Telefon: </text>
-<text top="388" left="682" width="56" height="13" font="7">038731 </text>
-<text top="388" left="744" width="5" height="13" font="11">-</text>
-<text top="388" left="763" width="75" height="13" font="7">470/  333 </text>
-<text top="453" left="523" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="469" left="523" width="74" height="13" font="7">Telefon: </text>
-<text top="551" left="523" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="567" left="522" width="74" height="13" font="7">Telefon: </text>
-<text top="650" left="522" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="666" left="521" width="74" height="13" font="7">Telefon: </text>
-<text top="747" left="521" width="79" height="13" font="7">Schulrat/</text>
-<text top="747" left="602" width="5" height="13" font="11">-</text>
-<text top="747" left="611" width="56" height="13" font="7">rätin: </text>
-<text top="453" left="680" width="140" height="13" font="7">Herr  Martienßen </text>
-<text top="469" left="681" width="47" height="13" font="7">03874 </text>
-<text top="469" left="734" width="5" height="13" font="11">-</text>
-<text top="469" left="753" width="57" height="13" font="7">57421/ </text>
-<text top="486" left="753" width="47" height="13" font="7">57422 </text>
-<text top="551" left="680" width="112" height="13" font="7">Herr  Hartwig </text>
-<text top="567" left="680" width="47" height="13" font="7">03994 </text>
-<text top="567" left="734" width="5" height="13" font="11">-</text>
-<text top="567" left="752" width="66" height="13" font="7">635310/ </text>
-<text top="584" left="752" width="66" height="13" font="7">635311/ </text>
-<text top="600" left="752" width="56" height="13" font="7">635312 </text>
-<text top="650" left="679" width="105" height="13" font="7">Herr  Ritter </text>
-<text top="666" left="680" width="38" height="13" font="7">0395 </text>
-<text top="666" left="724" width="5" height="13" font="11">-</text>
-<text top="666" left="742" width="39" height="13" font="7">6410 </text>
-<text top="747" left="678" width="119" height="13" font="7">Herr  Taterka, </text>
-<text top="764" left="679" width="84" height="13" font="7">Frau  Lenz </text>
-<text top="780" left="520" width="74" height="13" font="7">Telefon: </text>
-<text top="781" left="678" width="38" height="13" font="7">0395 </text>
-<text top="781" left="723" width="5" height="13" font="11">-</text>
-<text top="781" left="741" width="73" height="13" font="7">5952226, </text>
-<text top="796" left="678" width="38" height="13" font="7">0395 </text>
-<text top="796" left="723" width="5" height="13" font="11">-</text>
-<text top="796" left="741" width="67" height="13" font="7">5952426 </text>
-<text top="845" left="521" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="878" left="520" width="74" height="13" font="7">Telefon: </text>
-<text top="943" left="520" width="79" height="13" font="7">Schulrat/</text>
-<text top="943" left="601" width="5" height="13" font="12">-</text>
-<text top="943" left="610" width="56" height="13" font="7">rätin: </text>
-<text top="959" left="519" width="74" height="13" font="7">Telefon: </text>
-<text top="1041" left="520" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="1057" left="519" width="77" height="13" font="13">Tele~on: </text>
-<text top="1155" left="515" width="11" height="13" font="7">8 </text>
-<text top="845" left="678" width="79" height="13" font="7">Frau  Tack</text>
-<text top="845" left="764" width="7" height="13" font="14">, </text>
-<text top="845" left="771" width="62" height="13" font="7">(amt.), </text>
-<text top="862" left="677" width="164" height="13" font="7">Herr  Ritter  (amt.) </text>
-<text top="878" left="678" width="47" height="13" font="7">03981 </text>
-<text top="878" left="731" width="5" height="13" font="15">-</text>
-<text top="878" left="749" width="67" height="13" font="7">255354/ </text>
-<text top="894" left="749" width="57" height="13" font="7">255384 </text>
-<text top="943" left="677" width="130" height="13" font="7">Herr  Zwerschke </text>
-<text top="959" left="677" width="48" height="13" font="7">03871 </text>
-<text top="959" left="731" width="5" height="13" font="11">-</text>
-<text top="959" left="749" width="47" height="13" font="7">43153 </text>
-<text top="1040" left="676" width="94" height="13" font="7">Herr  Exner </text>
-<text top="1056" left="677" width="48" height="13" font="7">03973 </text>
-<text top="1056" left="730" width="5" height="13" font="11">-</text>
-<text top="1056" left="749" width="95" height="13" font="7">52185  oder </text>
-<text top="1073" left="749" width="48" height="13" font="7">52262 </text>
-<text top="63" left="1019" width="222" height="13" font="7">Anschrift  des  Schulamtes </text>
-<text top="157" left="1020" width="249" height="13" font="7">Landkreis  Ribnitz-Damgarten </text>
-<text top="173" left="1021" width="284" height="13" font="7">Schulamt  - untere  Landesbehörde </text>
-<text top="190" left="1021" width="284" height="13" font="7">Damgartener  Chaussee  48/  PF  133 </text>
-<text top="206" left="1021" width="212" height="13" font="7">18311  Ribnitz-Damgarten </text>
-<text top="256" left="1021" width="138" height="13" font="7">Landkreis  Röbe1 </text>
-<text top="271" left="1021" width="284" height="13" font="7">Schulamt  - untere  Landesbehörde </text>
-<text top="288" left="1021" width="148" height="13" font="7">Bahnhofstraße  13 </text>
-<text top="304" left="1021" width="166" height="13" font="7">17207  Röbel/Müritz </text>
-<text top="354" left="1022" width="167" height="13" font="7">Kreis  Rostock-Land </text>
-<text top="369" left="1021" width="284" height="13" font="7">Schulamt  - untere  Landesbehörde </text>
-<text top="386" left="1021" width="247" height="13" font="7">Tessiner  Straße  12/  PF  2017 </text>
-<text top="403" left="1022" width="121" height="13" font="7">18055  Rosteck </text>
-<text top="452" left="1021" width="167" height="13" font="7">Hansestadt  Rosteck </text>
-<text top="467" left="1022" width="86" height="13" font="7">Schulamt  -</text>
-<text top="467" left="1121" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="484" left="1022" width="157" height="13" font="7">Schillingallee  71 </text>
-<text top="501" left="1023" width="121" height="13" font="7">18057  Rosteck </text>
-<text top="550" left="1022" width="139" height="13" font="7">Landkreis  Rügen </text>
-<text top="565" left="1022" width="86" height="13" font="7">Schulamt  -</text>
-<text top="565" left="1122" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="583" left="1022" width="147" height="13" font="7">Billrothstraße  5 </text>
-<text top="599" left="1023" width="167" height="13" font="7">18528  Bergen/Rügen </text>
-<text top="648" left="1023" width="167" height="13" font="7">Landkreis  Schwerin </text>
-<text top="664" left="1023" width="86" height="13" font="7">Schulamt  -</text>
-<text top="664" left="1122" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="680" left="1022" width="293" height="13" font="7">Wismarsche  Straße  132/  PF  011051 </text>
-<text top="697" left="1024" width="131" height="13" font="7">19053  Schwerin </text>
-<text top="746" left="1023" width="230" height="13" font="7">Landeshauptstadt  Schwerin </text>
-<text top="762" left="1024" width="86" height="13" font="7">Schulamt  -</text>
-<text top="762" left="1123" width="184" height="13" font="7">untere  Landesbehörde </text>
-<text top="779" left="1024" width="156" height="13" font="7">Schusterstraße  17 </text>
-<text top="796" left="1024" width="131" height="13" font="7">19055  Schwerin </text>
-<text top="844" left="1024" width="176" height="13" font="7">Landkreis  Sternberg </text>
-<text top="860" left="1025" width="283" height="13" font="7">Schulamt  - untere  Landesbehörde </text>
-<text top="877" left="1024" width="122" height="13" font="7">Kreisschulrat </text>
-<text top="895" left="1023" width="23" height="11" font="8">Am </text>
-<text top="894" left="1052" width="65" height="13" font="7">Berge  3 </text>
-<text top="909" left="1025" width="140" height="13" font="7">19406  Sternberg </text>
-<text top="958" left="1025" width="177" height="13" font="7">Landkreis  Stralsund </text>
-<text top="974" left="1025" width="283" height="13" font="7">Schulamt  - untere  Landesbehörde </text>
-<text top="991" left="1025" width="149" height="13" font="7">Tribseer  Damm  1a </text>
-<text top="1007" left="1025" width="141" height="13" font="7">18437  Stralsund </text>
-<text top="1055" left="1026" width="187" height="13" font="7">Hansestadt  Stralsund </text>
-<text top="1071" left="1026" width="283" height="13" font="7">Schulamt  - untere  Landesbehörde </text>
-<text top="1088" left="1027" width="201" height="13" font="7">Frankendamm  5  od.  PF  1 </text>
-<text top="1104" left="1027" width="141" height="13" font="7">18408  Stralsund </text>
-<text top="59" left="1362" width="266" height="13" font="7">Name  des(r)  Schulrates/-rätin </text>
-<text top="70" left="1362" width="283" height="13" font="7">Ortsnetzkennzahl/Telefonnummmer </text>
-<text top="153" left="1362" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="170" left="1362" width="74" height="13" font="7">Telefon: </text>
-<text top="251" left="1363" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="268" left="1362" width="74" height="13" font="7">Telefon: </text>
-<text top="349" left="1363" width="146" height="13" font="7">Schulrat/-rätin: </text>
-<text top="366" left="1362" width="74" height="13" font="7">Telefon: </text>
-<text top="152" left="1519" width="112" height="13" font="7">Frau  Richter </text>
-<text top="168" left="1520" width="47" height="13" font="7">03821 </text>
-<text top="168" left="1573" width="5" height="13" font="11">-</text>
-<text top="168" left="1591" width="86" height="13" font="7">2204  oder </text>
-<text top="184" left="1591" width="48" height="13" font="7">59214 </text>
-<text top="250" left="1519" width="172" height="13" font="7">Frau  Podszus  (amt.) </text>
-<text top="266" left="1520" width="56" height="13" font="7">039931 </text>
-<text top="266" left="1582" width="5" height="13" font="11">-</text>
-<text top="266" left="1600" width="48" height="13" font="7">54411 </text>
-<text top="348" left="1519" width="113" height="13" font="7">Herr  Scherer </text>
-<text top="364" left="1520" width="39" height="13" font="7">0381 </text>
-<text top="364" left="1564" width="5" height="13" font="11">-</text>
-<text top="364" left="1582" width="48" height="13" font="7">22562 </text>
-<text top="447" left="1363" width="342" height="13" font="7">Schulrat/-rätin:  Fr.Kunze,  Herr  Grimm </text>
-<text top="462" left="1519" width="110" height="13" font="7">Herr  Brandt, </text>
-<text top="479" left="1520" width="130" height="13" font="7">Frau  v.  Fircks </text>
-<text top="496" left="1363" width="74" height="13" font="7">Telefon: </text>
-<text top="496" left="1520" width="38" height="13" font="7">0381 </text>
-<text top="496" left="1564" width="5" height="13" font="11">-</text>
-<text top="496" left="1583" width="75" height="13" font="7">4922357/ </text>
-<text top="511" left="1583" width="66" height="13" font="7">4923695 </text>
-<text top="545" left="1364" width="274" height="13" font="7">Schulrat/-rätin:  Herr  Baumann, </text>
-<text top="560" left="1519" width="80" height="13" font="7">Herr  Goer</text>
-<text top="560" left="1601" width="23" height="13" font="11">tz </text>
-<text top="578" left="1363" width="74" height="13" font="7">Telefon: </text>
-<text top="578" left="1520" width="47" height="13" font="7">03838 </text>
-<text top="578" left="1574" width="5" height="13" font="11">-</text>
-<text top="578" left="1592" width="48" height="13" font="7">21111 </text>
-<text top="644" left="1364" width="78" height="13" font="7">Schulrat/</text>
-<text top="644" left="1444" width="5" height="13" font="11">-</text>
-<text top="644" left="1454" width="55" height="13" font="7">rätin: </text>
-<text top="661" left="1364" width="74" height="13" font="7">Telefon: </text>
-<text top="742" left="1364" width="79" height="13" font="7">Schulrat/</text>
-<text top="742" left="1444" width="5" height="13" font="12">-</text>
-<text top="742" left="1454" width="56" height="13" font="7">rätin: </text>
-<text top="776" left="1364" width="74" height="13" font="7">Telefon: </text>
-<text top="840" left="1365" width="145" height="13" font="7">Schulrat/-rätin: </text>
-<text top="857" left="1365" width="74" height="13" font="7">Telefon: </text>
-<text top="954" left="1366" width="145" height="13" font="7">Schulrat/-rätin: </text>
-<text top="971" left="1365" width="74" height="13" font="7">Telefon: </text>
-<text top="1052" left="1367" width="79" height="13" font="7">Schulrat/</text>
-<text top="1052" left="1447" width="5" height="13" font="11">-</text>
-<text top="1052" left="1457" width="55" height="13" font="7">rätin: </text>
-<text top="1084" left="1366" width="74" height="13" font="7">Telefon: </text>
-<text top="1151" left="1363" width="10" height="12" font="16">9 </text>
-<text top="642" left="1520" width="104" height="13" font="7">Herr  Müller </text>
-<text top="659" left="1521" width="39" height="13" font="7">0385 </text>
-<text top="659" left="1565" width="5" height="13" font="11">-</text>
-<text top="659" left="1583" width="78" height="13" font="7">5732505/ </text>
-<text top="675" left="1583" width="66" height="13" font="7">5732579 </text>
-<text top="741" left="1520" width="110" height="13" font="7">Herr  Schulz, </text>
-<text top="757" left="1521" width="139" height="13" font="7">Frau  Goltermann </text>
-<text top="774" left="1521" width="38" height="13" font="7">0385 </text>
-<text top="774" left="1565" width="5" height="13" font="11">-</text>
-<text top="774" left="1584" width="57" height="13" font="7">559236 </text>
-<text top="839" left="1521" width="130" height="13" font="7">Herr  Dr.  Papke </text>
-<text top="855" left="1522" width="47" height="13" font="7">03847 </text>
-<text top="855" left="1575" width="5" height="13" font="11">-</text>
-<text top="855" left="1593" width="57" height="13" font="7">20196/ </text>
-<text top="871" left="1593" width="57" height="13" font="7">20195/ </text>
-<text top="887" left="1593" width="48" height="13" font="7">20194 </text>
-<text top="953" left="1522" width="74" height="13" font="7">Herr  Kob </text>
-<text top="969" left="1523" width="47" height="13" font="7">03831 </text>
-<text top="969" left="1576" width="5" height="13" font="11">-</text>
-<text top="969" left="1594" width="57" height="13" font="7">256453 </text>
-<text top="1050" left="1523" width="118" height="13" font="7">Frau  Paprott, </text>
-<text top="1066" left="1522" width="85" height="13" font="7">Herr  Bork </text>
-<text top="1082" left="1523" width="47" height="13" font="7">03831 </text>
-<text top="1082" left="1577" width="5" height="13" font="11">-</text>
-<text top="1082" left="1595" width="58" height="13" font="7">254416 </text>
+<page number="2" position="absolute" top="0" left="0" height="1261" width="1785">
+	<fontspec id="8" size="11" family="Times" color="#373737"/>
+	<fontspec id="9" size="12" family="Times" color="#4e4e4e"/>
+	<fontspec id="10" size="11" family="Times" color="#4e4e4e"/>
+	<fontspec id="11" size="11" family="Times" color="#4e4e4e"/>
+	<fontspec id="12" size="10" family="Helvetica" color="#373737"/>
+	<fontspec id="13" size="11" family="Times" color="#101010"/>
+	<fontspec id="14" size="11" family="Times" color="#272727"/>
+	<fontspec id="15" size="21" family="Times" color="#101010"/>
+	<fontspec id="16" size="11" family="Times" color="#373737"/>
+<image top="0" left="0" width="1785" height="1262" src="schoollist_2.pdf-2_1.jpg"/>
+<image top="1" left="4" width="82" height="229" src="schoollist_2.pdf-2_2.png"/>
+<image top="328" left="53" width="22" height="266" src="schoollist_2.pdf-2_3.png"/>
+<image top="912" left="52" width="22" height="62" src="schoollist_2.pdf-2_4.png"/>
+<image top="1077" left="52" width="29" height="164" src="schoollist_2.pdf-2_5.png"/>
+<text top="65" left="194" width="205" height="12" font="8">Kreis/Organisationsform/ </text>
+<text top="79" left="193" width="172" height="12" font="8">Anschrift  der  Schule </text>
+<text top="125" left="193" width="287" height="13" font="9"><b>Kreisfreie  Stadt  Neubrandenburg </b></text>
+<text top="173" left="193" width="97" height="12" font="10"><b>Grundschule </b></text>
+<text top="232" left="194" width="228" height="12" font="8">1.  Grundschule  &#34;Uns  Hüsung&#34; </text>
+<text top="246" left="193" width="119" height="12" font="8">Katharinenstr. </text>
+<text top="246" left="319" width="10" height="12" font="11">1 </text>
+<text top="261" left="194" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="304" left="193" width="120" height="12" font="8">2.  Grundschule </text>
+<text top="319" left="193" width="137" height="12" font="8">Stavener  Str.  49 </text>
+<text top="333" left="193" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="377" left="193" width="129" height="12" font="8">15.  Grundschule </text>
+<text top="391" left="191" width="203" height="12" font="8">Werner-Seelenbinder-Str. </text>
+<text top="391" left="402" width="10" height="12" font="11">1 </text>
+<text top="405" left="193" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="449" left="193" width="120" height="12" font="8">6.  Grundschule </text>
+<text top="464" left="192" width="179" height="12" font="8">Neustrelitzer  Str.  Sb </text>
+<text top="478" left="192" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="522" left="192" width="120" height="12" font="8">3.  Grundschule </text>
+<text top="536" left="192" width="137" height="12" font="8">Stavener  Str.  52 </text>
+<text top="551" left="192" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="594" left="192" width="302" height="12" font="8">8.  Grundschule  &#34;An  der  Märchensäule&#34; </text>
+<text top="609" left="192" width="170" height="12" font="8">Juri-Gagarin-Ring  20 </text>
+<text top="624" left="192" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="668" left="192" width="120" height="12" font="8">9.  Grundschule </text>
+<text top="682" left="191" width="169" height="12" font="8">Juri-Gagarin-Ring  22 </text>
+<text top="696" left="191" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="740" left="191" width="120" height="12" font="8">4.  Grundschule </text>
+<text top="754" left="191" width="188" height="12" font="8">Bertold-Brecht-Str.  lb </text>
+<text top="769" left="191" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="812" left="191" width="129" height="12" font="8">16.  Grundschule </text>
+<text top="827" left="189" width="107" height="12" font="8">Adlerstr.  la </text>
+<text top="841" left="191" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="885" left="191" width="129" height="12" font="8">10.  Grundschule </text>
+<text top="900" left="190" width="162" height="12" font="8">Robert-Koch-Str.  52 </text>
+<text top="914" left="191" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="957" left="190" width="228" height="12" font="8">7.  Grundschule  &#34;Lindenberg&#34; </text>
+<text top="972" left="190" width="136" height="12" font="8">Kirschenallee  24 </text>
+<text top="986" left="190" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="1030" left="190" width="129" height="12" font="8">12.  Grundschule </text>
+<text top="1044" left="190" width="136" height="12" font="8">Razgrader  Str.  3 </text>
+<text top="1059" left="190" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="1102" left="190" width="254" height="12" font="8">13.  Grundschule  am  Reitbahnsee </text>
+<text top="1116" left="189" width="120" height="12" font="8">Hufeisenstr.  1 </text>
+<text top="1131" left="190" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="65" left="503" width="179" height="12" font="8">Name  des  Schulleiters </text>
+<text top="79" left="503" width="226" height="12" font="8">Ortsnetzkennzahl/Telefonnr. </text>
+<text top="246" left="510" width="112" height="12" font="8">Herr  Borchert </text>
+<text top="260" left="511" width="93" height="12" font="8">0395  - 2291 </text>
+<text top="319" left="510" width="94" height="12" font="8">Frau  Krause </text>
+<text top="333" left="510" width="46" height="12" font="8">0395  -</text>
+<text top="333" left="568" width="60" height="12" font="8">4228705 </text>
+<text top="391" left="510" width="95" height="12" font="8">Frau  Balser </text>
+<text top="405" left="510" width="119" height="12" font="8">0395  - 3699936 </text>
+<text top="464" left="509" width="120" height="12" font="8">Frau  Beyermann </text>
+<text top="478" left="509" width="46" height="12" font="8">0395  -</text>
+<text top="478" left="568" width="35" height="12" font="8">6571 </text>
+<text top="536" left="509" width="136" height="12" font="8">Frau  Dr.  Manthey </text>
+<text top="551" left="509" width="46" height="12" font="8">0395  -</text>
+<text top="551" left="567" width="60" height="12" font="8">4691315 </text>
+<text top="609" left="508" width="96" height="12" font="8">Herr  Dräger </text>
+<text top="624" left="509" width="101" height="12" font="8">0395  - 71808 </text>
+<text top="682" left="508" width="94" height="12" font="8">Frau  Rosema </text>
+<text top="696" left="508" width="101" height="12" font="8">0395  - 71905 </text>
+<text top="754" left="508" width="94" height="12" font="8">Frau  Enunert </text>
+<text top="769" left="508" width="46" height="12" font="8">0395  -</text>
+<text top="769" left="566" width="59" height="12" font="8">4229164 </text>
+<text top="827" left="508" width="103" height="12" font="8">Frau  Siebert </text>
+<text top="841" left="507" width="46" height="12" font="8">0395  -</text>
+<text top="841" left="566" width="60" height="12" font="8">4225434 </text>
+<text top="899" left="507" width="86" height="12" font="8">Frau  Arndt </text>
+<text top="914" left="507" width="110" height="12" font="8">0395  - 792297 </text>
+<text top="972" left="507" width="86" height="12" font="8">Frau  Romey </text>
+<text top="986" left="507" width="118" height="12" font="8">0395  - 3683774 </text>
+<text top="1044" left="507" width="86" height="12" font="8">Frau  Brunk </text>
+<text top="1058" left="507" width="110" height="12" font="8">0395  -.690231 </text>
+<text top="1071" left="554" width="6" height="11" font="12">' </text>
+<text top="1116" left="506" width="76" height="12" font="8">Frau  Mews </text>
+<text top="1130" left="507" width="35" height="12" font="8">0395 </text>
+<text top="1130" left="548" width="4" height="12" font="7">-</text>
+<text top="1130" left="565" width="60" height="12" font="8">4699430 </text>
+<text top="1199" left="507" width="4" height="12" font="13">-</text>
+<text top="1199" left="524" width="19" height="12" font="11">14 </text>
+<text top="1199" left="548" width="4" height="12" font="13">-</text>
+<text top="65" left="752" width="40" height="12" font="8">Schü-</text>
+<text top="65" left="811" width="35" height="12" font="8">dar: </text>
+<text top="79" left="752" width="30" height="12" font="8">ler </text>
+<text top="79" left="810" width="53" height="12" font="8">weibl. </text>
+<text top="246" left="759" width="28" height="12" font="8">359 </text>
+<text top="246" left="818" width="28" height="12" font="8">170 </text>
+<text top="319" left="758" width="27" height="12" font="14">242 </text>
+<text top="319" left="817" width="28" height="12" font="8">110 </text>
+<text top="391" left="758" width="28" height="12" font="8">336 </text>
+<text top="391" left="817" width="29" height="12" font="8">179 </text>
+<text top="464" left="758" width="28" height="12" font="8">183 </text>
+<text top="464" left="825" width="19" height="12" font="8">77 </text>
+<text top="536" left="757" width="28" height="12" font="8">237 </text>
+<text top="536" left="816" width="28" height="12" font="11">104 </text>
+<text top="609" left="757" width="28" height="12" font="8">237 </text>
+<text top="609" left="816" width="28" height="12" font="8">105 </text>
+<text top="682" left="757" width="27" height="12" font="8">244 </text>
+<text top="682" left="815" width="28" height="12" font="8">120 </text>
+<text top="754" left="756" width="28" height="12" font="8">250 </text>
+<text top="754" left="815" width="28" height="12" font="8">130 </text>
+<text top="827" left="756" width="27" height="12" font="8">268 </text>
+<text top="827" left="815" width="27" height="12" font="8">125 </text>
+<text top="899" left="756" width="27" height="12" font="14">248 </text>
+<text top="899" left="815" width="28" height="12" font="8">130 </text>
+<text top="971" left="756" width="27" height="12" font="8">203 </text>
+<text top="971" left="815" width="28" height="12" font="8">102 </text>
+<text top="1044" left="755" width="28" height="12" font="8">561 </text>
+<text top="1044" left="814" width="28" height="12" font="8">287 </text>
+<text top="1116" left="756" width="27" height="12" font="8">646 </text>
+<text top="1116" left="814" width="28" height="12" font="8">338 </text>
+<text top="41" left="1026" width="681" height="21" font="15">----------------------------------------------------------------------------------</text>
+<text top="62" left="1026" width="204" height="12" font="8">Kreis/Organisationsform/ </text>
+<text top="77" left="1025" width="172" height="12" font="8">Anschrift  der  Schule </text>
+<text top="60" left="1334" width="178" height="12" font="8">Name  des  Schulleiters </text>
+<text top="74" left="1334" width="226" height="12" font="8">Ortsnetzkennzahl/Telefonnr. </text>
+<text top="59" left="1583" width="40" height="12" font="8">Schü-</text>
+<text top="59" left="1641" width="36" height="12" font="8">dar: </text>
+<text top="73" left="1583" width="30" height="12" font="8">ler </text>
+<text top="73" left="1641" width="53" height="12" font="8">weibl. </text>
+<text top="85" left="1026" width="681" height="21" font="15">----------------------------------------------------------------------------------</text>
+<text top="120" left="1027" width="128" height="12" font="8">14.  Grundschule </text>
+<text top="135" left="1026" width="128" height="12" font="8">Hufeisenstr.  31 </text>
+<text top="149" left="1027" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="193" left="1026" width="120" height="12" font="8">5.  Grundschule </text>
+<text top="207" left="1027" width="169" height="12" font="8">&#34;Grundschule  am  See&#34; </text>
+<text top="222" left="1026" width="86" height="12" font="8">Dükerweg  2 </text>
+<text top="236" left="1027" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="280" left="1027" width="129" height="12" font="8">11.  Grundschule </text>
+<text top="295" left="1027" width="136" height="12" font="8">Kopernikusstr.  6 </text>
+<text top="309" left="1027" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="352" left="1027" width="128" height="12" font="8">17.  Grundschule </text>
+<text top="352" left="1161" width="77" height="13" font="8">&#34;Am  Wall&#34; </text>
+<text top="367" left="1027" width="112" height="12" font="8">Krämerstr.  16 </text>
+<text top="381" left="1028" width="170" height="12" font="8">17033  Neubrandenburg </text>
+<text top="441" left="1026" width="89" height="12" font="16"><b>Realschule </b></text>
+<text top="484" left="1028" width="236" height="12" font="8">1.  Realschule  &#34;Fritz  Reuter&#34; </text>
+<text top="499" left="1027" width="119" height="12" font="8">Katharinenstr. </text>
+<text top="499" left="1153" width="10" height="12" font="11">1 </text>
+<text top="513" left="1028" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="557" left="1028" width="112" height="12" font="8">2.  Realschule </text>
+<text top="571" left="1027" width="136" height="12" font="8">Stavener  Str.  49 </text>
+<text top="586" left="1028" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="630" left="1028" width="121" height="12" font="8">10.  Realschule </text>
+<text top="645" left="1028" width="161" height="12" font="8">Robert-Koch-Str.  52 </text>
+<text top="659" left="1028" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="702" left="1029" width="294" height="12" font="8">9.  Realschule  &#34;Heinrich  Schliemann&#34; </text>
+<text top="717" left="1028" width="169" height="12" font="8">Juri-Gagarin-Ring  22 </text>
+<text top="731" left="1029" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="776" left="1029" width="111" height="12" font="8">4.  Realschule </text>
+<text top="790" left="1028" width="188" height="12" font="8">Bertold-Brecht-Str.  lb </text>
+<text top="804" left="1029" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="847" left="1029" width="293" height="12" font="8">8.  Realschule  &#34;Johann  Heinrich  Voß&#34; </text>
+<text top="863" left="1029" width="169" height="12" font="8">Juri-Gagarin-Ring  20 </text>
+<text top="877" left="1029" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="936" left="1028" width="247" height="12" font="16"><b>Realschule  mit  Hauptschul tei1 </b></text>
+<text top="980" left="1029" width="121" height="12" font="8">11.  Realschule </text>
+<text top="994" left="1029" width="136" height="12" font="8">Kopernikusstr.  4 </text>
+<text top="1008" left="1030" width="171" height="12" font="8">17036  Neubrandenburg </text>
+<text top="1051" left="1030" width="112" height="12" font="8">6.  Realschule </text>
+<text top="1051" left="1147" width="118" height="13" font="8">&#34;Am  Gätenbach&#34; </text>
+<text top="1066" left="1029" width="179" height="12" font="8">Neustrelitzer  Str.  Sb </text>
+<text top="1080" left="1030" width="171" height="12" font="8">17033  Neubrandenburg </text>
+<text top="132" left="1343" width="103" height="12" font="8">Frau  Lehmann </text>
+<text top="147" left="1343" width="35" height="12" font="8">0395 </text>
+<text top="147" left="1385" width="4" height="12" font="13">-</text>
+<text top="147" left="1402" width="60" height="12" font="8">4226476 </text>
+<text top="219" left="1343" width="103" height="12" font="8">Frau  Tannert </text>
+<text top="233" left="1343" width="94" height="12" font="8">0395  - 2237 </text>
+<text top="292" left="1343" width="129" height="12" font="8">Herr  Dr.  Plesse </text>
+<text top="306" left="1344" width="110" height="12" font="8">0395  - 781341 </text>
+<text top="364" left="1343" width="103" height="12" font="8">Herr  Rediske </text>
+<text top="379" left="1344" width="35" height="12" font="8">0395 </text>
+<text top="379" left="1385" width="4" height="12" font="7">-</text>
+<text top="379" left="1402" width="43" height="12" font="8">41032 </text>
+<text top="497" left="1344" width="119" height="12" font="8">Frau  Lindhorst </text>
+<text top="511" left="1344" width="94" height="12" font="8">0395  - 3139 </text>
+<text top="569" left="1344" width="85" height="12" font="8">Frau  Mücke </text>
+<text top="583" left="1344" width="46" height="12" font="8">0395  -</text>
+<text top="583" left="1403" width="59" height="12" font="8">4228705 </text>
+<text top="642" left="1344" width="103" height="12" font="8">Frau  Stechow </text>
+<text top="656" left="1344" width="110" height="12" font="8">0395  - 792297 </text>
+<text top="714" left="1345" width="104" height="12" font="8">Frau  Stieger </text>
+<text top="729" left="1345" width="35" height="12" font="8">0395 </text>
+<text top="729" left="1386" width="4" height="12" font="7">-</text>
+<text top="729" left="1402" width="44" height="12" font="8">71905 </text>
+<text top="788" left="1344" width="88" height="12" font="8">Herr  Leye. </text>
+<text top="802" left="1345" width="46" height="12" font="8">0395  -</text>
+<text top="802" left="1403" width="60" height="12" font="8">4229164 </text>
+<text top="860" left="1345" width="102" height="12" font="8">Frau  Michael </text>
+<text top="875" left="1346" width="35" height="12" font="8">0395 </text>
+<text top="875" left="1387" width="4" height="12" font="13">-</text>
+<text top="875" left="1403" width="43" height="12" font="8">71808 </text>
+<text top="992" left="1346" width="78" height="12" font="8">Frau  Leye </text>
+<text top="1006" left="1346" width="101" height="12" font="8">0395  - 72905 </text>
+<text top="1063" left="1346" width="120" height="12" font="8">Frau  Schiffner </text>
+<text top="1078" left="1347" width="46" height="12" font="8">0395  -</text>
+<text top="1078" left="1405" width="35" height="12" font="8">6571 </text>
+<text top="1123" left="1030" width="319" height="12" font="8">13.  Realschule  &#34;Friedrich  Ludwig  Jahn&#34; </text>
+<text top="1136" left="1030" width="120" height="12" font="8">Traberallee  18 </text>
+<text top="1136" left="1346" width="153" height="12" font="8">Herr  Frydrychowski </text>
+<text top="1151" left="1031" width="171" height="12" font="8">17034  Neubrandenburg </text>
+<text top="1151" left="1347" width="35" height="12" font="8">0395 </text>
+<text top="1151" left="1388" width="4" height="12" font="13">-</text>
+<text top="1151" left="1405" width="60" height="12" font="8">4699297 </text>
+<text top="1195" left="1348" width="4" height="12" font="13">-</text>
+<text top="1195" left="1365" width="19" height="12" font="8">15 </text>
+<text top="1195" left="1389" width="4" height="12" font="13">-</text>
+<text top="131" left="1592" width="28" height="12" font="14">329 </text>
+<text top="131" left="1650" width="28" height="12" font="11">161 </text>
+<text top="218" left="1592" width="28" height="12" font="8">277 </text>
+<text top="218" left="1650" width="28" height="12" font="8">137 </text>
+<text top="291" left="1592" width="28" height="12" font="8">525 </text>
+<text top="290" left="1650" width="28" height="12" font="8">251 </text>
+<text top="363" left="1592" width="28" height="12" font="8">281 </text>
+<text top="363" left="1650" width="28" height="12" font="8">127 </text>
+<text top="495" left="1592" width="28" height="12" font="8">241 </text>
+<text top="494" left="1650" width="28" height="12" font="8">115 </text>
+<text top="567" left="1592" width="28" height="12" font="14">239 </text>
+<text top="567" left="1650" width="28" height="12" font="8">111 </text>
+<text top="640" left="1592" width="28" height="12" font="8">313 </text>
+<text top="639" left="1651" width="28" height="12" font="8">135 </text>
+<text top="713" left="1592" width="7" height="12" font="13">3</text>
+<text top="713" left="1601" width="19" height="12" font="8">14 </text>
+<text top="712" left="1651" width="28" height="12" font="8">146 </text>
+<text top="786" left="1593" width="28" height="12" font="14">392 </text>
+<text top="785" left="1651" width="29" height="12" font="8">169 </text>
+<text top="858" left="1593" width="28" height="12" font="8">300 </text>
+<text top="858" left="1652" width="28" height="12" font="8">161 </text>
+<text top="989" left="1594" width="28" height="12" font="8">382 </text>
+<text top="989" left="1652" width="28" height="12" font="8">164 </text>
+<text top="1061" left="1594" width="27" height="12" font="8">358 </text>
+<text top="1061" left="1653" width="29" height="12" font="8">149 </text>
+<text top="1133" left="1595" width="28" height="12" font="8">547 </text>
+<text top="1133" left="1653" width="27" height="12" font="8">248 </text>
 </page>
-<page number="3" position="absolute" top="0" left="0" height="1265" width="1787">
-	<fontspec id="17" size="13" family="Times" color="#3d3d3d"/>
-	<fontspec id="18" size="10" family="Times" color="#3d3d3d"/>
-	<fontspec id="19" size="12" family="Times" color="#3d3d3d"/>
-	<fontspec id="20" size="13" family="Times" color="#1c1c1c"/>
-	<fontspec id="21" size="12" family="Times" color="#515151"/>
-	<fontspec id="22" size="12" family="Times" color="#1c1c1c"/>
-	<fontspec id="23" size="12" family="Times" color="#818181"/>
-	<fontspec id="24" size="22" family="Times" color="#1c1c1c"/>
-	<fontspec id="25" size="21" family="Times" color="#1c1c1c"/>
-	<fontspec id="26" size="11" family="Times" color="#515151"/>
-	<fontspec id="27" size="11" family="Times" color="#3d3d3d"/>
-	<fontspec id="28" size="11" family="Times" color="#3d3d3d"/>
-	<fontspec id="29" size="11" family="Times" color="#000000"/>
-	<fontspec id="30" size="10" family="Helvetica" color="#616161"/>
-	<fontspec id="31" size="10" family="Helvetica" color="#3d3d3d"/>
-	<fontspec id="32" size="10" family="Helvetica" color="#1c1c1c"/>
-<image top="0" left="0" width="1787" height="1265" src="schoollist_2.pdf-3_1.jpg"/>
-<image top="4" left="4" width="82" height="75" src="schoollist_2.pdf-3_2.png"/>
-<image top="788" left="52" width="10" height="75" src="schoollist_2.pdf-3_3.png"/>
-<image top="955" left="52" width="32" height="154" src="schoollist_2.pdf-3_4.png"/>
-<image top="1176" left="936" width="4" height="81" src="schoollist_2.pdf-3_5.png"/>
-<text top="64" left="184" width="223" height="14" font="17">Anschrift  des  Schulamtes </text>
-<text top="159" left="186" width="178" height="14" font="17">Landkreis  Strasburg </text>
-<text top="175" left="186" width="285" height="14" font="17">Schulamt  - untere  Landesbehörde </text>
-<text top="194" left="184" width="23" height="11" font="18">Am </text>
-<text top="192" left="212" width="50" height="14" font="17">Markt </text>
-<text top="192" left="267" width="21" height="13" font="19">22 </text>
-<text top="209" left="186" width="49" height="13" font="19">17331 </text>
-<text top="208" left="240" width="87" height="14" font="17">Strasburg </text>
-<text top="257" left="185" width="159" height="14" font="17">Landkreis  Teterow </text>
-<text top="273" left="185" width="285" height="14" font="17">Schulamt  - untere  Landesbehörde </text>
-<text top="290" left="185" width="150" height="14" font="17">Rostocker  Straße </text>
-<text top="290" left="340" width="48" height="13" font="19">43-49 </text>
-<text top="307" left="186" width="49" height="13" font="19">17166 </text>
-<text top="306" left="239" width="69" height="14" font="17">Teterow </text>
-<text top="355" left="185" width="194" height="14" font="17">Landkreis  Ueckermünde </text>
-<text top="371" left="185" width="285" height="14" font="17">Schulamt  - untere  Landesbehörde </text>
-<text top="388" left="185" width="113" height="14" font="17">Goethestraße </text>
-<text top="389" left="303" width="22" height="13" font="19">16 </text>
-<text top="405" left="185" width="48" height="13" font="19">17368 </text>
-<text top="404" left="239" width="104" height="14" font="17">Ueckermünde </text>
-<text top="453" left="185" width="140" height="14" font="17">Landkreis  Waren </text>
-<text top="469" left="185" width="285" height="14" font="17">Schulamt  - untrer  Landesbehörde </text>
-<text top="486" left="185" width="104" height="14" font="17">Kietzstraße </text>
-<text top="486" left="294" width="49" height="13" font="19">10/11 </text>
-<text top="502" left="185" width="48" height="13" font="19">17192 </text>
-<text top="502" left="238" width="113" height="14" font="17">Waren/Müritz </text>
-<text top="552" left="184" width="159" height="14" font="17">Kreis  Wismar-Land </text>
-<text top="568" left="184" width="285" height="14" font="17">Schulamt  - untere  Landesbehörde </text>
-<text top="586" left="183" width="23" height="11" font="18">Am </text>
-<text top="584" left="211" width="103" height="14" font="17">Gerberhof  5 </text>
-<text top="601" left="184" width="48" height="13" font="19">23970 </text>
-<text top="600" left="237" width="59" height="14" font="17">Wismar </text>
-<text top="650" left="184" width="158" height="14" font="17">Hansestadt  Wismar </text>
-<text top="666" left="184" width="221" height="14" font="17">Schulamt  - Landesbehörde </text>
-<text top="682" left="184" width="184" height="14" font="17">Kleine-Hohe-Straße  2 </text>
-<text top="699" left="184" width="49" height="13" font="19">23966 </text>
-<text top="699" left="237" width="59" height="14" font="17">Wismar </text>
-<text top="748" left="183" width="158" height="14" font="17">Landkreis  Walgast </text>
-<text top="765" left="183" width="285" height="14" font="17">Schulamt  - untere  Landesbehörde </text>
-<text top="781" left="184" width="184" height="14" font="17">Peenemünder  Straße  1 </text>
-<text top="798" left="183" width="48" height="13" font="19">17438 </text>
-<text top="797" left="236" width="69" height="14" font="17">Walgast </text>
-<text top="64" left="528" width="268" height="14" font="17">Name  des(r)  Schulrates/-rätin </text>
-<text top="76" left="528" width="276" height="14" font="17">Ortsnetzkennzahl/Telefonnummer </text>
-<text top="159" left="528" width="147" height="14" font="17">Schulrat/-rätin: </text>
-<text top="175" left="528" width="74" height="14" font="17">Telefon: </text>
-<text top="257" left="528" width="147" height="14" font="17">Schulrat/-rätin: </text>
-<text top="273" left="527" width="74" height="14" font="17">Telefon: </text>
-<text top="355" left="527" width="79" height="14" font="17">Schulrat/</text>
-<text top="355" left="608" width="5" height="14" font="20">-</text>
-<text top="355" left="617" width="57" height="14" font="17">rätin: </text>
-<text top="371" left="527" width="74" height="14" font="17">Telefon: </text>
-<text top="453" left="527" width="146" height="14" font="17">Schulrat/-rätin: </text>
-<text top="469" left="526" width="74" height="14" font="17">Telefon: </text>
-<text top="551" left="526" width="79" height="14" font="17">Schulrat/</text>
-<text top="551" left="607" width="5" height="14" font="20">-</text>
-<text top="551" left="617" width="56" height="14" font="17">rätin: </text>
-<text top="567" left="525" width="74" height="14" font="17">Telefon: </text>
-<text top="649" left="526" width="146" height="14" font="17">Schulrat/-rätin: </text>
-<text top="666" left="525" width="74" height="14" font="17">Telefon: </text>
-<text top="747" left="526" width="79" height="14" font="17">Schulrat/</text>
-<text top="747" left="606" width="5" height="14" font="20">-</text>
-<text top="747" left="616" width="56" height="14" font="17">rätin: </text>
-<text top="764" left="525" width="74" height="14" font="17">Telefon: </text>
-<text top="1155" left="515" width="21" height="13" font="21">10 </text>
-<text top="159" left="686" width="84" height="14" font="17">Frau  Tack </text>
-<text top="175" left="686" width="67" height="13" font="19">039753  -</text>
-<text top="175" left="767" width="48" height="13" font="19">72353 </text>
-<text top="257" left="685" width="96" height="14" font="17">Herr  Stein </text>
-<text top="273" left="686" width="58" height="13" font="19">03996  -</text>
-<text top="273" left="757" width="40" height="13" font="19">1300 </text>
-<text top="355" left="685" width="113" height="14" font="17">Frau  Krolzik </text>
-<text top="371" left="685" width="56" height="13" font="19">039771 </text>
-<text top="371" left="748" width="5" height="13" font="22">-</text>
-<text top="371" left="766" width="58" height="13" font="19">390250 </text>
-<text top="452" left="684" width="111" height="14" font="17">Frau  Podszus </text>
-<text top="469" left="685" width="48" height="13" font="19">03991 </text>
-<text top="469" left="738" width="5" height="13" font="22">-</text>
-<text top="469" left="756" width="49" height="13" font="19">7370/ </text>
-<text top="486" left="757" width="52" height="13" font="19">737212</text>
-<text top="486" left="812" width="7" height="13" font="23">. </text>
-<text top="551" left="683" width="140" height="14" font="17">Herr  Dr.  Behnke </text>
-<text top="567" left="684" width="47" height="13" font="19">03841 </text>
-<text top="567" left="737" width="5" height="13" font="22">-</text>
-<text top="567" left="756" width="58" height="13" font="19">284061 </text>
-<text top="649" left="682" width="123" height="14" font="17">Herr  Trzeczak </text>
-<text top="666" left="684" width="47" height="13" font="19">03841 </text>
-<text top="666" left="737" width="5" height="13" font="22">-</text>
-<text top="666" left="755" width="49" height="13" font="19">2510/ </text>
-<text top="682" left="755" width="58" height="13" font="19">251400 </text>
-<text top="747" left="682" width="104" height="14" font="17">Herr  Mesing </text>
-<text top="764" left="683" width="48" height="13" font="19">03836 </text>
-<text top="764" left="737" width="5" height="13" font="22">-</text>
-<text top="764" left="755" width="48" height="13" font="19">6070/ </text>
-<text top="781" left="755" width="57" height="13" font="19">607302 </text>
-<text top="44" left="1024" width="681" height="22" font="24">----------------------------------------------------------------------------------</text>
-<text top="64" left="1024" width="204" height="14" font="17">Kreis/Organisationsform/ </text>
-<text top="79" left="1023" width="172" height="14" font="17">Anschrift  der  Schule </text>
-<text top="61" left="1332" width="178" height="14" font="17">Name  des  Schulleiters </text>
-<text top="75" left="1332" width="226" height="14" font="17">Ortsnetzkennzahl/Telefonnr. </text>
-<text top="59" left="1581" width="40" height="14" font="17">Schü-</text>
-<text top="59" left="1639" width="36" height="14" font="17">dar: </text>
-<text top="73" left="1581" width="30" height="14" font="17">ler </text>
-<text top="73" left="1639" width="53" height="14" font="17">weibl. </text>
-<text top="88" left="1024" width="681" height="21" font="25">----------------------------------------------------------------------------------</text>
-<text top="128" left="1024" width="251" height="13" font="26"><b>Kreisfreie  Stadt  Greifswald </b></text>
-<text top="174" left="1024" width="96" height="13" font="27"><b>Grundschul.e </b></text>
-<text top="217" left="1025" width="204" height="14" font="17">Erich-Böhmke-Grundschule </text>
-<text top="231" left="1025" width="154" height="14" font="17">Loitzer  Landstraße </text>
-<text top="233" left="1184" width="45" height="12" font="28">56/58 </text>
-<text top="248" left="1026" width="44" height="12" font="28">17489 </text>
-<text top="247" left="1075" width="89" height="14" font="17">Greifswald </text>
-<text top="289" left="1026" width="194" height="14" font="17">Grundschule  Insel  Riems </text>
-<text top="320" left="1027" width="44" height="12" font="28">17498 </text>
-<text top="319" left="1076" width="88" height="14" font="17">Riemserort </text>
-<text top="362" left="1026" width="220" height="14" font="17">Käthe-Kollwitz-Grundschule </text>
-<text top="378" left="1026" width="76" height="14" font="17">Knopfstr. </text>
-<text top="379" left="1110" width="45" height="12" font="28">25/26 </text>
-<text top="393" left="1027" width="45" height="12" font="28">17489 </text>
-<text top="392" left="1076" width="88" height="14" font="17">Greifswald </text>
-<text top="435" left="1026" width="254" height="14" font="17">Grundschule  Ernst  Moritz  Arndt </text>
-<text top="450" left="1026" width="194" height="14" font="17">Ernst-Moritz-Arndt-Str. </text>
-<text top="451" left="1227" width="19" height="12" font="28">37 </text>
-<text top="466" left="1027" width="45" height="12" font="28">17489 </text>
-<text top="465" left="1077" width="88" height="14" font="17">Greifswald </text>
-<text top="508" left="1027" width="187" height="14" font="17">Karl-Krull-Grundschule </text>
-<text top="522" left="1027" width="86" height="14" font="17">Bleichstr. </text>
-<text top="524" left="1119" width="20" height="12" font="28">36 </text>
-<text top="538" left="1028" width="45" height="12" font="28">17489 </text>
-<text top="537" left="1077" width="88" height="14" font="17">Greifswald </text>
-<text top="580" left="1027" width="212" height="14" font="17">Erwin-Fischer-Grundschule </text>
-<text top="595" left="1028" width="69" height="14" font="17">Feldstr. </text>
-<text top="597" left="1103" width="20" height="12" font="28">86 </text>
-<text top="611" left="1028" width="45" height="12" font="28">17489 </text>
-<text top="610" left="1077" width="88" height="14" font="17">Greifswald </text>
-<text top="653" left="1029" width="120" height="14" font="17">8.  Grundschule </text>
-<text top="668" left="1028" width="127" height="14" font="17">Karl-Krull-Str. </text>
-<text top="669" left="1162" width="20" height="12" font="28">19 </text>
-<text top="684" left="1029" width="44" height="12" font="28">17491 </text>
-<text top="683" left="1078" width="88" height="14" font="17">Greifswald </text>
-<text top="726" left="1029" width="204" height="14" font="17">Fritz-Reuter-Grundschule </text>
-<text top="741" left="1028" width="113" height="14" font="17">Max-Hagen-Weg </text>
-<text top="741" left="1146" width="19" height="13" font="19">13 </text>
-<text top="756" left="1029" width="44" height="13" font="19">17491 </text>
-<text top="756" left="1078" width="88" height="14" font="17">Greifswald </text>
-<text top="801" left="1029" width="26" height="12" font="28">11. </text>
-<text top="799" left="1062" width="96" height="14" font="17">Grundschule </text>
-<text top="814" left="1028" width="146" height="14" font="17">Max-Planck-Str.  7 </text>
-<text top="830" left="1030" width="44" height="12" font="28">17491 </text>
-<text top="828" left="1079" width="89" height="14" font="17">Greifswald </text>
-<text top="873" left="1030" width="26" height="12" font="28">13. </text>
-<text top="872" left="1063" width="96" height="14" font="17">Grundschule </text>
-<text top="886" left="1029" width="146" height="14" font="17">Max-Planck-Str.  9 </text>
-<text top="902" left="1030" width="44" height="12" font="28">17491 </text>
-<text top="901" left="1079" width="88" height="14" font="17">Greifswald </text>
-<text top="944" left="1030" width="146" height="14" font="17">Hanse-Grundschule </text>
-<text top="958" left="1029" width="188" height="14" font="17">Albert-Einstein-Str.  6 </text>
-<text top="974" left="1031" width="44" height="12" font="28">17491 </text>
-<text top="973" left="1080" width="88" height="14" font="17">Greifswald </text>
-<text top="1016" left="1031" width="212" height="14" font="17">Erich-Weinert-Grundschule </text>
-<text top="1031" left="1030" width="111" height="14" font="17">Makarenkostr. </text>
-<text top="1031" left="1148" width="20" height="13" font="19">53 </text>
-<text top="1046" left="1031" width="44" height="12" font="28">17491 </text>
-<text top="1045" left="1081" width="89" height="14" font="17">Greifswald </text>
-<text top="1088" left="1032" width="204" height="14" font="17">Pablo-Neruda-Grundschule </text>
-<text top="1102" left="1031" width="163" height="14" font="17">Ernst-Thälmann-Ring </text>
-<text top="1104" left="1198" width="19" height="12" font="28">15 </text>
-<text top="1118" left="1032" width="44" height="12" font="28">17491 </text>
-<text top="1117" left="1081" width="88" height="14" font="17">Greifswald </text>
-<text top="228" left="1342" width="95" height="14" font="17">Frau  Küster </text>
-<text top="244" left="1342" width="54" height="12" font="28">03834  -</text>
-<text top="244" left="1408" width="53" height="12" font="28">500929 </text>
-<text top="301" left="1342" width="78" height="14" font="17">Frau  Päch </text>
-<text top="317" left="1343" width="118" height="12" font="28">038351  - 80201 </text>
-<text top="374" left="1342" width="86" height="14" font="17">Frau  Kuhrt </text>
-<text top="390" left="1343" width="54" height="12" font="28">03834  -</text>
-<text top="390" left="1409" width="35" height="12" font="28">3255 </text>
-<text top="446" left="1343" width="111" height="14" font="17">Frau  Hörhager </text>
-<text top="462" left="1343" width="118" height="12" font="28">03834  - 500062 </text>
-<text top="519" left="1343" width="112" height="14" font="17">Frau  Hochheim </text>
-<text top="534" left="1344" width="54" height="12" font="28">03834  -</text>
-<text top="534" left="1410" width="43" height="12" font="28">68423 </text>
-<text top="591" left="1343" width="89" height="14" font="17">Herr  Stein </text>
-<text top="607" left="1344" width="54" height="12" font="28">03834  -</text>
-<text top="607" left="1410" width="52" height="12" font="28">500775 </text>
-<text top="665" left="1344" width="86" height="14" font="17">Frau  Woite </text>
-<text top="680" left="1345" width="54" height="12" font="28">03834  -</text>
-<text top="680" left="1411" width="52" height="12" font="28">814051 </text>
-<text top="737" left="1345" width="111" height="14" font="17">Frau  Schwibbe </text>
-<text top="753" left="1345" width="54" height="12" font="28">03834  -</text>
-<text top="753" left="1411" width="52" height="12" font="28">814053 </text>
-<text top="810" left="1344" width="95" height="14" font="17">Herr  Krüger </text>
-<text top="826" left="1345" width="54" height="12" font="28">03834  -</text>
-<text top="826" left="1412" width="52" height="12" font="28">812071 </text>
-<text top="883" left="1346" width="86" height="14" font="17">Frau  Giese </text>
-<text top="898" left="1346" width="118" height="12" font="28">03834  - 812063 </text>
-<text top="955" left="1346" width="135" height="14" font="17">Frau  Mundschedel </text>
-<text top="970" left="1347" width="54" height="12" font="28">03834  -</text>
-<text top="970" left="1413" width="52" height="12" font="28">812059 </text>
-<text top="1027" left="1347" width="95" height="14" font="17">Frau  Pretor </text>
-<text top="1042" left="1347" width="118" height="12" font="28">03834  - 812022 </text>
-<text top="1099" left="1347" width="111" height="14" font="17">Frau  Schinkel </text>
-<text top="1115" left="1348" width="44" height="12" font="28">03834 </text>
-<text top="1115" left="1397" width="4" height="12" font="29">-</text>
-<text top="1115" left="1414" width="52" height="12" font="28">812021 </text>
-<text top="1198" left="1350" width="4" height="12" font="30">-</text>
-<text top="1198" left="1366" width="19" height="12" font="31">11 </text>
-<text top="1198" left="1391" width="4" height="12" font="32">-</text>
-<text top="227" left="1599" width="18" height="13" font="19">91 </text>
-<text top="227" left="1657" width="19" height="12" font="28">43 </text>
-<text top="300" left="1600" width="18" height="12" font="28">67 </text>
-<text top="299" left="1658" width="19" height="12" font="28">34 </text>
-<text top="373" left="1591" width="28" height="12" font="28">293 </text>
-<text top="372" left="1649" width="28" height="12" font="28">153 </text>
-<text top="445" left="1591" width="27" height="12" font="28">254 </text>
-<text top="445" left="1649" width="28" height="12" font="28">127 </text>
-<text top="518" left="1591" width="28" height="12" font="28">130 </text>
-<text top="517" left="1659" width="17" height="12" font="28">65 </text>
-<text top="590" left="1592" width="27" height="12" font="28">214 </text>
-<text top="590" left="1650" width="28" height="12" font="28">101 </text>
-<text top="663" left="1592" width="28" height="12" font="28">187 </text>
-<text top="662" left="1659" width="19" height="13" font="19">91 </text>
-<text top="736" left="1593" width="27" height="12" font="28">278 </text>
-<text top="735" left="1651" width="28" height="12" font="28">103 </text>
-<text top="809" left="1593" width="27" height="12" font="28">217 </text>
-<text top="808" left="1660" width="18" height="13" font="19">95 </text>
-<text top="882" left="1594" width="28" height="12" font="28">219 </text>
-<text top="881" left="1652" width="28" height="12" font="28">115 </text>
-<text top="954" left="1594" width="27" height="12" font="28">265 </text>
-<text top="954" left="1652" width="28" height="12" font="28">125 </text>
-<text top="1026" left="1595" width="27" height="12" font="28">262 </text>
-<text top="1026" left="1653" width="28" height="12" font="28">150 </text>
-<text top="1098" left="1595" width="27" height="12" font="28">265 </text>
-<text top="1098" left="1654" width="28" height="12" font="28">127 </text>
+<page number="3" position="absolute" top="0" left="0" height="1279" width="1797">
+	<fontspec id="17" size="21" family="Times" color="#131313"/>
+	<fontspec id="18" size="21" family="Times" color="#393939"/>
+	<fontspec id="19" size="11" family="Times" color="#393939"/>
+	<fontspec id="20" size="11" family="Times" color="#393939"/>
+	<fontspec id="21" size="11" family="Times" color="#5a5a5a"/>
+	<fontspec id="22" size="11" family="Times" color="#131313"/>
+	<fontspec id="23" size="11" family="Times" color="#696969"/>
+	<fontspec id="24" size="9" family="Helvetica" color="#393939"/>
+	<fontspec id="25" size="13" family="Helvetica" color="#393939"/>
+	<fontspec id="26" size="16" family="Times" color="#000000"/>
+	<fontspec id="27" size="10" family="Times" color="#393939"/>
+<image top="0" left="0" width="1798" height="1279" src="schoollist_2.pdf-3_1.jpg"/>
+<image top="1" left="16" width="85" height="192" src="schoollist_2.pdf-3_2.png"/>
+<image top="235" left="62" width="10" height="59" src="schoollist_2.pdf-3_3.png"/>
+<image top="452" left="1646" width="89" height="52" src="schoollist_2.pdf-3_4.png"/>
+<image top="1083" left="55" width="27" height="153" src="schoollist_2.pdf-3_5.png"/>
+<text top="52" left="206" width="514" height="21" font="17">--------------------------------------------------------------</text>
+<text top="52" left="721" width="8" height="21" font="18">-</text>
+<text top="52" left="729" width="157" height="21" font="17">-------------------</text>
+<text top="67" left="205" width="204" height="12" font="19">Kreis/Organisationsform/ </text>
+<text top="81" left="204" width="172" height="12" font="19">Anschrift  der  Schule </text>
+<text top="71" left="513" width="178" height="12" font="19">Name  des  Schulleiters </text>
+<text top="86" left="514" width="225" height="12" font="19">Ortsnetzkennzahl/Telefonnr. </text>
+<text top="74" left="762" width="40" height="12" font="19">Schü-</text>
+<text top="88" left="762" width="30" height="12" font="19">ler </text>
+<text top="74" left="820" width="35" height="12" font="19">dar: </text>
+<text top="89" left="820" width="53" height="12" font="19">weibl. </text>
+<text top="95" left="205" width="107" height="21" font="17">-------------</text>
+<text top="95" left="314" width="8" height="21" font="18">-</text>
+<text top="95" left="322" width="421" height="21" font="17">---------------------------------------------------</text>
+<text top="95" left="745" width="8" height="21" font="18">-</text>
+<text top="95" left="753" width="73" height="21" font="17">---------</text>
+<text top="95" left="828" width="8" height="21" font="18">-</text>
+<text top="95" left="837" width="49" height="21" font="17">------</text>
+<text top="125" left="205" width="295" height="12" font="19">12.  Realschule  &#34;Ernst-Moritz  Arndt&#34; </text>
+<text top="139" left="204" width="136" height="12" font="19">Razgrader  Str.  2 </text>
+<text top="153" left="204" width="171" height="12" font="19">17034  Neubrandenburg </text>
+<text top="197" left="203" width="112" height="12" font="19">7.  Realschule </text>
+<text top="211" left="202" width="136" height="12" font="19">Kirschenallee  24 </text>
+<text top="226" left="203" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="269" left="202" width="112" height="12" font="19">5.  Realschule </text>
+<text top="284" left="201" width="86" height="12" font="19">Dükerweg  2 </text>
+<text top="299" left="201" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="341" left="200" width="112" height="12" font="19">3.  Realschule </text>
+<text top="356" left="199" width="136" height="12" font="19">Stavener  Str.  52 </text>
+<text top="371" left="200" width="171" height="12" font="19">17034  Neubrandenburg </text>
+<text top="429" left="197" width="80" height="12" font="20"><b>Gymnasium </b></text>
+<text top="474" left="198" width="222" height="12" font="19">Friedrich-Engels-Gymnasium </text>
+<text top="488" left="197" width="136" height="12" font="19">Kopernikusstr.  2 </text>
+<text top="502" left="197" width="171" height="12" font="19">17036  Neubrandenburg </text>
+<text top="546" left="196" width="131" height="12" font="19">Curie-Gymnasium </text>
+<text top="560" left="196" width="136" height="12" font="19">Demminer  Str.  42 </text>
+<text top="575" left="196" width="171" height="12" font="19">17034  Neubrandenburg </text>
+<text top="619" left="195" width="183" height="12" font="19">Gymnasium  &#34;Ernst  Alban</text>
+<text top="619" left="379" width="9" height="12" font="21">&#34; </text>
+<text top="633" left="195" width="169" height="12" font="19">Juri-Gagarin-Ring  18 </text>
+<text top="648" left="195" width="171" height="12" font="19">17036  Neubrandenburg </text>
+<text top="691" left="193" width="164" height="12" font="19">Musisches  Gymnasium </text>
+<text top="705" left="193" width="104" height="12" font="19">Lessingstr.1 </text>
+<text top="720" left="193" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="764" left="192" width="262" height="12" font="19">Gymnasium  in  der  Johannesstraße </text>
+<text top="778" left="192" width="128" height="12" font="19">Johannesstr.  18 </text>
+<text top="792" left="192" width="171" height="12" font="19">17034  Neubrandenburg </text>
+<text top="852" left="190" width="230" height="12" font="20"><b>Gymnasium  mit  Realschulteil </b></text>
+<text top="894" left="190" width="122" height="12" font="19">Sportgymnasium </text>
+<text top="909" left="190" width="219" height="12" font="19">Geschwister-Scholl-Str.  14 </text>
+<text top="924" left="190" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="968" left="189" width="204" height="12" font="20"><b>Integrierte  Gesamtschule </b></text>
+<text top="1011" left="188" width="155" height="12" font="19">Gesamtschule  Mitte </text>
+<text top="1025" left="188" width="112" height="12" font="19">Krämerstr.  16 </text>
+<text top="1040" left="188" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="1084" left="186" width="205" height="12" font="20"><b>Kooperative  Gesamtschule </b></text>
+<text top="143" left="520" width="104" height="12" font="19">Herr  Willert </text>
+<text top="157" left="521" width="46" height="12" font="19">0395  -</text>
+<text top="157" left="579" width="51" height="12" font="19">690415 </text>
+<text top="215" left="518" width="179" height="12" font="19">Herr  Dr.  Tojtschitsch </text>
+<text top="229" left="519" width="118" height="12" font="19">0395  - 3683774 </text>
+<text top="288" left="517" width="96" height="12" font="19">Herr  Freier </text>
+<text top="302" left="518" width="93" height="12" font="19">0395  - 2237 </text>
+<text top="360" left="516" width="94" height="12" font="19">Frau  Jahnke </text>
+<text top="375" left="516" width="35" height="12" font="19">0395 </text>
+<text top="375" left="557" width="4" height="12" font="22">-</text>
+<text top="375" left="575" width="59" height="12" font="19">4691315 </text>
+<text top="491" left="513" width="57" height="13" font="19">Herr  Dr</text>
+<text top="492" left="573" width="7" height="12" font="23">. </text>
+<text top="492" left="588" width="45" height="12" font="19">Klemp </text>
+<text top="505" left="514" width="102" height="13" font="19">0395  - 71851 </text>
+<text top="564" left="512" width="128" height="13" font="19">Herr  Dr.  Rätzer </text>
+<text top="578" left="512" width="35" height="12" font="19">0395 </text>
+<text top="578" left="553" width="4" height="11" font="24">-</text>
+<text top="579" left="570" width="60" height="12" font="19">4226294 </text>
+<text top="637" left="510" width="137" height="13" font="19">Herr  Dr.  Kittler </text>
+<text top="651" left="511" width="102" height="13" font="19">0395  - 72840 </text>
+<text top="709" left="509" width="137" height="13" font="19">Herr  Dr.  Klötzer </text>
+<text top="723" left="510" width="34" height="12" font="19">0395 </text>
+<text top="721" left="551" width="5" height="14" font="25">-</text>
+<text top="724" left="567" width="60" height="12" font="19">5823027 </text>
+<text top="781" left="508" width="103" height="12" font="19">Herr  Schütze </text>
+<text top="796" left="508" width="35" height="12" font="19">0395 </text>
+<text top="793" left="549" width="6" height="17" font="26">-</text>
+<text top="796" left="566" width="59" height="12" font="19">4225635 </text>
+<text top="913" left="505" width="120" height="13" font="19">Herr  Schneider </text>
+<text top="927" left="506" width="35" height="12" font="19">0395 </text>
+<text top="927" left="547" width="4" height="12" font="7">-</text>
+<text top="927" left="564" width="36" height="12" font="19">2226 </text>
+<text top="1030" left="504" width="154" height="12" font="19">Herr  Bretschneider </text>
+<text top="1044" left="505" width="35" height="12" font="19">0395 </text>
+<text top="1044" left="546" width="4" height="12" font="7">-</text>
+<text top="1044" left="563" width="43" height="12" font="19">41032 </text>
+<text top="1128" left="186" width="329" height="12" font="19">Kooperative  Gesamtschule  Neubrandenburg </text>
+<text top="1143" left="186" width="144" height="12" font="19">Razgrader  Str.  22 </text>
+<text top="1143" left="502" width="95" height="12" font="19">Herr  Böhnke </text>
+<text top="1158" left="186" width="171" height="12" font="19">17034  Neubrandenburg </text>
+<text top="1158" left="502" width="35" height="12" font="19">0395 </text>
+<text top="1158" left="544" width="4" height="12" font="7">-</text>
+<text top="1158" left="561" width="51" height="12" font="19">690312 </text>
+<text top="1203" left="502" width="4" height="12" font="22">-</text>
+<text top="1203" left="519" width="19" height="12" font="19">16 </text>
+<text top="1203" left="543" width="4" height="12" font="22">-</text>
+<text top="146" left="769" width="27" height="12" font="19">423 </text>
+<text top="147" left="828" width="27" height="12" font="19">198 </text>
+<text top="218" left="767" width="28" height="12" font="19">291 </text>
+<text top="219" left="826" width="28" height="12" font="19">123 </text>
+<text top="290" left="766" width="28" height="12" font="19">196 </text>
+<text top="291" left="833" width="19" height="12" font="19">74 </text>
+<text top="363" left="764" width="28" height="12" font="19">291 </text>
+<text top="363" left="823" width="28" height="12" font="19">131 </text>
+<text top="494" left="762" width="27" height="12" font="19">970 </text>
+<text top="495" left="821" width="26" height="12" font="19">622 </text>
+<text top="566" left="761" width="28" height="12" font="19">716 </text>
+<text top="567" left="819" width="28" height="12" font="19">449 </text>
+<text top="639" left="759" width="27" height="12" font="19">555 </text>
+<text top="640" left="817" width="27" height="12" font="19">272 </text>
+<text top="712" left="758" width="28" height="12" font="19">517 </text>
+<text top="712" left="816" width="28" height="12" font="3">373 </text>
+<text top="784" left="757" width="26" height="12" font="19">692 </text>
+<text top="785" left="815" width="28" height="12" font="19">360 </text>
+<text top="915" left="755" width="27" height="12" font="3">939 </text>
+<text top="916" left="813" width="27" height="12" font="19">492 </text>
+<text top="1032" left="753" width="27" height="12" font="19">461 </text>
+<text top="1033" left="811" width="27" height="12" font="3">223 </text>
+<text top="1148" left="751" width="27" height="12" font="19">795 </text>
+<text top="1149" left="809" width="28" height="12" font="19">366 </text>
+<text top="76" left="1031" width="204" height="12" font="19">Kreis/Organisationsform/ </text>
+<text top="90" left="1030" width="172" height="12" font="19">Anschrift  der  Schule </text>
+<text top="136" left="1030" width="263" height="12" font="20"><b>Sonderschu1e  für  Lernbehinderte </b></text>
+<text top="180" left="1030" width="146" height="12" font="19">Pestalozzi-Schule </text>
+<text top="194" left="1030" width="212" height="12" font="19">Schule  für  Lernbehinderte </text>
+<text top="209" left="1030" width="145" height="12" font="19">Ziegelbergstr.  27 </text>
+<text top="223" left="1030" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="282" left="1029" width="279" height="12" font="20"><b>Sonderschu1e  für  Sprachbehinderte </b></text>
+<text top="326" left="1029" width="262" height="12" font="19">Sprachheilschule  Neubrandenburg </text>
+<text top="341" left="1029" width="128" height="12" font="19">Kirschenallee  6 </text>
+<text top="355" left="1029" width="170" height="12" font="19">17033  Neubrandenburg </text>
+<text top="414" left="1029" width="279" height="12" font="20"><b>Sonderschu1e  für  Körperbehinderte </b></text>
+<text top="458" left="1028" width="278" height="12" font="19">Sonderschule  für  Körperbehinderte </text>
+<text top="472" left="1028" width="161" height="12" font="19">Robert-Blum-Str.  34 </text>
+<text top="487" left="1028" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="546" left="1028" width="287" height="12" font="20"><b>Sonderschu1e  für  Geistigbehinderte </b></text>
+<text top="590" left="1027" width="237" height="12" font="19">Schule  für  Geistigbehinderte </text>
+<text top="604" left="1027" width="188" height="13" font="19">Bertold-Brecht-Str.  1a </text>
+<text top="619" left="1028" width="170" height="12" font="19">17034  Neubrandenburg </text>
+<text top="678" left="1027" width="295" height="12" font="20"><b>Sonderschu1e  für  Verhaltensgestörte </b></text>
+<text top="722" left="1027" width="195" height="12" font="19">Grundschule  am  Lindetal </text>
+<text top="736" left="1026" width="246" height="12" font="19">Schule  für  Verhaltensgestörte </text>
+<text top="751" left="1027" width="152" height="12" font="19">Ernst-Alban-Str.  1 </text>
+<text top="765" left="1027" width="171" height="12" font="19">17036  Neubrandenburg </text>
+<text top="825" left="1025" width="123" height="12" font="20"><b>Abendgymnasium </b></text>
+<text top="868" left="1025" width="123" height="12" font="19">Abendgymnasium </text>
+<text top="882" left="1026" width="85" height="12" font="19">Poststr.  3 </text>
+<text top="897" left="1026" width="171" height="12" font="19">17033  Neubrandenburg </text>
+<text top="76" left="1339" width="178" height="12" font="19">Name  des  Schulleiters </text>
+<text top="91" left="1339" width="226" height="12" font="19">Ortsnetzkennzahl/Telefonnr. </text>
+<text top="209" left="1346" width="95" height="12" font="19">Frau  Reuter </text>
+<text top="223" left="1347" width="35" height="12" font="19">0395 </text>
+<text top="223" left="1388" width="4" height="12" font="22">-</text>
+<text top="223" left="1404" width="36" height="12" font="19">2961 </text>
+<text top="340" left="1345" width="103" height="12" font="19">Frau  Schulze </text>
+<text top="355" left="1346" width="35" height="12" font="19">0395 </text>
+<text top="355" left="1387" width="4" height="12" font="22">-</text>
+<text top="355" left="1404" width="51" height="12" font="19">699203 </text>
+<text top="472" left="1344" width="78" height="12" font="19">Frau  Lück </text>
+<text top="487" left="1344" width="35" height="12" font="19">0395 </text>
+<text top="483" left="1385" width="6" height="17" font="26">-</text>
+<text top="487" left="1402" width="35" height="12" font="19">2661 </text>
+<text top="604" left="1343" width="78" height="12" font="19">Frau  Jahn </text>
+<text top="619" left="1343" width="35" height="12" font="19">0395 </text>
+<text top="619" left="1385" width="4" height="12" font="22">-</text>
+<text top="619" left="1401" width="60" height="12" font="19">4225728 </text>
+<text top="751" left="1342" width="86" height="12" font="19">Frau  Josek </text>
+<text top="765" left="1343" width="35" height="12" font="19">0395 </text>
+<text top="765" left="1384" width="4" height="12" font="22">-</text>
+<text top="765" left="1400" width="43" height="12" font="19">72945 </text>
+<text top="882" left="1341" width="129" height="12" font="19">Herr  Dr.  Brasch </text>
+<text top="897" left="1342" width="35" height="12" font="19">0395 </text>
+<text top="893" left="1383" width="6" height="17" font="26">-</text>
+<text top="897" left="1400" width="42" height="12" font="19">66145 </text>
+<text top="1211" left="1341" width="4" height="12" font="22">-</text>
+<text top="1211" left="1358" width="7" height="12" font="21">1</text>
+<text top="1211" left="1366" width="10" height="12" font="19">7 </text>
+<text top="1211" left="1383" width="4" height="12" font="23">-</text>
+<text top="77" left="1587" width="40" height="12" font="19">Schü-</text>
+<text top="91" left="1587" width="30" height="12" font="19">ler </text>
+<text top="209" left="1595" width="28" height="12" font="19">314 </text>
+<text top="341" left="1601" width="19" height="12" font="19">75 </text>
+<text top="472" left="1592" width="28" height="12" font="19">179 </text>
+<text top="604" left="1600" width="19" height="12" font="19">86 </text>
+<text top="750" left="1598" width="19" height="12" font="19">70 </text>
+<text top="882" left="1598" width="18" height="12" font="19">61 </text>
+<text top="77" left="1645" width="36" height="12" font="19">dar: </text>
+<text top="91" left="1645" width="53" height="12" font="19">weibl. </text>
+<text top="209" left="1653" width="28" height="12" font="27">113 </text>
+<text top="341" left="1660" width="18" height="12" font="19">28 </text>
+<text top="604" left="1658" width="20" height="12" font="19">30 </text>
+<text top="751" left="1665" width="10" height="12" font="22">5 </text>
+<text top="882" left="1656" width="19" height="12" font="19">35 </text>
 </page>
 </pdf2xml>

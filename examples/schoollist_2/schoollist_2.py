@@ -7,7 +7,6 @@ Feb. 2017, WZB Berlin Social Science Center - https://wzb.eu
 """
 
 import os
-import re
 from math import radians, degrees
 
 import numpy as np
@@ -30,7 +29,7 @@ DATAPATH = 'data/'
 OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'schoollist_2.pdf.xml'
 
-N_COLS = 3              # number of columns
+N_COLS = 4              # number of columns
 HEADER_ROW_HEIGHT = 90  # space between the two header row horizontal lines in pixels, measured in the scanned pages
 MIN_ROW_GAP = 80        # minimum space between two rows in pixels, measured in the scanned pages
 MIN_COL_WIDTH = 410     # minimum space between two columns in pixels, measured in the scanned pages
