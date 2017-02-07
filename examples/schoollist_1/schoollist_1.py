@@ -8,7 +8,8 @@ It includes the following stages:
    utils (pdftohtml command))
 2. Split the scanned double pages so that we can later process the lists page-by-page
 3. Detect clusters of horizontal lines using the image processing module and repair rotated pages
-4. Get column and line positions of all pages
+4. Get column and line positions of all pages (for lines/rows using the detected horizontal lines and for columns
+   by analyzing the distribution of text box x-positions)
 5. Create a grid of columns and lines for each page
 6. Match the text boxes into the grid and hence extract the tabular data, storing it into a pandas DataFrame
 

@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 """
+An example script that shows how to extract tabular data from OCR-scanned *double* pages with lists of public
+schools in Germany.
+
+It includes the following stages:
+1. Load the XML describing the pages and text boxes (the XML was generated from the OCR scanned PDF with poppler
+   utils (pdftohtml command))
+2. Split the scanned double pages so that we can later process the lists page-by-page
+3. Detect clusters of horizontal lines using the image processing module and repair rotated pages
+4. Get column and line positions of all pages only by using the distribution of text box positions
+5. Create a grid of columns and lines for each page
+6. Match the text boxes into the grid and hence extract the tabular data, storing it into a pandas DataFrame
 
 Feb. 2017, WZB Berlin Social Science Center - https://wzb.eu
 
@@ -16,7 +27,7 @@ import cv2
 from pdftabextract import imgproc
 from pdftabextract.geom import pt
 from pdftabextract.common import read_xml, parse_pages, save_page_grids, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL
-from pdftabextract.textboxes import rotate_textboxes, sorted_by_attr, border_positions_from_texts
+from pdftabextract.textboxes import rotate_textboxes, border_positions_from_texts
 from pdftabextract.clustering import (find_clusters_1d_break_dist,
                                       calc_cluster_centers_1d,
                                       zip_clusters_and_values)
@@ -33,7 +44,10 @@ N_COLS = 4              # number of columns
 HEADER_ROW_HEIGHT = 90  # space between the two header row horizontal lines in pixels, measured in the scanned pages
 MIN_ROW_GAP = 80        # minimum space between two rows in pixels, measured in the scanned pages
 MIN_COL_WIDTH = 410     # minimum space between two columns in pixels, measured in the scanned pages
-SMALLTEXTS_WIDTH = 15
+SMALLTEXTS_WIDTH = 15   # maximum width of text boxes that are considered "small" and will be excluded from column
+                        # detection because they distort the column recognition
+CORRECT_COLS_MIN_DIFFSUM = 10  # minimum summed deviation from the "ideal" median column positions threshold, from
+                               # which on a correction is performed
 
 
 #%% Some helper functions
@@ -180,7 +194,8 @@ split_tree.write(repaired_xmlfile)
 
 #%% Determine the rows and columns of the tables
 
-page_grids = {}
+page_row_positions = {}
+page_col_positions = {}
 
 print("detecting rows and columns...")
 for p_num, p in split_pages.items():
@@ -195,14 +210,16 @@ for p_num, p in split_pages.items():
         print("> page %d: no table found" % p_num)
         continue
     
+    # from the table header, we get the top y position from where the data rows start
     table_top_y = sorted(possible_header_lines)[-1]
     
     table_texts = [t for t in p['texts'] if t['top'] >= table_top_y]
     
+    # get the y positions of all text boxes and calculate clusters from them
     texts_ys = border_positions_from_texts(table_texts, DIRECTION_VERTICAL)
     row_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(texts_ys, dist_thresh=MIN_ROW_GAP/2/scaling_y),
                                            texts_ys)
-    
+    # calculate the row positions from subsequent topmost and bottommost text boxes per cluster
     row_positions = []
     prev_row_bottom = None
     for _, row_ys in row_clusters:
@@ -216,15 +233,19 @@ for p_num, p in split_pages.items():
         
         prev_row_bottom = row_bottom
     
+    # get the x positions of all text boxes and calculate clusters from them
     in_rows_texts = [t for t in table_texts if t['bottom'] <= row_positions[-1]]
     in_rows_bigtexts = [t for t in in_rows_texts if t['width'] >= SMALLTEXTS_WIDTH]
     texts_xs = border_positions_from_texts(in_rows_bigtexts, DIRECTION_HORIZONTAL, only_attr='low')  # left borders of text boxes
     
     col_clusters = zip_clusters_and_values(find_clusters_1d_break_dist(texts_xs, dist_thresh=SMALLTEXTS_WIDTH),
                                            texts_xs)
+    
+    # sort clusters by size
     col_cluster_sizes = map(lambda x: len(x[0]), col_clusters)
     col_clusters_by_size = sorted(zip(col_clusters, col_cluster_sizes), key=lambda x: x[1], reverse=True)
     
+    # calculate the column positions from subsequent leftmost text boxes per cluster
     col_positions = []
     for (_, col_xs), _ in col_clusters_by_size[:N_COLS]:
         col_positions.append(np.min(col_xs))
@@ -233,7 +254,52 @@ for p_num, p in split_pages.items():
     last_col_texts = [t for t in in_rows_texts if col_positions[-1] <= t['left'] < p['width']]
     col_positions.append(max([t['right'] for t in last_col_texts]))
     
+    # save it to the dicts
+    page_row_positions[p_num] = row_positions
+    page_col_positions[p_num] = col_positions
+                      
+    print("> page %d: detected %d rows, %d columns" % (p_num, len(row_positions)-1, len(col_positions)-1))
+
+
+#%% Correct the column positions if necessary
+
+# 1. calculate the normalized column median positions of all pages with a valid number of columns
+all_cols = [list() for _ in range(N_COLS+1)]
+norm_col_pos = {}
+for p_num, col_positions in page_col_positions.items():
+    if len(col_positions) != N_COLS+1:
+        continue
+    
+    norm_pos = np.array(col_positions) - col_positions[0]
+    norm_col_pos[p_num] = norm_pos
+    for i in range(N_COLS+1):
+        all_cols[i].append(norm_pos[i])
+
+col_medians = np.array([np.median(pos) for pos in all_cols])
+
+# 2. correct the column positions for pages where not the right number of columns was detected or the positions of
+# the detected columns differ too much from the median
+print('correcting columns...')
+for p_num, col_positions in page_col_positions.items():
+    if p_num in norm_col_pos:
+        norm_pos = norm_col_pos.get(p_num, None)
+        diffsum = np.sum(np.abs(np.array(norm_pos) - col_medians))
+    else:  # this happens when the number of columns was not correctly detected
+        diffsum = None
+    
+    if diffsum is None or diffsum > CORRECT_COLS_MIN_DIFFSUM:   # correct the columns for this page
+        print('> page %d: corrected (diffsum was %f)' % (p_num, diffsum))
+        x_offset = page_col_positions[p_num][0]
+        corrected_pos = list(col_medians + x_offset)
+        page_col_positions[p_num] = corrected_pos
+
+
+#%% Create the page grids from the row and column positions and save them
+page_grids = {}
+
+for p_num, col_positions in page_col_positions.items():
     # create the grid
+    row_positions = page_row_positions[p_num]
     grid = make_grid_from_positions(col_positions, row_positions)
     
     n_rows = len(grid)
@@ -250,3 +316,32 @@ for p_num, p in split_pages.items():
 page_grids_file = os.path.join(OUTPUTPATH, output_files_basename + '.pagegrids.json')
 print("saving page grids JSON file to '%s'" % page_grids_file)
 save_page_grids(page_grids, page_grids_file)
+
+
+#%% Create data frames (requires pandas library)
+
+# For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in their cells (splitting text
+# boxes to separate lines if necessary) and output the result. Normally, you would do some more parsing here, e.g.
+# extracting the adress components from the second column.
+
+full_df = pd.DataFrame()
+print("fitting text boxes into page grids and generating final output...")
+for p_num, p in split_pages.items():
+    if p_num not in page_grids: continue  # happens when no table was detected
+
+    print("> page %d" % p_num)
+    datatable, unmatched_texts = fit_texts_into_grid(p['texts'], page_grids[p_num], return_unmatched_texts=True)
+    
+    df = datatable_to_dataframe(datatable, split_texts_in_lines=True)
+    df['from_page'] = p_num
+    full_df = full_df.append(df, ignore_index=True)
+
+print("extracted %d rows from %d pages" % (len(full_df), len(split_pages)))
+
+csv_output_file = os.path.join(OUTPUTPATH, output_files_basename + '.csv')
+print("saving extracted data to '%s'" % csv_output_file)
+full_df.to_csv(csv_output_file, index=False)
+
+excel_output_file = os.path.join(OUTPUTPATH, output_files_basename + '.xlsx')
+print("saving extracted data to '%s'" % excel_output_file)
+full_df.to_excel(excel_output_file, index=False)
