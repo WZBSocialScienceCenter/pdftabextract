@@ -50,7 +50,11 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
     return clusters
 
 
-def find_clusters_1d_hierarchical(vals, t, **kwargs):    
+def find_clusters_1d_hierarchical(vals, t, **kwargs):
+    """
+    Find clusters in <vals> using hierarchical clustering with parameter <t>. Further parameters need to be passed via
+    <kwargs>. Uses *fclusterdata* from *scipy.cluster.hierarchy*.
+    """
     from scipy.cluster.hierarchy import fclusterdata
     
     data = vals.reshape((len(vals), 1))
@@ -62,7 +66,9 @@ def find_clusters_1d_hierarchical(vals, t, **kwargs):
     
     return clusters
 
+
 #%% Cluster adjustment
+
 def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clusters_method, **kwargs):
     """
     From a dict containing clusters per page, find the cluster centers and apply some adjustments to them
@@ -148,28 +154,13 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     else:
         return adjusted_centers
 
-
-#def remove_empty_sections(positions, texts, direction, considered_empty_ratio):
-#    if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
-#        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
-#        
-#    texts_in_secs = split_texts_by_positions(texts, positions, direction,
-#                                             discard_empty_sections=False,
-#                                             enrich_with_positions=True)
-#    max_n_texts = max(map(len, [tup[0] for tup in texts_in_secs]))
-#    n_texts_thresh = round(max_n_texts * considered_empty_ratio)
-#    filtered_positions = []
-#    for texts, (_, pos) in texts_in_secs:
-#        if len(texts) > n_texts_thresh:
-#            filtered_positions.append(pos)
-#    
-#    return filtered_positions
-
         
 def merge_overlapping_sections_of_texts(texts_in_secs, direction, overlap_thresh):
     """
     Merge overlapping sections of texts in <direction> whose consecutive
     "distance" or overlap (when the distance is negative) is less than <overlap_thresh>.
+    
+    Return merged sections.
     """
     if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
         raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
@@ -215,6 +206,8 @@ def merge_small_sections_of_texts(texts_in_secs, min_num_texts):
     """
     Merge sections that are too small, i.e. have too few "content" which means that their number
     of texts is lower than or equal <min_num_texts>.
+    
+    Return merged sections.
     """
     merged_secs = []
     prev_sec = None
@@ -261,20 +254,6 @@ def calc_cluster_centers_1d(clusters_w_vals, method=np.median):
     zip_clusters_and_values).
     """
     return [method(vals) for _, vals in clusters_w_vals]
-
-    
-#def calc_cluster_centers_range(clusters_w_vals, reduce_clusters_method=np.median, return_centers=False):
-#    """
-#    Calculate the cluster centers of <clusters_w_vals> using calc_cluster_centers_1d and return their range, i.e.
-#    max(centers) - min(centers).
-#    Optionally return also the centers.
-#    """
-#    centers = calc_cluster_centers_1d(clusters_w_vals, method=reduce_clusters_method)
-#    rng = max(centers) - min(centers)
-#    if return_centers:
-#        return rng, centers
-#    else:
-#        return rng
 
         
 def array_match_difference_1d(a, b):
@@ -395,5 +374,4 @@ def find_best_matching_array(base_arr, model_arr, same_size_use_model_arr_diff_t
         diff = 0  # can only be zero
     
     return best_arr, diff
-
 
