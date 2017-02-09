@@ -27,8 +27,8 @@ def make_grid_from_positions(colpos, rowpos):
     if len(rowpos) == 0:
         raise ValueError("List of row positions is empty.")
     
-    row_spans = position_spans(rowpos)
-    col_spans = position_spans(colpos)    
+    row_spans = subsequent_pairs(rowpos)
+    col_spans = subsequent_pairs(colpos)    
     
     # create a grid with rectangles of table cells
     grid = []
@@ -152,6 +152,11 @@ def datatable_to_dataframe(table, split_texts_in_lines=False, **kwargs):
 
 #%% Helper functions
 
-def position_spans(positions):
-    p = positions
-    return [(p[i-1], v) for i, v in enumerate(p) if i > 0]
+def subsequent_pairs(l):
+    """
+    Return subsequent pairs of values in a list <l>, i.e. [(x1, x2), (x2, x3), (x3, x4), .. (xn-1, xn)] for a
+    list [x1 .. xn]
+    """
+    
+    return [(l[i-1], v) for i, v in enumerate(l) if i > 0]
+
