@@ -29,7 +29,7 @@ July 2016, Markus Konrad <markus.konrad@wzb.eu> / Berlin Social Science Center (
         background: #CCCCCC;
     }
     
-    #xmlfile {
+    #xmlfile, #gridfile {
         width: 30%;
     }
         
@@ -219,6 +219,7 @@ July 2016, Markus Konrad <markus.konrad@wzb.eu> / Berlin Social Science Center (
         }
 
         console.log("loading XML file '" + xmlfile + "'");
+        document.getElementById('xmlfile').value = xmlfile;
         d3.xml(xmlfile, 'application/xml', function (err, d) {
             xmldoc = d;
             
@@ -292,6 +293,10 @@ July 2016, Markus Konrad <markus.konrad@wzb.eu> / Berlin Social Science Center (
     }
 
     function loadGridFile(gridfile) {
+        gridfile = typeof gridfile !== 'undefined' ? gridfile : document.getElementById('gridfile').value;
+        
+        document.getElementById('gridfile').value = gridfile;
+        
         d3.json(gridfile, function (d) {
             pagesGrids = d;
             alwaysDisplayGrid = true;
@@ -447,6 +452,10 @@ July 2016, Markus Konrad <markus.konrad@wzb.eu> / Berlin Social Science Center (
           <label for="xmlfile">XML File:</label>
           <input id="xmlfile" name="xmlfile" type="text" required autofocus>
           <input type="submit" value="Load" onclick="loadXMLFile()" style="margin-right: 5em">
+          <br>
+          <label for="gridfile">Grid File:</label>
+          <input id="gridfile" name="gridfile" type="text">
+          <input type="submit" value="Load" onclick="loadGridFile()" style="margin-right: 5em">
         </div>
 
         <div style="width:33%; text-align:center; float: left">
