@@ -44,7 +44,7 @@ OUTPUTPATH = 'generated_output/'
 INPUT_XML = 'ALA1934_RR-excerpt.pdf.xml'
 
 N_COL_BORDERS = 17
-MIN_COL_WIDTH = 60   # <- very important. the minimum space between two columns in pixels, measured in the scanned pages
+MIN_COL_WIDTH = 60   # <- very important! minimum width of a column in pixels, measured in the scanned pages
 
 #%% Some helper functions
 def save_image_w_lines(iproc_obj, imgfilebasename, orig_img_as_background):
