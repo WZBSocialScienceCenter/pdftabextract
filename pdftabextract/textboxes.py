@@ -217,3 +217,4 @@ def deskew_textboxes(page, skew_radians, skew_direction, about_pt):
             pt_deskewed = pt(t['left'], t['top'] + y_diff)
         
         update_text_dict_pos(t, pt_deskewed, update_node=True)
+

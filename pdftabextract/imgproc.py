@@ -26,18 +26,26 @@ def pt_to_tuple(p):
 
 
 class ImageProc:
+    """
+    Class for image processing. Methods for detecting lines in an image and clustering them. Helper methods for
+    drawing.
+    """
     DRAW_LINE_WIDTH = 2
     
+    
     def __init__(self, imgfile):
+        """
+        Create a new image processing object for <imgfile>.
+        """
         if not imgfile:
-            raise ValueError("paramter 'imgfile' must be a non-empty, non-None string")
+            raise ValueError("parameter 'imgfile' must be a non-empty, non-None string")
         
         self.imgfile = imgfile
         self.input_img = None
         self.img_w = None
         self.img_h = None
                 
-        self.gray_img = None
+        self.gray_img = None  # grayscale version of the input image
         self.edges = None     # edges detected by Canny algorithm
         
         self.lines_hough = []   # contains tuples (rho, theta, theta_norm, DIRECTION_HORIZONTAL or DIRECTION_VERTICAL)
@@ -50,6 +58,8 @@ class ImageProc:
                      gray_conversion=cv2.COLOR_BGR2GRAY):
         """
         Detect lines in input image using hough transform.
+        Return detected lines as list with tuples:
+        (rho, theta, normalized theta with 0 <= theta_norm < np.pi, DIRECTION_VERTICAL or DIRECTION_HORIZONTAL)
         """
         
         self.gray_img = cv2.cvtColor(self.input_img, gray_conversion)
@@ -64,6 +74,12 @@ class ImageProc:
     
     def find_pages_separator_line(self, direction=DIRECTION_VERTICAL, around_rel_position=0.5,
                                   clustering_method=None, **clustering_kwargs):
+        """
+        Try to find a separator line on double pages. After line detection, find a line in direction <direction> around
+        <around_rel_position>.
+        Return the 1D line position.
+        """
+        
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
@@ -82,6 +98,11 @@ class ImageProc:
         return cluster_centers[sep_idx]
     
     def split_image(self, pos, direction=DIRECTION_VERTICAL):
+        """
+        Split input image of this ImageProc object into two at <pos> for direction <direction>. Good for splitting
+        double pages after <find_pages_separator_line>.
+        """
+        
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
@@ -119,12 +140,17 @@ class ImageProc:
         assert 0 <= yb1 <= img_h
         assert 0 <= yb2 <= img_h
         
+        # split and return copies
         img_a = self.input_img[ya1:ya2, xa1:xa2].copy()
         img_b = self.input_img[yb1:yb2, xb1:xb2].copy()
         
         return img_a, img_b
         
-    def apply_found_rotation_or_skew(self, rot_or_skew_type, rot_or_skew_radians):        
+    def apply_found_rotation_or_skew(self, rot_or_skew_type, rot_or_skew_radians):
+        """
+        Apply a found page rotation or skew to the detected lines in order to fix their rotation / skew.
+        You can pass the output of find_rotation_or_skew into this method.
+        """
         if rot_or_skew_type is None or rot_or_skew_radians is None:
             return self.lines_hough
         
@@ -245,14 +271,27 @@ class ImageProc:
         return None, None
     
     def find_clusters(self, direction, method, **kwargs):
+        """
+        Find line clusters for detected lines in direction <direction> using clustering method <method> (from clustering
+        module). <kwargs> will be passed to <method>.
+        Optionally remove clusters with high standard deviation values (<remove_cluster_sections_stddev_thresh>).
+        Optionally remove clusters with empty sections, meaning that there are only a few text boxes inside these
+        sections.
+        <remove_empty_cluster_sections_use_texts>: list of text boxes for empty cluster section removal
+        <remove_empty_cluster_sections_n_texts_ratio>: ratio for min. texts threshold
+        <remove_empty_cluster_sections_scaling>: text box coord. system scaling in relation to image coord. system
+        """
         remove_empty_cluster_sections_use_texts = kwargs.pop('remove_empty_cluster_sections_use_texts', None)
         if remove_empty_cluster_sections_use_texts is not None:
-            remove_empty_cluster_sections_n_texts_ratio = kwargs.pop('remove_empty_cluster_sections_n_texts_ratio')
+                    <remove_empty_cluster_sections_use_texts>: list of text boxes for empty cluster section removal = kwargs.pop('remove_empty_cluster_sections_n_texts_ratio')
             remove_empty_cluster_sections_scaling = kwargs.pop('remove_empty_cluster_sections_scaling')
             remove_empty_cluster_sections_clust_center_fn = kwargs.pop('remove_empty_cluster_sections_clust_center_fn',
                                                                        np.median)
         
         remove_cluster_sections_stddev_thresh = kwargs.pop('remove_cluster_sections_stddev_thresh', None)
+        
+        if not self.lines_hough:
+            raise ValueError("no lines in lines_hough. did you call detect_lines before?")
         
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
@@ -319,6 +358,11 @@ class ImageProc:
         return clusters_w_vals
             
     def draw_lines(self, orig_img_as_background=True, draw_line_num=False):
+        """
+        Draw detected lines and return the rendered image.
+        <orig_img_as_background>: if True, draw on top of input image
+        <draw_line_num>: if True, draw line number
+        """
         lines_ab = self.ab_lines_from_hough_lines(self.lines_hough)
         
         baseimg = self._baseimg_for_drawing(orig_img_as_background)
@@ -335,6 +379,9 @@ class ImageProc:
         return baseimg
 
     def draw_line_clusters(self, direction, clusters_w_vals, orig_img_as_background=True):
+        """
+        Draw detected clusters of lines in direction <direction> using <clusters_w_vals>.
+        """
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
@@ -358,6 +405,9 @@ class ImageProc:
     
     @staticmethod
     def draw_lines_in_dir(baseimg, direction, line_positions, line_color, line_width=None):
+        """
+        Draw a list of lines <line_positions> on <baseimg> in direction <direction> using <line_color> and <line_width>.
+        """
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
             raise ValueError("invalid value for 'direction': '%s'" % direction)
         
@@ -379,12 +429,17 @@ class ImageProc:
             cv2.line(baseimg, p1, p2, line_color, line_width)
     
     def _baseimg_for_drawing(self, use_orig):
+        """
+        Get a base image for drawing: Either the input image if <use_orig> is True or an empty (black) image.
+        """
         if use_orig:
             return np.copy(self.input_img)
         else:
             return np.zeros((self.img_h, self.img_w, 3), np.uint8)
         
-    def _load_imgfile(self):        
+    def _load_imgfile(self):  
+        """Load the image file self.imgfile to self.input_img. Additionally set the image width and height (self.img_w
+        and self.img_h)"""      
         self.input_img = cv2.imread(self.imgfile)
         if self.input_img is None:
             raise IOError("could not load file '%s'" % self.imgfile)
@@ -410,3 +465,4 @@ class ImageProc:
             lines_hough.append((rho, theta, theta_norm, line_dir))
         
         return lines_hough
+

@@ -13,6 +13,7 @@ import numpy as np
 
 
 def pt(x, y, dtype=np.float):
+    """Create a point in 2D space at <x>, <y>"""
     return np.array((x, y), dtype=dtype)
 
 
@@ -122,9 +123,10 @@ def pointintersect(p1, p2, p3, p4, check_in_segm=True):
 
 def rect(lefttop, rightbottom):
     """
+    create a rectangle structure from top left and bottom right point.
     :param leftop: np.array from pt()
     :param rightbottom: np.array from pt()
-    :return 2x2 np.array matrix, first row is lefttop, second row is rightbottom
+    :return 2x2 np.array matrix, first row is top left point, second row is bottom right point
     """
     assert lefttop.dtype == rightbottom.dtype        
     
@@ -132,10 +134,12 @@ def rect(lefttop, rightbottom):
 
     
 def rect_from_text(t):
+    """create a rectangle from a text box <t>"""
     return rect(t['topleft'], t['bottomright'])
 
     
 def rectcenter(r):
+    """"Return the center of a rectangle <r>."""
     w = r[1][0] - r[0][0]
     h = r[1][1] - r[0][1]
     
@@ -143,14 +147,21 @@ def rectcenter(r):
 
 
 def rectcenter_dist(r1, r2):
+    """Return the distance between centers of rectangles <r1> and <r2>"""
     return ptdist(rectcenter(r1), rectcenter(r2))
 
 
 def rectarea(r):
+    """Return the area of rectangle <r>""""
     return (r[1][0] - r[0][0]) * (r[1][1] - r[0][1])
 
 
 def rectintersect(a, b, norm_intersect_area=None):
+    """
+    Check for rectangle intersection between rectangles <a> and <b>.
+    Return None if no intersection, else return the area of the intersection, optionally normalized/scaled to
+    <norm_intersect_area>.
+    """
     assert a.dtype == b.dtype    
     assert norm_intersect_area in (None, 'a', 'b')
     
@@ -162,7 +173,9 @@ def rectintersect(a, b, norm_intersect_area=None):
     
     max_a = min(a_a, a_b)
     
+    # deltas per axis
     d = np.empty(4, dtype=a.dtype)
+    
     # x
     d[0] = b[1][0] - a[0][0]
     d[1] = a[1][0] - b[0][0]
@@ -171,7 +184,7 @@ def rectintersect(a, b, norm_intersect_area=None):
     d[2] = b[1][1] - a[0][1]
     d[3] = a[1][1] - b[0][1]
     
-    if np.sum(d >= 0) == 4:
+    if np.sum(d >= 0) == 4:  # intersection
         if norm_intersect_area == 'a':
             norm_with = a_a
         elif norm_intersect_area == 'b':
@@ -180,8 +193,9 @@ def rectintersect(a, b, norm_intersect_area=None):
             norm_with = 1.0
             
         return min(max_a, np.min(np.abs(d[0:2])) * np.min(np.abs(d[2:4]))) / norm_with
-    else:
+    else:  # no intersection
         return None
+
 
 def normalize_angle(theta):
     """Normalize an angle theta to theta_norm so that: 0 <= theta_norm < np.pi"""
@@ -197,6 +211,7 @@ def normalize_angle(theta):
     assert 0 <= theta_norm < np.pi
     
     return theta_norm
+
 
 def project_polarcoord_lines(lines, img_w, img_h):
     """
@@ -258,3 +273,4 @@ def project_polarcoord_lines(lines, img_w, img_h):
         lines_ab.append((p1, p2))
     
     return lines_ab
+

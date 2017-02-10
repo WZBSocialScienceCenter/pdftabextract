@@ -18,6 +18,11 @@ from .common import DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, update_text_dict_p
 
 
 def split_page_texts(p, split_pos, direction=DIRECTION_VERTICAL):
+    """
+    Split text boxes on a double page <p> at position <split_pos>, the separator line going in direction <direction>.
+    Return a 2D tuple with the split pages A and B:
+    ((A text boxes, A width, A height), (B text boxes, B width, B height))
+    """
     if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
         raise ValueError("invalid value for 'direction': '%s'" % direction)
     
@@ -54,6 +59,12 @@ def split_page_texts(p, split_pos, direction=DIRECTION_VERTICAL):
 
 
 def create_split_pages_dict_structure(split_pages, save_to_output_path=None):    
+    """
+    From a list of split pages <split_pages> with tuples containing
+    (base double page, (split pages from split_page_texts), (split page images)) form a new page dict structure and new
+    XML element structure.
+    Return tuple (new XML element tree object, new XML element root, new pages dict with split pages)
+    """
     if save_to_output_path:
         output_dir = os.path.dirname(save_to_output_path)
         output_fname = os.path.basename(save_to_output_path)
@@ -133,3 +144,4 @@ def create_split_pages_dict_structure(split_pages, save_to_output_path=None):
         new_tree.write(save_to_output_path)
     
     return new_tree, new_root, pages
+
