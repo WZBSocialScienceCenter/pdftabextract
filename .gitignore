@@ -8,3 +8,4 @@ build/
 dist/
 pdftabextract.egg-info/
 ipynotes.py
+.cache/

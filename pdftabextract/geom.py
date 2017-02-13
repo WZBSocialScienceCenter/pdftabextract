@@ -34,7 +34,7 @@ def vecrotate(v, theta, about=np.array((0,0))):
     """rotate a vector v by angle theta (in radians) about point <about>"""
     cth = math.cos(theta)
     sth = math.sin(theta)
-        
+
     return pt(
         cth * v[0] - sth * v[1] + about[0] - cth * about[0] + sth * about[1],
         sth * v[0] + cth * v[1] + about[1] - sth * about[0] - cth * about[1]
@@ -54,12 +54,12 @@ def overlap(a1, a2, b1, b2):
            a_min <= b_max <= a_max or b_min <= a_max <= b_max
 
 
-def pointintersect(p1, p2, p3, p4, check_in_segm=True):
+def lineintersect(p1, p2, p3, p4, check_in_segm=True):
     """
     Check if two lines made from (p1, p2) and (p3, p4) respectively, intersect.
     
     If check_in_segm is True, will check that the line segments actually intersect,
-    will calculate intersection of inifite lines.
+    otherwise will calculate intersection of inifite lines.
     
     If no intersection is found, returns None
     For parallel lines, returns pt(np.nan, np.nan) if they are coincident.
@@ -99,7 +99,7 @@ def pointintersect(p1, p2, p3, p4, check_in_segm=True):
         return P
         
     if parallel:  # check if parallel segments are coincident
-        if overlap(p1[0], p2[0], p3[0], p4[0]) and overlap(p1[1], p2[1], p3[1], p4[1]):
+        if not check_in_segm or (overlap(p1[0], p2[0], p3[0], p4[0]) and overlap(p1[1], p2[1], p3[1], p4[1])):
             return P      # lines coincident -> return pt(np.nan, np.nan)
         else:
             return None   # no intersection in segment, only parallel
@@ -152,7 +152,7 @@ def rectcenter_dist(r1, r2):
 
 
 def rectarea(r):
-    """Return the area of rectangle <r>""""
+    """Return the area of rectangle <r>"""
     return (r[1][0] - r[0][0]) * (r[1][1] - r[0][1])
 
 
