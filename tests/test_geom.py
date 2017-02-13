@@ -7,9 +7,10 @@ Created on Mon Feb 13 09:50:51 2017
 
 import math
 
+import pytest
 import numpy as np
 
-from pdftabextract.geom import pt, ptdist, vecangle, vecrotate, overlap, lineintersect
+from pdftabextract.geom import pt, ptdist, vecangle, vecrotate, overlap, lineintersect, rect
 
 
 def test_pt():
@@ -94,3 +95,30 @@ def test_lineintersect():
     assert np.array_equal(lineintersect(pt(0, 0), pt(0, 1), pt(0, 1), pt(2, 2), False), pt(0, 1))  # intersection - touch
     assert np.array_equal(lineintersect(pt(0, 0), pt(2, 2), pt(0, 2), pt(2, 0), False), pt(1, 1))  # intersection
 
+
+def test_rect():
+    with pytest.raises(ValueError):
+        rect(pt(0, 0), pt(1, 1, dtype=np.int))  # dtypes do not match
+    
+    with pytest.raises(ValueError):
+        rect(pt(0, 0), pt(0, 0))  # doesn't form rect
+
+    with pytest.raises(ValueError):
+        rect(pt(1, 1), pt(0, 0))  # doesn't form rect
+
+    with pytest.raises(ValueError):
+        rect(pt(0, 0), pt(1, 0))  # doesn't form rect
+    
+    a = pt(0, 0)
+    b = pt(1, 1)
+    r = rect(a, b)
+    assert r.dtype == a.dtype == b.dtype
+    assert np.array_equal(r[0], a)
+    assert np.array_equal(r[1], b)
+    
+    a = pt(-3, -1)
+    b = pt(8, 1.2)
+    r = rect(a, b)
+    assert r.dtype == a.dtype == b.dtype
+    assert np.array_equal(r[0], a)
+    assert np.array_equal(r[1], b)

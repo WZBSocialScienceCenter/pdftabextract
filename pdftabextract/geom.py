@@ -128,7 +128,14 @@ def rect(lefttop, rightbottom):
     :param rightbottom: np.array from pt()
     :return 2x2 np.array matrix, first row is top left point, second row is bottom right point
     """
-    assert lefttop.dtype == rightbottom.dtype        
+    if lefttop.dtype != rightbottom.dtype:
+        raise ValueError('dtypes of lefttop and rightbottom must match')
+    
+    if lefttop[0] >= rightbottom[0]:
+        raise ValueError('lefttop[0] must be smaller than rightbottom[0] to form a rectangle')
+    
+    if lefttop[1] >= rightbottom[1]:
+        raise ValueError('lefttop[1] must be smaller than rightbottom[1] to form a rectangle')
     
     return np.array((lefttop, rightbottom), dtype=lefttop.dtype)
 
