@@ -8,15 +8,20 @@ Created on Mon Feb 13 09:50:51 2017
 import math
 
 import pytest
+from hypothesis import given, example
+import hypothesis.strategies as st 
 import numpy as np
 
-from pdftabextract.geom import pt, ptdist, vecangle, vecrotate, overlap, lineintersect, rect
+from pdftabextract.geom import (pt, ptdist, vecangle, vecrotate, overlap, lineintersect,
+                                rect, rectcenter, rectarea, rectintersect,
+                                normalize_angle, normalize_angle_halfcircle)
 
 
 def test_pt():
     x = 0
     y = 1
     pt0 = pt(x, y)
+    assert type(pt0) is np.ndarray
     assert pt0.dtype == np.float
     assert pt0[0] == x
     assert pt0[1] == y
@@ -122,3 +127,87 @@ def test_rect():
     assert r.dtype == a.dtype == b.dtype
     assert np.array_equal(r[0], a)
     assert np.array_equal(r[1], b)
+
+
+def test_rectcenter():
+    a = pt(0, 0)
+    b = pt(1, 1)
+    r = rect(a, b)
+    center = rectcenter(r)
+    assert type(center) is np.ndarray
+    assert np.array_equal(center, pt(0.5, 0.5))
+    
+    a = pt(-3, -1)
+    b = pt(2, 5)
+    r = rect(a, b)
+    assert np.array_equal(rectcenter(r), pt(-0.5, 2))
+
+
+def test_rectarea():
+    a = pt(0, 0)
+    b = pt(1, 1)
+    r = rect(a, b)
+    assert rectarea(r) == 1
+                   
+    a = pt(-3, -1)
+    b = pt(2, 5)
+    r = rect(a, b)
+    assert rectarea(r) == 30
+
+
+def test_rectintersect():
+    a = rect(pt(0, 0), pt(1, 1))
+    b = rect(pt(-3, -1), pt(2, 5))
+    
+    assert rectintersect(a, a) == rectarea(a)
+    assert rectintersect(b, b) == rectarea(b)
+    assert rectintersect(a, a, norm_intersect_area='a') == 1
+    assert rectintersect(a, a, norm_intersect_area='b') == 1
+                        
+    with pytest.raises(ValueError):
+        rectintersect(a, a, norm_intersect_area='c')
+    
+    # complete intersect
+    assert rectintersect(a, b) == rectarea(a)
+    assert rectintersect(b, a) == rectarea(a)
+    assert rectintersect(a, b, norm_intersect_area='a') == 1
+    assert rectintersect(b, a, norm_intersect_area='b') == 1
+    assert rectintersect(b, a, norm_intersect_area='a') < 1
+    assert rectintersect(a, b, norm_intersect_area='b') < 1
+
+    # partial intersect
+    a = rect(pt(0, 0), pt(1, 1))
+    b = rect(pt(0.5, 0.5), pt(1.5, 1.5))
+    assert rectintersect(a, b) == 0.25
+    assert rectintersect(a, b, norm_intersect_area='a') == 0.25
+    assert rectintersect(a, b, norm_intersect_area='b') == 0.25
+    b = rect(pt(0.75, 0.5), pt(1.5, 1.5))
+    assert rectintersect(a, b) == 0.125
+
+    # touch
+    a = rect(pt(0, 0), pt(1, 1))
+    b = rect(pt(1, 1), pt(1.5, 1.5))
+    assert rectintersect(a, b) == 0
+
+    # no intersection
+    a = rect(pt(0, 0), pt(1, 1))
+    b = rect(pt(1.1, 1.1), pt(1.5, 1.5))
+    assert rectintersect(a, b) is None
+
+
+@given(st.floats(min_value=-1000*np.pi, max_value=1000*np.pi))
+def test_normalize_angle(theta):
+    assert 0 <= normalize_angle(theta) < 2 * np.pi
+
+
+def test_normalize_angle_2():
+    for i in range(-1000, 1000):
+        theta = i * np.pi
+        norm = normalize_angle(theta)
+        assert 0 <= norm < 2 * np.pi
+        assert round(norm / np.pi, 6) == i % 2
+
+
+@given(st.floats(min_value=-1000*np.pi, max_value=1000*np.pi))
+def test_normalize_angle_halfcircle(theta):
+    assert 0 <= normalize_angle_halfcircle(theta) < np.pi

@@ -169,14 +169,19 @@ def rectintersect(a, b, norm_intersect_area=None):
     Return None if no intersection, else return the area of the intersection, optionally normalized/scaled to
     <norm_intersect_area>.
     """
-    assert a.dtype == b.dtype    
-    assert norm_intersect_area in (None, 'a', 'b')
+    if a.dtype != b.dtype:
+        raise ValueError('dtypes of a and b must match')
+    
+    if norm_intersect_area not in (None, 'a', 'b'):
+        raise ValueError("norm_intersect_area must be None, 'a' or 'b'")
     
     a_a = rectarea(a)
     a_b = rectarea(b)
 
-    assert a_a >= 0
-    assert a_b >= 0
+    if a_a <= 0:
+        raise ValueError('Area of a must be > 0')
+    if a_b <= 0:
+        raise ValueError('Area of b must be > 0')
     
     max_a = min(a_a, a_b)
     
@@ -205,19 +210,28 @@ def rectintersect(a, b, norm_intersect_area=None):
 
 
 def normalize_angle(theta):
-    """Normalize an angle theta to theta_norm so that: 0 <= theta_norm < np.pi"""
-    if theta >= np.pi:
-        theta_norm = theta - np.pi
-    elif theta < -np.pi:
-        theta_norm = theta + 2 * np.pi
+    """Normalize an angle theta to theta_norm so that: 0 <= theta_norm < 2 * np.pi"""
+    twopi = 2 * np.pi
+    
+    if theta >= twopi:
+        m = math.floor(theta/twopi)
+        if theta/twopi - m > 0.9999:   # account for rounding errors
+            m += 1        
+        theta_norm = theta - m * twopi
     elif theta < 0:
-        theta_norm = theta + np.pi
+        m = math.ceil(theta/twopi)
+        if theta/twopi - m < -0.9999:   # account for rounding errors
+            m -= 1
+        theta_norm = abs(theta - m * twopi)
     else:
         theta_norm = theta
-    
-    assert 0 <= theta_norm < np.pi
-    
+        
     return theta_norm
+
+
+def normalize_angle_halfcircle(theta):
+    theta_norm = normalize_angle(theta)
+    return theta_norm if theta_norm < np.pi else theta_norm - np.pi
 
 
 def project_polarcoord_lines(lines, img_w, img_h):

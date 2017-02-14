@@ -283,7 +283,7 @@ class ImageProc:
         """
         remove_empty_cluster_sections_use_texts = kwargs.pop('remove_empty_cluster_sections_use_texts', None)
         if remove_empty_cluster_sections_use_texts is not None:
-                    <remove_empty_cluster_sections_use_texts>: list of text boxes for empty cluster section removal = kwargs.pop('remove_empty_cluster_sections_n_texts_ratio')
+            remove_empty_cluster_sections_n_texts_ratio = kwargs.pop('remove_empty_cluster_sections_n_texts_ratio')
             remove_empty_cluster_sections_scaling = kwargs.pop('remove_empty_cluster_sections_scaling')
             remove_empty_cluster_sections_clust_center_fn = kwargs.pop('remove_empty_cluster_sections_clust_center_fn',
                                                                        np.median)

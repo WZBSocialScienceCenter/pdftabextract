@@ -117,9 +117,10 @@ def parse_pages(root, load_page_nums=None, require_image=False, only_load_toplef
         # add the text boxes to the page
         for t in p.findall('text'):
             tdict = create_text_dict(t)
-            trect = rect(tdict['topleft'], tdict['bottomright'])
-            
-            if rectarea(trect) <= 0:    # seems like there are rectangles with zero area
+            try:
+                rect(tdict['topleft'], tdict['bottomright'])
+            except ValueError:
+                # seems like there are rectangles with zero area
                 continue                # -> skip them
                         
             # join all text elements to one string
