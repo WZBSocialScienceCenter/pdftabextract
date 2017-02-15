@@ -14,7 +14,8 @@ import numpy as np
 
 from pdftabextract.geom import (pt, ptdist, vecangle, vecrotate, overlap, lineintersect,
                                 rect, rectcenter, rectarea, rectintersect,
-                                normalize_angle, normalize_angle_halfcircle)
+                                normalize_angle, normalize_angle_halfcircle,
+                                project_polarcoord_lines)
 
 FMIN = np.finfo(np.float32).min
 FMAX = np.finfo(np.float32).max
@@ -220,6 +221,32 @@ def test_normalize_angle():
         theta = i * np.pi
         norm = normalize_angle(theta)
         assert 0 <= norm < 2 * np.pi
-        assert np.isclose(round(norm / np.pi, 6), i % 2)
+        assert norm / np.pi == i % 2
 
+
+def test_normalize_angle_halfcircle():
+    for i in range(-10, 10):
+        theta = 0.5 * i * np.pi
+        norm = normalize_angle_halfcircle(theta)
+        assert 0 <= norm < np.pi
+        assert norm / np.pi * 2 == i % 2
+
+@given(
+    st.lists(st.lists(st.floats(allow_nan=False, allow_infinity=False), min_size=2, max_size=2)),
+    st.integers(),
+    st.integers()
+)
+def test_project_polarcoord_lines(hough_lines, img_w, img_h):
+    if img_w <= 0 or img_h <= 0:
+        with pytest.raises(ValueError):
+            project_polarcoord_lines(hough_lines, img_w, img_h)
+        return
+    else:
+        res = project_polarcoord_lines(hough_lines, img_w, img_h)
+    assert type(res) is list
+    assert len(res) == len(hough_lines)
+    for pts in res:
+        assert len(pts) == 2
+        assert type(pts[0]) == type(pts[1]) == np.ndarray
+        assert len(pts[0]) == len(pts[1]) == 2
 

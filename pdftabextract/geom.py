@@ -237,7 +237,7 @@ def normalize_angle(theta):
     else:
         theta_norm = theta
     
-    return round(theta_norm, 5)
+    return theta_norm
 
 
 def normalize_angle_halfcircle(theta):
@@ -250,7 +250,12 @@ def project_polarcoord_lines(lines, img_w, img_h):
     Project lines in polar coordinate space <lines> (e.g. from hough transform) onto a canvas of size
     <img_w> by <img_h>.
     """
-        
+    
+    if img_w <= 0:
+        raise ValueError('img_w must be > 0')
+    if img_h <= 0:
+        raise ValueError('img_h must be > 0')
+    
     lines_ab = []
     for i, (rho, theta) in enumerate(lines):
         # calculate intersections with canvas dimension minima/maxima
