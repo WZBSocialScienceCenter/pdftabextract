@@ -24,10 +24,21 @@ def ptdist(p1, p2):
 
 def vecangle(v1, v2):
     """angle between two vectors v1, v2 in radians"""
-    denom = (np.linalg.norm(v1) * np.linalg.norm(v2))
-    if denom == 0:
+    v0 = pt(0, 0)
+        
+    if np.allclose(v1, v0) or np.allclose(v2, v0):
         return np.nan
-    return math.acos(np.vdot(v1, v2) / denom)
+    
+    if np.allclose(v1, v2):
+        return 0
+    
+    num = np.vdot(v1, v2)
+    denom = (np.linalg.norm(v1) * np.linalg.norm(v2))
+    
+    if np.isclose(num, denom):
+        return 0
+    
+    return math.acos(num / denom)
 
 
 def vecrotate(v, theta, about=np.array((0,0))):
@@ -215,18 +226,18 @@ def normalize_angle(theta):
     
     if theta >= twopi:
         m = math.floor(theta/twopi)
-        if theta/twopi - m > 0.9999:   # account for rounding errors
+        if theta/twopi - m > 0.99999:   # account for rounding errors
             m += 1        
         theta_norm = theta - m * twopi
     elif theta < 0:
         m = math.ceil(theta/twopi)
-        if theta/twopi - m < -0.9999:   # account for rounding errors
+        if theta/twopi - m < -0.99999:   # account for rounding errors
             m -= 1
         theta_norm = abs(theta - m * twopi)
     else:
         theta_norm = theta
-        
-    return theta_norm
+    
+    return round(theta_norm, 5)
 
 
 def normalize_angle_halfcircle(theta):

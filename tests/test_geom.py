@@ -16,7 +16,10 @@ from pdftabextract.geom import (pt, ptdist, vecangle, vecrotate, overlap, linein
                                 rect, rectcenter, rectarea, rectintersect,
                                 normalize_angle, normalize_angle_halfcircle)
 
+FMIN = np.finfo(np.float32).min
+FMAX = np.finfo(np.float32).max
 
+               
 def test_pt():
     x = 0
     y = 1
@@ -42,7 +45,7 @@ def test_ptdist():
     assert ptdist(p2, p1) == ptdist(p1, p2)
 
     assert ptdist(p1, p3) == math.sqrt(2)
-
+    
 
 def test_vecangle():
     v1 = pt(1, 0)
@@ -56,6 +59,23 @@ def test_vecangle():
     assert round(vecangle(v1, v3), 4) == round(math.radians(45), 4)
     assert vecangle(v2, v4) == vecangle(v1, v4) == math.radians(90)
     assert vecangle(v2, v5) == math.radians(90)   # always the smaller angle
+
+
+@given(st.floats(min_value=FMIN, max_value=FMAX),
+       st.floats(min_value=FMIN, max_value=FMAX),
+       st.floats(min_value=FMIN, max_value=FMAX),
+       st.floats(min_value=FMIN, max_value=FMAX))
+def test_vecangle_2(x1, y1, x2, y2):
+    v0 = pt(0, 0)
+    v1 = pt(x1, y1)
+    v2 = pt(x2, y2)
+    
+    alpha = vecangle(v1, v2)
+    
+    if np.allclose(v1, v0) or np.allclose(v2, v0):
+        assert np.isnan(alpha)
+    else:
+        assert 0 <= alpha <= np.pi
 
 
 def test_vecrotate():
@@ -195,19 +215,11 @@ def test_rectintersect():
     assert rectintersect(a, b) is None
 
 
-@given(st.floats(min_value=-1000*np.pi, max_value=1000*np.pi))
-def test_normalize_angle(theta):
-    assert 0 <= normalize_angle(theta) < 2 * np.pi
-
-
-def test_normalize_angle_2():
-    for i in range(-1000, 1000):
+def test_normalize_angle():
+    for i in range(-10, 10):
         theta = i * np.pi
         norm = normalize_angle(theta)
         assert 0 <= norm < 2 * np.pi
-        assert round(norm / np.pi, 6) == i % 2
+        assert np.isclose(round(norm / np.pi, 6), i % 2)
 
 
-@given(st.floats(min_value=-1000*np.pi, max_value=1000*np.pi))
-def test_normalize_angle_halfcircle(theta):
-    assert 0 <= normalize_angle_halfcircle(theta) < np.pi
