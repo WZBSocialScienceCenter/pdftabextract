@@ -1,6 +1,6 @@
 # pdftabextract - A set of tools for data mining (OCR-processed) PDFs
 
-July 2016, Markus Konrad <markus.konrad@wzb.eu> / [Berlin Social Science Center](https://www.wzb.eu/en)
+July 2016 / Feb. 2017, Markus Konrad <markus.konrad@wzb.eu> / [Berlin Social Science Center](https://www.wzb.eu/en)
 
 ## Introduction
 
@@ -8,28 +8,36 @@ This repository contains a set of tools written in Python 3 with the aim to extr
 PDF files. Before these files can be processed they need to be converted to XML files in
 [pdf2xml format](http://www.mobipocket.com/dev/pdf2xml/). This is very simple -- see section below for instructions.
 
+### Module overview
+
 After that you can view the extracted text boxes with the
-[pdf2xml-viewer](https://github.com/WZBSocialScienceCenter/pdf2xml-viewer) tool if you like. The pdf2xml format can be
-loaded and parsed with functions in the `common` submodule. When the pages are skewed, you will need to straighten them
-before you can process them further. This can be done with the `fixrotation` submodule. Afterwards you can extract
-tabular data from these files and output the data in CSV or JSON format using the `tabextract` submodule.
+[pdf2xml-viewer](https://github.com/WZBSocialScienceCenter/pdf2xml-viewer) tool if you like. The pdf2xml format can be loaded and parsed with functions in the `common` submodule. Lines can be detected in the scanned images using the `imgproc` module. If the pages are skewed or rotated, this can be detected and fixed with methods from `imgproc` and functions in `textboxes`. Lines or text box positions can be clustered in order to detect table columns and rows using the `clustering` module. When columns and rows were successfully detected, they can be converted to a *page grid* with the `extract` module and their contents can be extracted using `fit_texts_into_grid` in the same module. `extract` also allows you to export the data as [pandas](http://pandas.pydata.org/) DataFrame.
+
+If your scanned pages are double pages, you will need to pre-process them with `splitpages`.
+
+### Examples and tutorials
+
+An extensive tutorial was [posted here](https://datascience.blog.wzb.eu/2017/02/16/data-mining-ocr-pdfs-using-pdftabextract-to-liberate-tabular-data-from-scanned-documents/) and is derived from the [Jupyter Notebook](https://github.com/WZBSocialScienceCenter/pdftabextract/blob/master/examples/catalogue_30s/catalog_30s_notebook.ipynb) contained in the examples. There are more use-cases and demonstrations in the [examples directory](https://github.com/WZBSocialScienceCenter/pdftabextract/blob/master/examples/).
+
 
 ## Features
 
-* load and parse files in pdf2xml format (`common` submodule)
-* straighten skewed pages (`fixrotation` submodule)
-* extract tabular data from pdf2xml files and output the data in CSV or JSON format (`tabextract` submodule)
+* load and parse files in pdf2xml format (`common` module)
+* split scanned double pages (`splitpages` module)
+* detect lines in scanned pages via image processing (`imgproc` module)
+* detect page rotation or skew and fix it (`imgproc` and `textboxes` module)
+* detect clusters in detected lines or text box positions in order to find column and row positions (`clustering` module)
+* extract tabular data and convert it to pandas DataFrame (which allows export to CSV, Excel, etc.) (`extract` module)
+
+## Installation
+
+This package is available on [PyPI](https://pypi.python.org/pypi/pdftabextract/) and can be installed via pip: `pip install pdftabextract`
 
 ## Requirements
 
-The requirements are listed in `requirements.txt`. You basically need a scientific Python software stack installed
-(for example via [Anaconda](https://www.continuum.io/why-anaconda) or [pip](https://pypi.python.org/pypi)) with
-the following libraries:
+The requirements are listed in `requirements.txt` and are installed automatically if you use pip.
 
-* numpy
-* scipy
-
-**The scripts were only tested with Python 3. They might also work with Python 2.x with minor modifications.**
+**Only Python 3 -- No Python 2 support.**
 
 ## Converting PDF files to XML files with pdf2xml format
 
@@ -51,26 +59,29 @@ converted.
 For usage and background information, please read my series of blog posts about
 [data mining PDFs](https://datascience.blog.wzb.eu/category/pdfs/).
 
-You should have a look at the examples to see how to use the provided functions and configuration settings. Examples are
-provided in the *examples* directory. Remember to set the PYTHONPATH according to where you put the
-*pdftabextract* package. You can run an example straight from the root dictionary with
-`PYTHONPATH=. python examples/process_ocr_output.py` (note: your Python 3 executable might be named `python3`).
-
-Alternatively, you can use an IDE like [Spyder](https://github.com/spyder-ide/spyder).
 
 See the following images of the example input/output:
 
-Original OCR-processed ("sandwich") PDF
-![original OCR-processed PDF](https://datascience.blog.wzb.eu/wp-content/uploads/10/2016/07/ocr-output-pdf.png)
+Original page
+![original page](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1.png)
 
 Generated (and skewed) pdf2xml file viewed with [pdf2xml-viewer](https://github.com/WZBSocialScienceCenter/pdf2xml-viewer)
-![OCR PDF example in the viewer](https://datascience.blog.wzb.eu/wp-content/uploads/10/2016/07/ocr-pdf-example-screenshot.png)
+![OCR PDF example in the viewer](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdf2xml-viewer-page.png)
 
 Straightened file
 ![Straightened OCR PDF example](https://datascience.blog.wzb.eu/wp-content/uploads/10/2016/07/ocr-pdf-example-output-straightened.png)
 
-Extracted data (CSV file imported to LibreOffice)
-![Extracted data (CSV file imported to LibreOffice)](https://datascience.blog.wzb.eu/wp-content/uploads/10/2016/07/ocr-pdf-example-csv-output.png)
+Detected lines
+![Detected lines](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1-lines-orig.png)
+
+Detected clusters of vertical lines (columns)
+![Detected clusters of vertical lines (columns)](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1-vertical-clusters.png)
+
+Generated page grid viewed in pdf2xml-viewer
+![Generated page grid viewed in pdf2xml-viewer](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdf2xml-viewer-pagegrid.png)
+
+Excerpt of the extracted data
+![Excerpt of the extracted data](http://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdftabextract-example-extracted-data.png)
 
 ## License
 
