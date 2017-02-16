@@ -13,7 +13,6 @@ import numpy as np
 
 from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
-from pdftabextract.textboxes import split_texts_by_positions
 
 
 #%% Clustering
@@ -26,7 +25,10 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
     Returns a list if clusters, where each element in the list is a np.array with indices of <vals>.
     """
     if type(vals) is not np.ndarray:
-        raise ValueError("vals must be a NumPy array")
+        raise TypeError("vals must be a NumPy array")
+    
+    if dist_thresh < 0:
+        raise ValueError("dist_thresh must be positive")
     
     clusters = []
     
@@ -239,6 +241,9 @@ def zip_clusters_and_values(clusters, values):
     Return list of tuples, each tuple representing a cluster and containing two NumPy arrays:
     1. cluster indices into <values>, 2. values of this cluster
     """
+    if type(values) is not np.ndarray:
+        raise TypeError("values must be a NumPy array")
+    
     clusters_w_vals = []
     for c_ind in clusters:
         c_vals = values[c_ind]
