@@ -10,7 +10,8 @@ from hypothesis import given
 import hypothesis.strategies as st 
 import numpy as np
 
-from pdftabextract.clustering import (find_clusters_1d_break_dist, zip_clusters_and_values, calc_cluster_centers_1d)
+from pdftabextract.clustering import (find_clusters_1d_break_dist, zip_clusters_and_values, calc_cluster_centers_1d,
+                                      array_match_difference_1d)
 
 
 @given(st.lists(st.integers(min_value=-10000, max_value=10000)),
@@ -108,3 +109,28 @@ def test_calc_cluster_centers_1d(seq, delta):
     centers = calc_cluster_centers_1d(clusts_w_vals)
     assert len(centers) == len(clusts_w_vals)
 
+    for c, (_, vals) in zip(centers, clusts_w_vals):
+        assert c == np.median(vals)
+
+@given(st.lists(st.integers(min_value=-10000, max_value=10000), average_size=100),
+       st.lists(st.integers(min_value=-10000, max_value=10000), average_size=100),
+       st.booleans(),
+       st.booleans())
+def test_array_match_difference_1d(l1, l2, l1_to_arr, l2_to_arr):
+    if l1_to_arr:
+        l1 = np.array(l1)
+    if l2_to_arr:
+        l2 = np.array(l2)
+    
+    if len(l1) != len(l2):
+        with pytest.raises(ValueError):  # lengths must be the same
+            array_match_difference_1d(l1, l2)
+        return
+    if len(l1) == 0:
+        with pytest.raises(ValueError):  # lengths must be > 0
+            array_match_difference_1d(l1, l2)
+        return
+    
+    diff1 = array_match_difference_1d(l1, l2)
+    assert diff1 == array_match_difference_1d(l2, l1)
+    assert diff1 == np.sum(np.abs(np.array(l1) - np.array(l2)))
