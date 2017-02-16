@@ -68,9 +68,6 @@ Original page
 Generated (and skewed) pdf2xml file viewed with [pdf2xml-viewer](https://github.com/WZBSocialScienceCenter/pdf2xml-viewer)
 ![OCR PDF example in the viewer](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdf2xml-viewer-page.png)
 
-Straightened file
-![Straightened OCR PDF example](https://datascience.blog.wzb.eu/wp-content/uploads/10/2016/07/ocr-pdf-example-output-straightened.png)
-
 Detected lines
 ![Detected lines](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1-lines-orig.png)
 
