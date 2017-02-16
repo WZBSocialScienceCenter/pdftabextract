@@ -337,7 +337,12 @@ def find_best_matching_array(base_arr, model_arr, same_size_use_model_arr_diff_t
         raise TypeError("base_arr must be NumPy array")
     if type(model_arr) is not np.ndarray:
         raise TypeError("model_arr must be NumPy array")
-    
+
+    if len(base_arr) < 1:
+        raise ValueError("base_arr length must be > 0")    
+    if len(model_arr) < 1:
+        raise ValueError("model_arr length must be > 0")
+
     amount_diff = len(base_arr)  - len(model_arr)
     
     if amount_diff > 0:    # too many values in base_arr

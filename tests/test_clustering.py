@@ -11,7 +11,7 @@ import hypothesis.strategies as st
 import numpy as np
 
 from pdftabextract.clustering import (find_clusters_1d_break_dist, zip_clusters_and_values, calc_cluster_centers_1d,
-                                      array_match_difference_1d)
+                                      array_match_difference_1d, find_best_matching_array)
 
 
 @given(st.lists(st.integers(min_value=-10000, max_value=10000)),
@@ -134,3 +134,54 @@ def test_array_match_difference_1d(l1, l2, l1_to_arr, l2_to_arr):
     diff1 = array_match_difference_1d(l1, l2)
     assert diff1 == array_match_difference_1d(l2, l1)
     assert diff1 == np.sum(np.abs(np.array(l1) - np.array(l2)))
+
+
+def test_find_best_matching_array():
+    values = [
+        [0,  10,     30,         40],
+        [0,  11,     29,         42],
+        [10, 21, 25, 39,         52],
+        [0,   9, 15, 29, 32,     41],
+        [0,  10,     29, 35, 36, 40],
+        [0,   9,                 41],
+        [0,          33,           ],
+    ]
+    
+    correct_results = [
+        ([0, 11, 29, 42], 4),
+        ([10, 21, 39, 52], 4),
+        ([0,  9, 29, 41], 3),
+        ([0, 10, 29, 40], 1),
+        ([0,  9, 30, 41], 2),
+        ([0, 10, 33, 40], 3)
+    ]
+    
+    model = np.array(values[0])
+    for i, row in enumerate(values[1:]):
+        row = np.array(row)
+        corrected_row, diffsum = find_best_matching_array(row, model)
+        corr_res_row, corr_diffsum = correct_results[i]
+        
+        assert np.array_equal(corrected_row, corr_res_row)
+        assert diffsum == corr_diffsum
+
+def test_find_best_matching_array_exceptions():
+    with pytest.raises(TypeError):
+        find_best_matching_array([1, 2, 3], np.array([1, 2, 3]))
+    with pytest.raises(TypeError):
+        find_best_matching_array(np.array([1, 2, 3]), [1, 2, 3])
+    with pytest.raises(ValueError):
+        find_best_matching_array(np.array([]), np.array([1, 2, 3]))
+    with pytest.raises(ValueError):
+        find_best_matching_array(np.array([1, 2, 3]), np.array([]))
+
+@given(st.lists(st.integers(min_value=-10000, max_value=10000), min_size=1, average_size=10, max_size=20),
+       st.lists(st.lists(st.integers(min_value=-10000, max_value=10000), min_size=1, average_size=10, max_size=20), min_size=1, average_size=10, max_size=20))
+def test_find_best_matching_array_hypothesis(model, trials):
+    model = np.array(model)
+    for row in trials:
+        row = np.array(row)
+        corrected_row, diffsum = find_best_matching_array(row, model)
+        
+        assert len(corrected_row) == len(model)
+        assert diffsum >= 0
