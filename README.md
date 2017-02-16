@@ -62,22 +62,22 @@ For usage and background information, please read my series of blog posts about
 
 See the following images of the example input/output:
 
-Original page
+### Original page
 ![original page](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1.png)
 
-Generated (and skewed) pdf2xml file viewed with [pdf2xml-viewer](https://github.com/WZBSocialScienceCenter/pdf2xml-viewer)
+### Generated (and skewed) pdf2xml file viewed with [pdf2xml-viewer](https://github.com/WZBSocialScienceCenter/pdf2xml-viewer)
 ![OCR PDF example in the viewer](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdf2xml-viewer-page.png)
 
-Detected lines
+### Detected lines
 ![Detected lines](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1-lines-orig.png)
 
-Detected clusters of vertical lines (columns)
+### Detected clusters of vertical lines (columns)
 ![Detected clusters of vertical lines (columns)](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/ALA1934_RR-excerpt.pdf-3_1-vertical-clusters.png)
 
-Generated page grid viewed in pdf2xml-viewer
+### Generated page grid viewed in pdf2xml-viewer
 ![Generated page grid viewed in pdf2xml-viewer](https://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdf2xml-viewer-pagegrid.png)
 
-Excerpt of the extracted data
+### Excerpt of the extracted data
 ![Excerpt of the extracted data](http://datascience.blog.wzb.eu/wp-content/uploads/10/2017/02/pdftabextract-example-extracted-data.png)
 
 ## License
