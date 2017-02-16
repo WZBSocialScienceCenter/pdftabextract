@@ -46,7 +46,7 @@ and is also available for OSX via Homebrew or MacPorts. From this package we nee
 an XML file in pdf2xml format in the following way using the Terminal:
 
 ```
-pdftohtml -c -i -hidden -xml input.pdf output.xml
+pdftohtml -c -hidden -xml input.pdf output.xml
 ```
 
 The arguments *input.pdf* and *output.xml* are your input PDF file and the created XML file in pdf2xml format
