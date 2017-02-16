@@ -10,7 +10,7 @@ from hypothesis import given
 import hypothesis.strategies as st 
 import numpy as np
 
-from pdftabextract.clustering import find_clusters_1d_break_dist, zip_clusters_and_values
+from pdftabextract.clustering import (find_clusters_1d_break_dist, zip_clusters_and_values, calc_cluster_centers_1d)
 
 
 @given(st.lists(st.integers(min_value=-10000, max_value=10000)),
@@ -93,4 +93,18 @@ def test_zip_clusters_and_values(seq, delta):
         assert len(ind) > 0
         assert len(ind) == len(vals)
         assert np.array_equal(arr[ind], vals)
+
+@given(st.lists(st.integers(min_value=-10000, max_value=10000)),
+       st.integers(min_value=-10000, max_value=10000))
+def test_calc_cluster_centers_1d(seq, delta):
+    arr = np.array(seq)
+    
+    try:
+        clusts = find_clusters_1d_break_dist(arr, delta)
+        clusts_w_vals = zip_clusters_and_values(clusts, arr)
+    except:   # exceptions are tested in test_find_clusters_1d_break_dist and test_zip_clusters_and_values
+        return
+    
+    centers = calc_cluster_centers_1d(clusts_w_vals)
+    assert len(centers) == len(clusts_w_vals)
 
