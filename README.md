@@ -6,7 +6,7 @@ July 2016 / Feb. 2017, Markus Konrad <markus.konrad@wzb.eu> / [Berlin Social Sci
 
 This repository contains a set of tools written in Python 3 with the aim to extract tabular data from (OCR-processed)
 PDF files. Before these files can be processed they need to be converted to XML files in
-[pdf2xml format](http://www.mobipocket.com/dev/pdf2xml/). This is very simple -- see section below for instructions.
+*pdf2xml* format. This is very simple -- see section below for instructions.
 
 ### Module overview
 
