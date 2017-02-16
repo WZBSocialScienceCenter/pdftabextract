@@ -2,3 +2,11 @@ testxmls/
 testoutput/
 __pycache__/
 .~*
+.ipynb_checkpoints/
+.spyproject/
+build/
+dist/
+pdftabextract.egg-info/
+ipynotes.py
+.cache/
+.hypothesis

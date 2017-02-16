@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<!--
+pdf2xml-viewer - A simple viewer and inspection tool for text boxes in PDF documents
+
+Uses d3.js.
+
+July 2016, Markus Konrad <markus.konrad@wzb.eu> / Berlin Social Science Center (https://www.wzb.eu/en)
+
+-->
+
+<meta charset="utf-8">
+<style>
+	body {
+		font: 10px sans-serif;
+        margin: 0;
+        padding: 0;
+	}
+
+    #main {
+        width: 100vw;
+        height: 95vh;
+        overflow: scroll;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #control {
+        background: #CCCCCC;
+    }
+    
+    #xmlfile, #gridfile {
+        width: 30%;
+    }
+        
+    svg {
+        margin: 0;
+        padding: 0;
+    }
+
+    rect {
+        fill: none;
+        stroke: red;
+    }
+
+    text {
+        stroke: black;
+    }
+
+    .lines {
+        stroke: blue;
+    }
+
+    .grid-row .grid-cell rect {
+        stroke: brown;
+        fill-opacity: 0.33;
+        stroke-opacity: 0.25;
+        stroke-width: 1px;
+    }
+
+    .grid-row.even .grid-cell rect {
+        fill: #FF9933;
+    }
+    .grid-row.odd .grid-cell rect {
+        fill: #FFFF33;
+    }
+    
+    .grid-row.even:hover .grid-cell rect {
+        fill: #FFCC77;
+    }
+    
+    .grid-row.odd:hover .grid-cell rect {
+        fill: #FFFF77;
+    }
+    
+    #grid-line-num rect {
+        stroke: none;
+        fill: #FFFFFF;
+        fill-opacity: 0.75;
+    }
+    
+    #grid-line-num text {
+        font-size: 9px;
+        font-family: Arial, sans-serif;
+        stroke: gray;
+        stroke-opacity: 0.75;
+    }
+</style>
+<body>
+
+<script src="d3.js" charset="utf-8"></script>
+
+<script>
+    var xmldoc = null;
+    var xmlfileBasePath = '';
+    var svg = null;
+    var curPageIndex = 0;      // page offset 0 .. N_PAGES
+    var curPageNumber = null;  // number defined in "page" elements of XML file (does not have to start with 1!)
+    var curBgImageScalingX = 1.0;
+    var curBgImageScalingY = 1.0;
+    var curBgImageOpacity = 0.33;
+    var pages = null;
+    var pageNumbers = [];    // array as page index -> page number
+    var fontspecs = {};  // are global for all pages
+    var pagesGrids = null;
+    var grid = null;
+    var alwaysDisplayGrid = false;
+
+    function displayPage(p) {
+        var w = parseInt(p.attributes['width'].value);
+        var h = parseInt(p.attributes['height'].value);
+        
+        function textStyle(textNode, prop) {
+            var spec = fontspecs[textNode.attributes['font'].value];
+            return spec[prop];
+        }
+
+        if (svg != null) {
+            svg.remove();
+        }
+
+        svg = d3.select("#main").append("svg")
+                .attr("width", w)
+                .attr("height", h);
+                
+        var pageImageElem = p.getElementsByTagName('image');
+        if (pageImageElem.length == 1) {
+            bgImgFile = xmlfileBasePath + '/' + pageImageElem[0].attributes['src'].value;
+            
+            svg.append('g')
+                .attr('id', 'bgimage')
+                .append('image')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', w)
+                .attr('height', h)
+                .attr('xlink:href', bgImgFile)
+                .style('opacity', curBgImageOpacity);
+
+            var bgImg = new Image();
+            bgImg.src = bgImgFile;
+            
+            bgImg.onload = function() {
+                curBgImageScalingX = this.width / w;
+                curBgImageScalingY = this.height / h;
+                if (curBgImageScalingX != curBgImageScalingY) {
+                    console.warn('background image scaling different for x and y: sx =',
+                    curBgImageScalingX, ' sy =', curBgImageScalingY);
+                }
+            }
+        } else {
+            curBgImageScaling = 1.0;
+        }
+
+        var textNodes = p.getElementsByTagName('text');
+
+        var textGroups = svg.selectAll('.text')
+                .data(textNodes).enter()
+                .append('g')
+                .attr('class', 'text')
+                .attr('transform', function (d) {
+                    var x = d.attributes['left'].value;
+                    var y = d.attributes['top'].value;
+                    return 'translate(' + x + ', ' + y + ')';
+                });
+
+        var textRects = textGroups.append('rect')
+                .attr('width', function (d) { return d.attributes['width'].value; })
+                .attr('height', function (d) { return d.attributes['height'].value; });
+        var textInRects = textGroups.append('text')
+                .attr('dy', function (d) { return d.attributes['height'].value / 1.4; })
+                .style('font-size', function (d) { return textStyle(d, 'size') })
+                .style('font-family', function (d) { return textStyle(d, 'family') })
+                .style('font-weight', function (d) {
+                    if (d.childNodes.length == 1 && d.childNodes[0].innerHTML && d.childNodes[0].tagName == 'b') {
+                        return 'bold';
+                    } else {
+                        return 'normal';
+                    }
+                })
+                .style('font-style', function (d) {
+                    if (d.childNodes.length == 1 && d.childNodes[0].innerHTML && d.childNodes[0].tagName == 'i') {
+                        return 'italic';
+                    } else {
+                        return 'normal';
+                    }
+                })
+                .text(function (d) {
+                    var txt = '';
+                    for (var i = 0; i < d.childNodes.length; i++) {
+                        var child = d.childNodes[i];
+                        if (child.innerHTML) {
+                            txt += ' ' + child.innerHTML;
+                        } else {
+                            txt += ' ' + child.nodeValue;
+                        }
+                    }
+                    
+                    return txt;
+                });
+
+        if (alwaysDisplayGrid) {
+            displayGrid();
+        }
+    }
+
+    function loadXMLFile(xmlfile) {
+        xmlfile = typeof xmlfile !== 'undefined' ? xmlfile : document.getElementById('xmlfile').value;
+
+        if (xmlfile.match(/^\W/) || xmlfile.match(/^(http|https|file):/)) {
+            return;
+        }
+        
+        var lastSlashIdx = xmlfile.lastIndexOf('/');
+        if (lastSlashIdx !== -1) {
+            xmlfileBasePath = xmlfile.substring(0, lastSlashIdx);
+        } else {
+            xmlfileBasePath = '';
+        }
+
+        console.log("loading XML file '" + xmlfile + "'");
+        document.getElementById('xmlfile').value = xmlfile;
+        d3.xml(xmlfile, 'application/xml', function (err, d) {
+            xmldoc = d;
+            
+            if (xmldoc === 'undefined') {
+                console.error('failed loading XML file');
+                console.error(err);
+            }
+
+            pages = xmldoc.getElementsByTagName('page');
+
+            if (pages.length <= 0) return;
+            
+            for (var i = 0; i < pages.length; i++) {
+              pageNumbers[i] = parseInt(pages[i].attributes.number.value);
+            }
+
+            loadFontSpecs(pages);
+
+            document.getElementById('pagenum').disabled = false;
+            document.getElementById('pagemax').innerHTML = pageNumbers[pageNumbers.length - 1];
+
+            setPageIndex(0);
+        });
+    }
+
+    function loadFontSpecs(pages) {
+        for (var p_i = 0; p_i < pages.length; p_i++) {
+            var p = pages[p_i];
+            var fontspecElems = p.getElementsByTagName('fontspec');
+            for (var i = 0; i < fontspecElems.length; i++) {
+                var spec = fontspecElems[i].attributes;
+                fontspecs[spec.id.value] = {
+                    'size': spec.size.value,
+                    'family': spec.family.value
+                }
+            }
+        }
+    }
+
+    function setPageIndex(index) {
+        if (index == null) {
+           index = 0;
+        }
+        
+        if (index < 0 || index >= pageNumbers.length) {
+            return;
+        }
+        
+        curPageIndex = index;
+        curPageNumber = pageNumbers[curPageIndex];
+        
+        document.getElementById('pagenum').value = curPageNumber;
+
+        displayPage(pages[curPageIndex]);
+    }
+    
+    function setPageNumber() {
+        var num = parseInt(document.getElementById('pagenum').value);
+        var index = pageNumbers.indexOf(num);
+        
+        if (index >= 0) {
+            setPageIndex(index);
+        }
+    }
+
+    function changePage(by) {
+        var toPageIndex = curPageIndex + by;
+        if (toPageIndex >= 0 && toPageIndex < pageNumbers.length) {
+            setPageIndex(toPageIndex);
+        }
+    }
+
+    function loadGridFile(gridfile) {
+        gridfile = typeof gridfile !== 'undefined' ? gridfile : document.getElementById('gridfile').value;
+        
+        document.getElementById('gridfile').value = gridfile;
+        
+        d3.json(gridfile, function (d) {
+            pagesGrids = d;
+            alwaysDisplayGrid = true;
+            displayGrid();
+        });
+    }
+
+    function displayGrid() {
+        if (!pagesGrids || !(curPageNumber in pagesGrids)) {
+            console.log('pages grids not loaded or this page does not have a grid');
+            return;
+        }
+
+        grid = pagesGrids[curPageNumber];
+        
+        var hasLeft = grid.hasOwnProperty('left');
+        var hasRight = grid.hasOwnProperty('right');
+        var gridCoords = new Array();
+        
+        if (hasLeft) {
+            gridCoords = gridCoords.concat(grid.left);
+        }
+        
+        if (hasRight) {
+            gridCoords = gridCoords.concat(grid.right);
+        }
+        
+        if (!hasLeft && !hasRight) {
+            gridCoords = grid;
+        }
+        
+        renderGridFromCoords(gridCoords);
+    }
+    
+    function renderGridFromCoords(coords) {
+        var gridRows = svg.selectAll('.grid-row')
+                .data(coords).enter()
+                .append('g')
+                .attr('class', function (d, i) {
+                    var evenodd = i % 2 == 0 ? 'even' : 'odd';
+                    return 'grid-row ' + evenodd
+                })
+                .on('mouseover', function (d, i) {
+                    var lastCell = d[d.length - 1];
+                    var dispW = 20;
+                    var rowH = lastCell[1][1] - lastCell[0][1];
+                    d3.selectAll('#grid-line-num').remove();
+                    
+                    var lineNumGroup = d3.select(this)
+                        .append('g')
+                        .attr('transform', function() {
+                            var x = lastCell[1][0] - dispW;
+                            var y = lastCell[0][1];
+                            return 'translate(' + x + ', ' + y + ')';
+                        })
+                        .attr('id', 'grid-line-num');
+                    
+                    lineNumGroup.append('rect')
+                        .attr('width', dispW)
+                        .attr('height', rowH);
+                            
+                    lineNumGroup.append('text')
+                        .attr('dx', dispW * 0.4)
+                        .attr('dy', rowH * 0.8)
+                        .text(i+1);
+                })
+                .on('mouseout', function () {
+                    d3.select('#grid-line-num').remove();
+                });
+
+        var gridCells = gridRows.selectAll('.grid-cell')
+                .data(function (d) { return d}).enter()
+                .append('g')
+                .attr('class', function (d, i) {
+                    var evenodd = i % 2 == 0 ? 'even' : 'odd';
+                    return 'grid-cell ' + evenodd
+                })
+                .attr('transform', function (d) {
+                    var x = d[0][0];
+                    var y = d[0][1];
+                    return 'translate(' + x + ', ' + y + ')';
+                });
+        var gridRects = gridCells.selectAll('rect')
+                .data(function (d) { return [d]}).enter()
+                .append('rect')
+                .attr('width', function (d) { return  d[1][0] - d[0][0]; })
+                .attr('height', function (d) { return  d[1][1] - d[0][1]; });
+    }
+
+    function removeGrid() {
+        d3.selectAll('.grid-cell').remove();
+    }
+
+    function drawLines(positions, direction, coordsRelativeToBgImage) {
+        if (typeof(coordsRelativeToBgImage) === 'undefined') coordsRelativeToBgImage = false;
+        var p = pages[curPageIndex];
+        var w = parseInt(p.attributes['width'].value);
+        var h = parseInt(p.attributes['height'].value);
+
+        var coord, maxpos, bgImgScaling;
+
+        if (direction == 'x') {
+            coord = 1;
+            maxpos = w;
+            bgImgScaling = curBgImageScalingX;
+        } else if (direction == 'y') {
+            coord = 0;
+            maxpos = h;
+            bgImgScaling = curBgImageScalingY;
+        } else {
+            console.error('invalid direction:', direction);
+            return;
+        }
+
+        var linesGroup = svg.append("g").attr("class", "lines");
+
+        var othercoord = (coord + 1) % 2;
+
+        var line = d3.svg.line()
+                .x(function (d) { return d[0] })
+                .y(function (d) { return d[1] })
+                .interpolate("basis");
+
+        positions.forEach(function (pos) {
+            if (coordsRelativeToBgImage) {
+                pos /= bgImgScaling;      
+            }
+        
+            var from = [null, null];
+            var to = [null, null];
+            from[coord] = pos;
+            from[othercoord] = 0;
+            to[coord] = pos;
+            to[othercoord] = maxpos;
+
+            linesGroup.append('path').attr('d', line([from, to]))
+        });
+    }
+
+    function removeLines() {
+        d3.selectAll('.lines').remove();
+    }
+    
+    function bgOpacityChanged(elem) {
+        curBgImageOpacity = parseInt(elem.value) / 100;
+        d3.select('#bgimage image').style('opacity', curBgImageOpacity);
+    }
+</script>
+
+<div id="control">
+    <fieldset>
+        <div style="width:33%; text-align:left; float: left">
+          <label for="xmlfile">XML File:</label>
+          <input id="xmlfile" name="xmlfile" type="text" required autofocus>
+          <input type="submit" value="Load" onclick="loadXMLFile()" style="margin-right: 5em">
+          <br>
+          <label for="gridfile">Grid File:</label>
+          <input id="gridfile" name="gridfile" type="text">
+          <input type="submit" value="Load" onclick="loadGridFile()" style="margin-right: 5em">
+        </div>
+
+        <div style="width:33%; text-align:center; float: left">
+          <label for="pagenum">Page:</label>
+          <button onclick="changePage(-1)">&larr;</button>
+          <input id="pagenum" name="pagenum" type="number" onchange="setPageNumber()" size="4" style="width: 40px" disabled> / <span id="pagemax">?</span>
+          <button onclick="changePage(+1)">&rarr;</button>
+        </div>
+        
+        <div style="width:33%; text-align:right; float: left">
+          <label for="bg_opacity">Background opacity:</label>
+          <input id=bg_opacity" name="bg_opacity" type="range" min="0" max="100" value="33" style="height:15px" onchange="bgOpacityChanged(this)">
+        </div>
+    </fieldset>
+</div>
+
+<div id="main">
+
+</div>
+
+</body>
