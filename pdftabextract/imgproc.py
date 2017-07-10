@@ -66,7 +66,9 @@ class ImageProc:
         self.edges = cv2.Canny(self.gray_img, canny_low_thresh, canny_high_thresh, apertureSize=canny_kernel_size)
         
         # detect lines with hough transform
-        lines = cv2.HoughLines(self.edges, hough_rho_res, hough_theta_res, hough_votes_thresh) or []
+        lines = cv2.HoughLines(self.edges, hough_rho_res, hough_theta_res, hough_votes_thresh)
+        if lines is None:
+            lines = []
         
         self.lines_hough = self._generate_hough_lines(lines)
         
