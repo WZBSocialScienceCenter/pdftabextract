@@ -246,7 +246,7 @@ def levenshtein(source, target):
 
 def fill_array_a_with_values_from_b(a, b, fill_indices):
     """
-    Fill array <a> with values from <b> taking values from indicies specified by <fill_indices>.
+    Fill array <a> with values from <b> taking values from indices specified by <fill_indices>.
     
     Example:
     fill_array_a_with_values_from_b(np.array(list('136')), np.array(list('abcdef')), [1, 3, 4])
