@@ -126,7 +126,7 @@ for p_num, p in pages.items():
     
     # cluster the detected *vertical* lines using find_clusters_1d_break_dist as simple clustering function
     # (break on distance MIN_COL_WIDTH/2)
-    # additionaly, remove all cluster sections that are considered empty
+    # additionally, remove all cluster sections that are considered empty
     # a cluster is considered empty when the number of text boxes in it is below 10% of the median number of text boxes
     # per cluster section
     vertical_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL, find_clusters_1d_break_dist,
