@@ -79,7 +79,7 @@ class ImageProc:
         """
         Try to find a separator line on double pages. After line detection, find a line in direction <direction> around
         <around_rel_position>.
-        Return the 1D line position.
+        Return the 1D line position if a separator line was found, else None.
         """
         
         if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
@@ -90,6 +90,10 @@ class ImageProc:
         
         line_clusters = self.find_clusters(direction, clustering_method or find_clusters_1d_break_dist,
                                            **clustering_kwargs)
+
+        if not line_clusters:
+            return None
+
         cluster_centers = np.array(calc_cluster_centers_1d(line_clusters))
         
         img_dim = self.img_w if direction == DIRECTION_VERTICAL else self.img_h

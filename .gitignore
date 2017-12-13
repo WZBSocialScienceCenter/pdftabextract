@@ -10,3 +10,4 @@ pdftabextract.egg-info/
 ipynotes.py
 .cache/
 .hypothesis
+.idea
