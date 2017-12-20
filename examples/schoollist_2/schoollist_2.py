@@ -322,7 +322,7 @@ save_page_grids(page_grids, page_grids_file)
 
 # For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in their cells (splitting text
 # boxes to separate lines if necessary) and output the result. Normally, you would do some more parsing here, e.g.
-# extracting the adress components from the second column.
+# extracting the address components from the second column.
 
 full_df = pd.DataFrame()
 print("fitting text boxes into page grids and generating final output...")

@@ -171,7 +171,7 @@ for p_num, p in split_pages.items():
     
     # cluster the detected *horizontal* lines using find_clusters_1d_break_dist as simple clustering function
     # (break on distance MIN_ROW_HEIGHT/2)
-    # additionaly, remove all cluster sections that are considered empty
+    # additionally, remove all cluster sections that are considered empty
     # a cluster is considered empty when the number of text boxes in it is below 10% of the median number of text boxes
     # per cluster section
     hori_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_HORIZONTAL, find_clusters_1d_break_dist,
@@ -306,7 +306,7 @@ save_page_grids(page_grids, page_grids_file)
 
 # For sake of simplicity, we will just fit the text boxes into the grid, merge the texts in their cells (splitting text
 # boxes to separate lines if necessary) and output the result. Normally, you would do some more parsing here, e.g.
-# extracting the adress components from the second column.
+# extracting the address components from the second column.
 
 full_df = pd.DataFrame()
 print("fitting text boxes into page grids and generating final output...")
