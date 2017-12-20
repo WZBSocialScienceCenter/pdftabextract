@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name='pdftabextract',
-    version='0.1.2',
+    version='0.2.0',
 
     description='A set of tools for data mining (OCR-processed) PDFs',
     long_description="""This repository contains a set of tools written in Python 3 with the aim to extract tabular
@@ -44,9 +44,8 @@ in the github repository.""",
     packages=['pdftabextract'],
     include_package_data=True,
 
-    install_requires=['numpy', 'opencv-python'],
+    install_requires=['numpy', 'opencv-python', 'scipy'],
     extras_require = {
-        'clustering_methods_from_scipy':  ['scipy'],
         'pandas_dataframes':  ['pandas'],
     }
 )

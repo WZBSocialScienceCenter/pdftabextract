@@ -9,9 +9,10 @@ import pytest
 from hypothesis import given
 import hypothesis.strategies as st 
 import numpy as np
+from scipy.stats import chisquare
 
 from pdftabextract.clustering import (find_clusters_1d_break_dist, zip_clusters_and_values, calc_cluster_centers_1d,
-                                      array_match_difference_1d, find_best_matching_array)
+                                      array_match_difference_1d, find_best_matching_array, adjust_bad_positions)
 
 
 @given(st.lists(st.integers(min_value=-10000, max_value=10000)),
@@ -72,6 +73,7 @@ def test_find_clusters_1d_break_dist(seq, delta):
             
             assert min(gaps) >= delta
 
+
 @given(st.lists(st.integers(min_value=-10000, max_value=10000)),
        st.integers(min_value=-10000, max_value=10000))
 def test_zip_clusters_and_values(seq, delta):
@@ -95,6 +97,7 @@ def test_zip_clusters_and_values(seq, delta):
         assert len(ind) == len(vals)
         assert np.array_equal(arr[ind], vals)
 
+
 @given(st.lists(st.integers(min_value=-10000, max_value=10000)),
        st.integers(min_value=-10000, max_value=10000))
 def test_calc_cluster_centers_1d(seq, delta):
@@ -111,6 +114,7 @@ def test_calc_cluster_centers_1d(seq, delta):
 
     for c, (_, vals) in zip(centers, clusts_w_vals):
         assert c == np.median(vals)
+
 
 @given(st.lists(st.integers(min_value=-10000, max_value=10000), average_size=100),
        st.lists(st.integers(min_value=-10000, max_value=10000), average_size=100),
@@ -165,6 +169,7 @@ def test_find_best_matching_array():
         assert np.array_equal(corrected_row, corr_res_row)
         assert diffsum == corr_diffsum
 
+
 def test_find_best_matching_array_exceptions():
     with pytest.raises(TypeError):
         find_best_matching_array([1, 2, 3], np.array([1, 2, 3]))
@@ -174,6 +179,7 @@ def test_find_best_matching_array_exceptions():
         find_best_matching_array(np.array([]), np.array([1, 2, 3]))
     with pytest.raises(ValueError):
         find_best_matching_array(np.array([1, 2, 3]), np.array([]))
+
 
 @given(st.lists(st.integers(min_value=-10000, max_value=10000), min_size=1, average_size=10, max_size=20),
        st.lists(st.lists(st.integers(min_value=-10000, max_value=10000), min_size=1, average_size=10, max_size=20), min_size=1, average_size=10, max_size=20))
@@ -185,3 +191,38 @@ def test_find_best_matching_array_hypothesis(model, trials):
         
         assert len(corrected_row) == len(model)
         assert diffsum >= 0
+
+
+def test_adjust_bad_positions():
+    pages_positions = {
+        0: [8, 28, 33, 38],
+        1: [10, 30, 35, 40],
+        2: [10, 30, 35, 40],
+        3: [0, 20, 25, 32],
+        4: [3, 21, 25, 31],
+        5: [3, 21, 25, 31],
+    }
+
+    mean_widths = np.diff([np.mean(pos) for pos in zip(*pages_positions.values())])
+
+    pages_positions.update({
+        6: [3, 21, 20, 31],       # bad: neg. width
+        7: [3, 21, 25, 28, 31],   # bad: too many positions
+        8: [3, 21, 25, 70],       # bad: invalid last position
+    })
+
+    alpha = 0.05
+    adj_positions = adjust_bad_positions(pages_positions, pos_check_signif_level=alpha)
+
+    assert pages_positions.keys() == adj_positions.keys()
+
+    for p_num in pages_positions.keys():
+        orig = pages_positions[p_num]
+        adj = adj_positions[p_num]
+
+        assert len(adj) == 4
+        assert adj[0] == orig[0]
+
+        adj_widths = np.diff(adj)
+        _, p_val = chisquare(adj_widths, mean_widths)
+        assert p_val >= alpha

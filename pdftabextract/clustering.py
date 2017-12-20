@@ -10,6 +10,7 @@ Created on Fri Dec 16 14:14:30 2016
 import itertools
 
 import numpy as np
+from scipy.stats import chisquare
 
 from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
@@ -230,6 +231,55 @@ def merge_small_sections_of_texts(texts_in_secs, min_num_texts):
     assert len(flatten_list(texts_in_secs)) == len(flatten_list(merged_secs))
 
     return merged_secs
+
+
+def adjust_bad_positions(positions_per_page, good_positions=None, pos_check_signif_level=0.05):
+    """
+    Try to adjust the positions in the dict `positions_per_page` (page number -> positions mapping) by determining the
+    mean column widths of "good positions" and comparing the individual columns widths with these mean values using a
+    Chi squared test. If the p-value of the test is below `pos_check_signif_level`, the positions of the page are
+    considered bad and will be fixed by using the mean widths instead.
+    If `good_positions` is set to None, the list of good positions will be determined using those that match the median
+    number of all positions.
+    """
+
+    if not 0 < pos_check_signif_level <= 1:
+        raise ValueError('`signif_level` must be in range (0,1]')
+
+    if not positions_per_page or not isinstance(positions_per_page, dict):
+        raise ValueError('`positions_per_page` must be a non-empty dict')
+
+    median_n_positions = int(np.median([len(pos) for pos in positions_per_page.values()]))
+
+    if not good_positions:
+        # no "good" positions list given -> create a list of good positions be selecting those that match the
+        # median number of all positions
+        good_positions = [pos for pos in positions_per_page.values() if len(pos) == median_n_positions]
+
+    if not good_positions:   # no "good" positions -> cannot proceed
+        return positions_per_page
+
+    mean_widths = np.diff([np.mean(pos) for pos in zip(*good_positions)])
+    if min(mean_widths) < 0:
+        raise ValueError('invalid positions: got negative mean width')
+
+    adjusted_positions = {}
+    for p_num, positions in positions_per_page.items():
+        if len(positions) != median_n_positions or min(np.diff(positions)) < 0:
+            # num. of positions not as expected or negative widths
+            p_val = 0
+        else:       # expected num. of positions. check if they match
+            widths = np.diff(positions)
+            _, p_val = chisquare(widths, mean_widths)
+
+        if p_val < pos_check_signif_level:
+            # the adjusted positions will be the first given position as offset plus the mean positions derived from
+            # the "good" positions
+            positions = np.concatenate([[positions[0]], positions[0] + np.cumsum(mean_widths)])
+
+        adjusted_positions[p_num] = positions
+
+    return adjusted_positions
 
 
 #%% Helper functions
