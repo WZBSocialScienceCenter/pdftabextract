@@ -12,7 +12,7 @@ import itertools
 import numpy as np
 from scipy.stats import chisquare
 
-from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list,
+from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list, update_text_dict_dim,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
 
 
@@ -23,7 +23,7 @@ def find_clusters_1d_break_dist(vals, dist_thresh):
     Very simple clusting in 1D: Sort <vals> and calculate distance between values. Form clusters when <dist_thresh> is
     exceeded.
     
-    Returns a list if clusters, where each element in the list is a np.array with indices of <vals>.
+    Returns a list of clusters, where each element in the list is a np.array with indices of <vals>.
     """
     if type(vals) is not np.ndarray:
         raise TypeError("vals must be a NumPy array")
@@ -157,7 +157,83 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     else:
         return adjusted_centers
 
-        
+
+def merge_nearby_textboxes_in_page(page, direction, max_nearby_dist, max_same_axis_dist, axis_align='center',
+                                   merge_on_overlap=False, join_str=None):
+    texts = page['texts']
+
+    if not texts:
+        return
+
+    if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
+        raise ValueError("direction must be `DIRECTION_HORIZONTAL` or `DIRECTION_VERTICAL` (see pdftabextract.common)")
+
+    if max_same_axis_dist < 0:
+        raise ValueError('`max_same_axis_dist` must be positive')
+
+    if direction == DIRECTION_HORIZONTAL:
+        nearby_attr = 'left'
+        nearby_attr_other = 'right'
+        axis_attr = 'top'
+        axis_attr_dim = 'height'
+        if join_str is None:
+            join_str = ' '
+    else:
+        nearby_attr = 'top'
+        nearby_attr_other = 'bottom'
+        axis_attr = 'left'
+        axis_attr_dim = 'width'
+        if join_str is None:
+            join_str = '\n'
+
+    if not isinstance(join_str, str):
+        raise ValueError('`join_str` must be a string')
+
+    texts = sorted_by_attr(texts, axis_attr)
+    if axis_align == 'center':
+        axes_gaps = np.array([t[axis_attr] + t[axis_attr_dim]/2 for t in texts])
+    else:
+        axes_gaps = np.diff([t[axis_align] for t in texts])
+    axes = find_clusters_1d_break_dist(axes_gaps, dist_thresh=max_same_axis_dist)
+
+    merged_texts = []
+    for t_indices in axes:
+        t_positions = [(texts[i], texts[i][nearby_attr], texts[i][nearby_attr_other]) for i in t_indices]
+        t_positions = sorted(t_positions, key=lambda x: x[1])
+
+        merged_texts.append(t_positions[0][0])
+
+        if len(t_positions) > 1:
+            gaps = [t_positions[i+1][1] - p[2] for i, p in enumerate(t_positions[:-1])]
+            for i, gap in enumerate(gaps):
+                t = t_positions[i+1][0]
+                prev_t = merged_texts[-1]
+
+                if gap <= max_nearby_dist and (merge_on_overlap or gap >= 0):   # merge
+                    # merge texts
+                    prev_t['value'] += join_str + t['value']
+                    prev_t['xmlnode'].text = prev_t['value']
+
+                    # update dimensions
+                    if direction == DIRECTION_HORIZONTAL:
+                        new_w = prev_t['width'] + (t['right'] - prev_t['right'])
+                        new_h = prev_t['height']
+                    else:
+                        new_w = prev_t['width']
+                        new_h = prev_t['height'] + (t['bottom'] - prev_t['bottom'])
+
+                    update_text_dict_dim(prev_t, (new_w, new_h), update_node=True)
+
+                    # remove this node from page
+                    page['xmlnode'].remove(t['xmlnode'])
+                else:   # don't merge
+                    merged_texts.append(t)
+
+    assert len(merged_texts) <= len(texts)
+
+    page['texts'] = merged_texts
+
+
 def merge_overlapping_sections_of_texts(texts_in_secs, direction, overlap_thresh):
     """
     Merge overlapping sections of texts in <direction> whose consecutive
@@ -166,7 +242,7 @@ def merge_overlapping_sections_of_texts(texts_in_secs, direction, overlap_thresh
     Return merged sections.
     """
     if direction not in (DIRECTION_HORIZONTAL, DIRECTION_VERTICAL):
-        raise ValueError("direction must be  DIRECTION_HORIZONTAL or DIRECTION_VERTICAL (see pdftabextract.common)")
+        raise ValueError("direction must be `DIRECTION_HORIZONTAL` or `DIRECTION_VERTICAL` (see pdftabextract.common)")
     
     if direction == DIRECTION_HORIZONTAL:
         pos_attr = 'left'
@@ -238,7 +314,7 @@ def adjust_bad_positions(positions_per_page, good_positions=None, pos_check_sign
     Try to adjust the positions in the dict `positions_per_page` (page number -> positions mapping) by determining the
     mean column widths of "good positions" and comparing the individual columns widths with these mean values using a
     Chi squared test. If the p-value of the test is below `pos_check_signif_level`, the positions of the page are
-    considered bad and will be fixed by using the mean widths instead.
+    considered bad and will be fixed by using the mean differences instead.
     If `good_positions` is set to None, the list of good positions will be determined using those that match the median
     number of all positions.
     """

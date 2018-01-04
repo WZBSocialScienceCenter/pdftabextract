@@ -31,8 +31,7 @@ class ImageProc:
     drawing.
     """
     DRAW_LINE_WIDTH = 2
-    
-    
+
     def __init__(self, imgfile):
         """
         Create a new image processing object for <imgfile>.
@@ -52,7 +51,6 @@ class ImageProc:
         
         self._load_imgfile()
 
-        
     def detect_lines(self, canny_low_thresh, canny_high_thresh, canny_kernel_size,
                      hough_rho_res, hough_theta_res, hough_votes_thresh,
                      gray_conversion=cv2.COLOR_BGR2GRAY):

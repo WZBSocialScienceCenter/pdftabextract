@@ -63,19 +63,26 @@ def save_page_grids(page_grids, output_file):
     with open(output_file, 'w') as f:
         json.dump(page_grids, f, cls=JSONEncoderPlus)
 
+
 #%% XML parsing / text box dict handling
 
-def parse_pages(root, load_page_nums=None, require_image=False, only_load_topleft_image=True):
+
+def parse_pages(root, load_page_nums=None, require_image=False, select_image='first', use_images=None):
     """
     Parses an XML structure in pdf2xml format to extract the pages with their text boxes.
     <root> is the XML tree root
     <load_page_nums> allows to define a sequence of page numbers that should be loaded (by default, all pages
     will be loaded).
-    <only_load_topleft_image> if there's more than one background image per page, use the one with top="0" and left="0"
+    <select_image> if there's more than one background image in a page, select an image according to one of these
+                   criteria:
+                   'first': simply use the first image
+                   'topleft': use the one with top="0" and left="0"
+    <use_images> pass a dict with page number -> image string mapping to set which images to use for which page
     position.
     
     Return an OrderedDict with page number -> page dict mapping.
     """
+    use_images = use_images or {}
     pages = OrderedDict()
     
     for p in root.findall('page'):  # parse all pages
@@ -86,18 +93,25 @@ def parse_pages(root, load_page_nums=None, require_image=False, only_load_toplef
         
         # find all images of the page
         p_images = p.findall('image')
-        if p_images:            
-            if len(p_images) == 1:
-                imgfile = p_images[0].attrib['src']
+        if p_images:
+            use_image = use_images.get(p_num, None)
+            if use_image:
+                imgfile = use_image
             else:
-                if not only_load_topleft_image:
-                    raise ValueError("multiple images on page %d but only_load_topleft_image was set to False" % p_num)
-                for imgtag in p_images:
-                    if int(imgtag.attrib['top']) == 0 and int(imgtag.attrib['left']) == 0:
-                        imgfile = imgtag.attrib['src']
-                        break
+                if len(p_images) == 1:
+                    imgfile = p_images[0].attrib['src']
                 else:
-                    raise ValueError("multiple images on page %d but none of it is in the top left corner" % p_num)
+                    if select_image == 'first':
+                        imgfile = p_images[0].attrib['src']
+                    elif select_image == 'topleft':
+                        for imgtag in p_images:
+                            if int(imgtag.attrib['top']) == 0 and int(imgtag.attrib['left']) == 0:
+                                imgfile = imgtag.attrib['src']
+                                break
+                        else:
+                            raise ValueError("multiple images on page %d but none of it is in the top left corner" % p_num)
+                    else:
+                        raise ValueError('invalid value for parameter `select_image`: "%s"' % select_image)
         else:
             if require_image:
                 raise ValueError("no image given on page %d but require_image was set to True" % p_num)
@@ -186,6 +200,33 @@ def update_text_dict_pos(t, pos, update_node=False):
     if update_node:   
         update_text_xmlnode(t, 'left', pos[0])
         update_text_xmlnode(t, 'top', pos[1])
+
+
+def update_text_dict_dim(t, dim, update_node=False):
+    """
+    Update text box <t>'s dimensions and set its width to dim[0] and height to dim[1].
+    If <update_node> is True, also set the respective attributes in the respective XML node of the text box.
+    """
+    if len(dim) != 2:
+        raise ValueError('text box dimensions `dim` must be sequence of length 2')
+
+    t_w, t_h = dim
+    t_right = t['left'] + t_w
+    t_bottom = t['top'] + t_h
+
+    t.update({
+        'width': t_w,
+        'height': t_h,
+        'bottom': t_bottom,
+        'right': t_right,
+        'bottomleft': np.array((t['left'], t_bottom)),
+        'topright': np.array((t_right, t['top'])),
+        'bottomright': np.array((t_right, t_bottom)),
+    })
+
+    if update_node:
+        update_text_xmlnode(t, 'width', t_w)
+        update_text_xmlnode(t, 'height', t_h)
 
 
 #%% string functions

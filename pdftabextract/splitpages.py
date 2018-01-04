@@ -44,7 +44,7 @@ def split_page_texts(p, split_pos, direction=DIRECTION_VERTICAL):
     
     for t in p['texts']:
         t = deepcopy(t)
-        t_pos =  t[pos_attr] + t[dim_attr]/2
+        t_pos = t[pos_attr] + t[dim_attr]/2
         if t_pos < split_pos:
             texts_a.append(t)
         else:
