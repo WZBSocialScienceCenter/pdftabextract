@@ -11,10 +11,13 @@ Created on Tue Jun  7 10:49:35 2016
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import json
+import struct
+import imghdr
 
 import numpy as np
 
-from .geom import pt, rect, rectarea
+from .geom import pt, rect
+
 
 #%% Constants
 
@@ -145,6 +148,21 @@ def parse_pages(root, load_page_nums=None, require_image=False, select_image='fi
         pages[p_num] = page
 
     return pages
+
+
+def set_page_image(p, imgfile):
+    """
+    For a page <p>, set the path to an image <imgfile>.
+    Modifies <p> in-place.
+    """
+    p['image'] = imgfile
+
+    img_size = get_image_size(imgfile)
+    if not img_size:
+        raise ValueError('could not determine image size of file `%s`' % imgfile)
+
+    ET.SubElement(p['xmlnode'], 'image', dict(src=imgfile, top='0', left='0',
+                                              width=str(img_size[0]), height=str(img_size[1])))
 
 
 def create_text_dict(t, value=None):
@@ -282,8 +300,61 @@ def levenshtein(source, target):
     return previous_row[-1]
 
 
-        
 #%% Other functions
+
+
+def test_jpeg(h, f):
+    # SOI APP2 + ICC_PROFILE
+    if h[0:4] == '\xff\xd8\xff\xe2' and h[6:17] == b'ICC_PROFILE':
+        return 'jpeg'
+    # SOI APP14 + Adobe
+    if h[0:4] == '\xff\xd8\xff\xee' and h[6:11] == b'Adobe':
+        return 'jpeg'
+    # SOI DQT
+    if h[0:4] == '\xff\xd8\xff\xdb':
+        return 'jpeg'
+imghdr.tests.append(test_jpeg)
+
+
+def get_image_size(fname):
+    """
+    Determine the image type of fhandle and return its size.
+    Taken from https://stackoverflow.com/a/39778771
+    """
+    with open(fname, 'rb') as fhandle:
+        head = fhandle.read(24)
+        if len(head) != 24:
+            return
+        what = imghdr.what(None, head)
+        if what == 'png':
+            check = struct.unpack('>i', head[4:8])[0]
+            if check != 0x0d0a1a0a:
+                return
+            width, height = struct.unpack('>ii', head[16:24])
+        elif what == 'gif':
+            width, height = struct.unpack('<HH', head[6:10])
+        elif what == 'jpeg':
+            try:
+                fhandle.seek(0) # Read 0xff next
+                size = 2
+                ftype = 0
+                while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
+                    fhandle.seek(size, 1)
+                    byte = fhandle.read(1)
+                    while ord(byte) == 0xff:
+                        byte = fhandle.read(1)
+                    ftype = ord(byte)
+                    size = struct.unpack('>H', fhandle.read(2))[0] - 2
+                # We are at a SOFn block
+                fhandle.seek(1, 1)  # Skip `precision' byte.
+                height, width = struct.unpack('>HH', fhandle.read(4))
+            except Exception:  #IGNORE:W0703
+                return
+        else:
+            return
+
+        return width, height
+
 
 def fill_array_a_with_values_from_b(a, b, fill_indices):
     """

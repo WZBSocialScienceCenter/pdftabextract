@@ -8,7 +8,7 @@ Created on Wed Dec 14 09:51:20 2016
 """
 
 from logging import warning
-from math import degrees, radians
+from math import degrees
 
 import numpy as np
 import cv2
