@@ -150,18 +150,21 @@ def parse_pages(root, load_page_nums=None, require_image=False, select_image='fi
     return pages
 
 
-def set_page_image(p, imgfile):
+def set_page_image(p, imgfile_src, imgfile_target=None):
     """
     For a page <p>, set the path to an image <imgfile>.
     Modifies <p> in-place.
     """
-    p['image'] = imgfile
+    if not imgfile_target:
+        imgfile_target = imgfile_src
 
-    img_size = get_image_size(imgfile)
+    p['image'] = imgfile_target
+
+    img_size = get_image_size(imgfile_src)
     if not img_size:
-        raise ValueError('could not determine image size of file `%s`' % imgfile)
+        raise ValueError('could not determine image size of file `%s`' % imgfile_src)
 
-    ET.SubElement(p['xmlnode'], 'image', dict(src=imgfile, top='0', left='0',
+    ET.SubElement(p['xmlnode'], 'image', dict(src=imgfile_target, top='0', left='0',
                                               width=str(img_size[0]), height=str(img_size[1])))
 
 
