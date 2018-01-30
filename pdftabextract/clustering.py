@@ -12,8 +12,10 @@ import itertools
 import numpy as np
 from scipy.stats import chisquare
 
+from pdftabextract import logger
 from pdftabextract.common import (fill_array_a_with_values_from_b, sorted_by_attr, flatten_list, update_text_dict_dim,
                                   DIRECTION_HORIZONTAL, DIRECTION_VERTICAL)
+
 
 
 #%% Clustering
@@ -109,28 +111,33 @@ def get_adjusted_cluster_centers(clusters, n_required_clusters, find_center_clus
     # 2. Clustering second pass: Cluster aligned ("normalized") centers and filter them
     centers_norm_clusters_ind = find_center_clusters_method(centers_norm, **kwargs)
     centers_norm_clusters = zip_clusters_and_values(centers_norm_clusters_ind, centers_norm)
+
+    if len(centers_norm_clusters) < n_required_clusters:
+        logger.warning('Number of found clusters is smaller than number of required clusters `n_required_clusters`. '
+                       'Try to decrease break distance or adapt other clustering parameters.')
+        center_norm_medians = np.array(sorted([np.median(vals) for _, vals in centers_norm_clusters]))
+    else:
+        # Filter clusters: take only clusters with at least <min_n_values> inside. Decrease this value on each iteration.
+        center_norm_medians = []
+        min_n_startval = max(map(len, centers_norm_clusters_ind))
+        for min_n_values in range(min_n_startval, 0, -1):
+            clust_ids_to_remove = []
+            for i, (_, vals) in enumerate(centers_norm_clusters):
+                val_median = np.median(vals)
+                if len(vals) >= min_n_values and val_median not in center_norm_medians:
+                    center_norm_medians.append(val_median)
+                    clust_ids_to_remove.append(i)
+
+                if len(center_norm_medians) == n_required_clusters:
+                    break
+            else:
+                centers_norm_clusters = [c for i, c in enumerate(centers_norm_clusters) if i not in clust_ids_to_remove]
+                continue
+            break
+
+        assert len(center_norm_medians) == n_required_clusters
     
-    # Filter clusters: take only clusters with at least <min_n_values> inside. Decrease this value on each iteration.
-    center_norm_medians = []
-    min_n_startval = max(map(len, centers_norm_clusters_ind))
-    for min_n_values in range(min_n_startval, 0, -1):
-        clust_ids_to_remove = []
-        for i, (_, vals) in enumerate(centers_norm_clusters):
-            val_median = np.median(vals)
-            if len(vals) >= min_n_values and val_median not in center_norm_medians:
-                center_norm_medians.append(val_median)
-                clust_ids_to_remove.append(i)
-        
-            if len(center_norm_medians) == n_required_clusters:
-                break
-        else:
-            centers_norm_clusters = [c for i, c in enumerate(centers_norm_clusters) if i not in clust_ids_to_remove]
-            continue
-        break
-    
-    assert len(center_norm_medians) == n_required_clusters
-    
-    center_norm_medians = np.array(sorted(center_norm_medians))
+        center_norm_medians = np.array(sorted(center_norm_medians))
 
     # 3. Adjust the cluster centers by finding the best matching array to <center_norm_medians> if sizes differ
     adjusted_centers = {}

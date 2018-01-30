@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name='pdftabextract',
-    version='0.3.1-dev',
+    version='0.4.0-dev',
 
     description='A set of tools for data mining (OCR-processed) PDFs',
     long_description="""This repository contains a set of tools written in Python 3 with the aim to extract tabular
