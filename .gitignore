@@ -11,3 +11,4 @@ ipynotes.py
 .cache/
 .hypothesis
 .idea
+.pytest_cache
