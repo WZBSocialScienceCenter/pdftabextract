@@ -2,6 +2,18 @@
 
 July 2016 / Feb. 2017, Markus Konrad <markus.konrad@wzb.eu> / [Berlin Social Science Center](https://www.wzb.eu/en)
 
+**IMPORTANT INITIAL NOTES**
+
+From time to time I receive emails from people trying to extract tabular data from PDFs. I'm fine with that and I'm glad to help. However, some people think that *pdftabextract* is some kind of magic wand that automatically extracts the data they want by simply running one of the provided examples on *their* documents. This, in the very most cases, won't work. I want to clear up a few things that you should consider before using this software and before writing an email to me:
+
+1. pdftabextract is **not an OCR (optical character recognition) software**. It requires scanned pages *with OCR information*, i.e. a "sandwich PDF" that contains both the scanned images and the recognized text. You need software like tesseract or ABBYY Finereader for OCR. In order to check if you have a "sandwich PDF", open your PDF and press "select all". This usually reveals the OCR-processed text information. 
+2. pdftabextract is some kind of **last resort** when all other things fail for extracting tabular data from PDFs. Before trying this out, you should ask yourself the following questions:
+  * Is there *really* no other way / no other format for which the data is available?
+  * Can a special OCR software like ABBYY Finereader detect and extract the tables (you need to try this with a large sample of pages -- I found the table recognition in Finereader often unreliable)?
+  * Is it possible to extract the recognized text as-is from the PDFs and parse it? Try using the `pdftotext` tool from **poppler-utils**, a package which is part of most Linux distributions and is also available for OSX via Homebrew or MacPorts: `pdftotext -layout yourdocument.pdf`. This will create a file `yourdocument.txt` containing the recognized text (from the OCR) with a layout that hopefully resembles your tables. Often, this can be parsed directly (e.g. with a Python script using [regular expressions](https://en.wikipedia.org/wiki/Regular_expression)). If it can't be parsed (e.g. if the columns are not well separated in the text or the tables on each page are too different to each other in order to come up with a common structure for parsing)  then pdftabextract is the right software for you.
+3. pdftabextract is **a set of tools**. As such, it contains functions that are suitable for certain documents but not for others and many functions require you to set parameters that depend on the layout, scan quality, etc. of your documents. You can't just use the example scripts blindly with your data. You will need to adjust parameters in order that it works well with your documents. Below are some hints and explanations regarding those tools and their parameters.
+
+
 ## Introduction
 
 This repository contains a set of tools written in Python 3 with the aim to extract tabular data from (OCR-processed)
