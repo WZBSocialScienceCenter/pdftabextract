@@ -275,7 +275,7 @@ def merge_overlapping_sections_of_texts(texts_in_secs, direction, overlap_thresh
         cur_sec = texts_in_secs[i]
         if dist < overlap_thresh:
             sec = cur_sec + prev_sec
-            if len(merged_secs) > 0:
+            if merged_secs:
                 merged_secs.pop()
         else:
             sec = cur_sec
@@ -301,7 +301,7 @@ def merge_small_sections_of_texts(texts_in_secs, min_num_texts):
         if prev_sec:
             if len(cur_sec) <= min_num_texts:  # number of texts is too low
                 sec = cur_sec + prev_sec       # merge this section with the previous section
-                if len(merged_secs) > 0:       # remove the prev. section from the final list
+                if merged_secs:                # remove the prev. section from the final list
                     merged_secs.pop()          # in order to add the merged section later
             else:
                 sec = cur_sec

@@ -290,13 +290,13 @@ def levenshtein(source, target):
         # Target and source items are aligned, and either
         # are different (cost of 1), or are the same (cost of 0).
         current_row[1:] = np.minimum(
-                current_row[1:],
-                np.add(previous_row[:-1], target != s))
+            current_row[1:],
+            np.add(previous_row[:-1], target != s))
 
         # Deletion (target grows shorter than source):
         current_row[1:] = np.minimum(
-                current_row[1:],
-                current_row[0:-1] + 1)
+            current_row[1:],
+            current_row[0:-1] + 1)
 
         previous_row = current_row
 
