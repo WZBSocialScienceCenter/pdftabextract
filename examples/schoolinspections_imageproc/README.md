@@ -4,7 +4,7 @@ Author: Markus Konrad <markus.konrad@wzb.eu>
 
 Date: Oct 2018
 
-A small example of how to extract data from a PDF with the help of image processing.
+A small example of how to extract data from a PDF with the help of image processing. See also the [companion blog post](https://datascience.blog.wzb.eu/2018/10/26/checkboxes-and-crosses-data-mining-pdfs-with-the-help-of-image-processing/).
 
 Source of the sample PDF: https://www.berlin.de/sen/bildung/schule/berliner-schulen/schulverzeichnis/
 
