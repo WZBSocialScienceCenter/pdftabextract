@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pdf2xml SYSTEM "pdf2xml.dtd">
+
+<pdf2xml producer="poppler" version="0.62.0">
+<page number="1" position="absolute" top="0" left="0" height="1263" width="892">
+<image left="0" top="0" width="892" height="1263" src="samplepage.png" />	<fontspec id="0" size="14" family="Times" color="#000000"/>
+	<fontspec id="1" size="12" family="Times" color="#000000"/>
+	<fontspec id="2" size="11" family="Times" color="#000000"/>
+	<fontspec id="3" size="12" family="Times" color="#000000"/>
+	<fontspec id="4" size="14" family="Times" color="#000000"/>
+	<fontspec id="5" size="8" family="Times" color="#000000"/>
+	<fontspec id="6" size="14" family="Times" color="#ffffff"/>
+	<fontspec id="7" size="12" family="Times" color="#ffffff"/>
+	<fontspec id="8" size="12" family="Times" color="#000000"/>
+	<fontspec id="9" size="14" family="Times" color="#ffffff"/>
+	<fontspec id="10" size="10" family="Times" color="#000000"/>
+	<fontspec id="11" size="6" family="Times" color="#000000"/>
+	<fontspec id="12" size="11" family="Times" color="#000000"/>
+<text top="87" left="161" width="7" height="18" font="0"> </text>
+<text top="91" left="405" width="83" height="14" font="1"><b>Kurzbericht</b></text>
+<text top="92" left="488" width="11" height="13" font="2"><b>  </b></text>
+<text top="92" left="787" width="5" height="13" font="2"><b> </b></text>
+<text top="109" left="262" width="372" height="13" font="2"><b>zur Inspektion der Grundschule am Arkonaplatz (01G01) </b></text>
+<text top="124" left="106" width="7" height="18" font="0"> </text>
+<text top="124" left="447" width="7" height="18" font="0"> </text>
+<text top="146" left="446" width="7" height="18" font="0"> </text>
+<text top="1193" left="106" width="6" height="17" font="3"> </text>
+<text top="1193" left="419" width="62" height="17" font="3">Seite 5/8 </text>
+<text top="1193" left="787" width="6" height="17" font="3"> </text>
+<text top="1191" left="779" width="7" height="18" font="0"> </text>
+<text top="170" left="106" width="148" height="16" font="4"><b>4.  Qualitätsprofil </b></text>
+<text top="165" left="254" width="6" height="12" font="5">2</text>
+<text top="170" left="260" width="7" height="16" font="4"><b> </b></text>
+<text top="216" left="90" width="337" height="16" font="6"><b>Qualitätsbereich 1: Ergebnisse der Schule </b></text>
+<text top="203" left="698" width="93" height="16" font="6"><b>Bewertung </b></text>
+<text top="230" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="230" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="230" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="230" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="262" left="110" width="0" height="17" font="8"> </text>
+<text top="256" left="129" width="27" height="15" font="1"><b>1.1 </b></text>
+<text top="254" left="179" width="255" height="17" font="3">Schulleistungsdaten und Schullaufbahn<b> </b></text>
+<text top="256" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="256" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="256" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="256" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="282" left="129" width="27" height="15" font="1"><b>1.3 </b></text>
+<text top="280" left="179" width="229" height="17" font="3">Schulzufriedenheit und Schulimage </text>
+<text top="282" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="282" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="282" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="282" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="321" left="90" width="431" height="16" font="6"><b>Qualitätsbereich 2: Unterricht/Lehr- und Lernprozesse </b></text>
+<text top="308" left="698" width="86" height="16" font="6"><b>Bewertung</b></text>
+<text top="309" left="784" width="6" height="15" font="7"><b> </b></text>
+<text top="335" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="335" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="335" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="335" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="380" left="110" width="0" height="17" font="8"> </text>
+<text top="361" left="129" width="27" height="15" font="1"><b>2.1 </b></text>
+<text top="359" left="179" width="465" height="17" font="3">Schulinternes Curriculum und Abstimmung des Lehr- und Lernangebots<b> </b></text>
+<text top="361" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="361" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="361" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="361" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="387" left="129" width="27" height="15" font="1"><b>2.2 </b></text>
+<text top="385" left="179" width="324" height="17" font="3">Unterrichtsgestaltung/Lehrerhandeln im Unterricht<b> </b></text>
+<text top="385" left="685" width="118" height="18" font="9">Unterrichtsprofil </text>
+<text top="413" left="129" width="21" height="15" font="1"><b>2.3</b></text>
+<text top="412" left="150" width="6" height="17" font="3"> </text>
+<text top="412" left="179" width="356" height="17" font="3">Systematische Unterstützung, Förderung und Beratung </text>
+<text top="413" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="413" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="413" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="413" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="452" left="90" width="252" height="16" font="6"><b>Qualitätsbereich 3: Schulkultur </b></text>
+<text top="439" left="698" width="86" height="16" font="6"><b>Bewertung</b></text>
+<text top="440" left="784" width="6" height="15" font="7"><b> </b></text>
+<text top="466" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="466" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="466" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="466" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="498" left="110" width="0" height="17" font="8"> </text>
+<text top="492" left="129" width="27" height="15" font="1"><b>3.1 </b></text>
+<text top="490" left="179" width="369" height="17" font="3">Beteiligung der Schülerinnen und Schüler und der Eltern<b> </b></text>
+<text top="492" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="492" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="492" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="492" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="518" left="129" width="27" height="15" font="1"><b>3.2 </b></text>
+<text top="516" left="179" width="317" height="17" font="3">Soziales Klima und soziales Lernen in der Schule<b> </b></text>
+<text top="518" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="518" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="518" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="518" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="557" left="90" width="308" height="16" font="6"><b>Qualitätsbereich 4: Schulmanagement </b></text>
+<text top="544" left="698" width="86" height="16" font="6"><b>Bewertung</b></text>
+<text top="545" left="784" width="6" height="15" font="7"><b> </b></text>
+<text top="571" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="571" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="571" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="571" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="603" left="110" width="0" height="17" font="8"> </text>
+<text top="597" left="129" width="27" height="15" font="1"><b>4.1 </b></text>
+<text top="595" left="179" width="292" height="17" font="3">Schulleitungshandeln und Schulgemeinschaft </text>
+<text top="597" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="597" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="597" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="597" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="623" left="129" width="27" height="15" font="1"><b>4.2 </b></text>
+<text top="621" left="179" width="314" height="17" font="3">Schulleitungshandeln und Qualitätsmanagement<b> </b></text>
+<text top="623" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="623" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="623" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="623" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="662" left="90" width="536" height="16" font="6"><b>Qualitätsbereich 5: Professionalisierung und Personalmanagement </b></text>
+<text top="649" left="698" width="86" height="16" font="6"><b>Bewertung</b></text>
+<text top="650" left="784" width="6" height="15" font="7"><b> </b></text>
+<text top="676" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="676" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="676" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="676" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="711" left="109" width="0" height="13" font="10"> </text>
+<text top="702" left="129" width="27" height="15" font="1"><b>5.1 </b></text>
+<text top="700" left="179" width="266" height="17" font="3">Personalentwicklung und Personaleinsatz<b> </b></text>
+<text top="702" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="702" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="702" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="702" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="728" left="129" width="27" height="15" font="1"><b>5.2 </b></text>
+<text top="727" left="179" width="322" height="17" font="3">Arbeits- und Kommunikationskultur im Kollegium<b> </b></text>
+<text top="728" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="728" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="728" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="728" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="767" left="90" width="531" height="16" font="6"><b>Qualitätsbereich 6: Ziele und Strategien der Qualitätsentwicklung </b></text>
+<text top="754" left="698" width="86" height="16" font="6"><b>Bewertung</b></text>
+<text top="755" left="784" width="6" height="15" font="7"><b> </b></text>
+<text top="781" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="781" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="781" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="781" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="816" left="109" width="0" height="13" font="10"> </text>
+<text top="807" left="129" width="27" height="15" font="1"><b>6.1 </b></text>
+<text top="805" left="179" width="291" height="17" font="3">Evaluation schulischer Entwicklungsvorhaben<b> </b></text>
+<text top="807" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="807" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="807" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="807" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="833" left="129" width="27" height="15" font="1"><b>6.2 </b></text>
+<text top="831" left="179" width="237" height="17" font="3">Fortschreibung des Schulprogramms<b> </b></text>
+<text top="833" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="833" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="833" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="833" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="872" left="90" width="254" height="16" font="6"><b>Ergänzende Qualitätsmerkmale </b></text>
+<text top="859" left="698" width="86" height="16" font="6"><b>Bewertung</b></text>
+<text top="860" left="784" width="6" height="15" font="7"><b> </b></text>
+<text top="886" left="686" width="16" height="15" font="7"><b>A </b></text>
+<text top="886" left="720" width="15" height="15" font="7"><b>B </b></text>
+<text top="886" left="753" width="15" height="15" font="7"><b>C </b></text>
+<text top="886" left="786" width="16" height="15" font="7"><b>D </b></text>
+<text top="947" left="109" width="0" height="13" font="10"> </text>
+<text top="912" left="129" width="27" height="15" font="1"><b>E.1 </b></text>
+<text top="910" left="179" width="214" height="17" font="3">Förderung der Sprachkompetenz<b> </b></text>
+<text top="912" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="912" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="912" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="912" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="938" left="129" width="27" height="15" font="1"><b>E.2 </b></text>
+<text top="936" left="179" width="116" height="17" font="3">Ganztagsangebot<b> </b></text>
+<text top="938" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="938" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="938" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="938" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="965" left="129" width="57" height="15" font="1"><b>E.7      </b></text>
+<text top="963" left="182" width="196" height="17" font="3">Staatliche Europaschule Berlin<b> </b></text>
+<text top="965" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="965" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="965" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="965" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="991" left="129" width="57" height="15" font="1"><b>E.9      </b></text>
+<text top="989" left="182" width="446" height="17" font="3">Unterrichtsentwicklung - Unterrichtsbezogenes Qualitätsmanagement<b> </b></text>
+<text top="991" left="700" width="6" height="15" font="1"><b> </b></text>
+<text top="991" left="734" width="6" height="15" font="1"><b> </b></text>
+<text top="991" left="767" width="6" height="15" font="1"><b> </b></text>
+<text top="991" left="801" width="6" height="15" font="1"><b> </b></text>
+<text top="1012" left="106" width="7" height="18" font="0"> </text>
+<text top="1076" left="106" width="223" height="18" font="0">                                  </text>
+<text top="1095" left="106" width="5" height="10" font="11">2</text>
+<text top="1096" left="111" width="12" height="17" font="3">  </text>
+<text top="1097" left="119" width="655" height="15" font="12">Das Qualitätsprofil beinhaltet verpflichtende Qualitätsmerkmale (blau unterlegt) und Wahlmodule. Hinter diesem </text>
+<text top="1114" left="119" width="635" height="15" font="12">Qualitätsprofil verbergen sich ca. 200 Indikatoren. Die Schule erhält im ausführlichen Bericht eine detaillierte </text>
+<text top="1130" left="119" width="667" height="15" font="12">Rückmeldung dieser Ergebnisse im Bewertungsbogen. Nähere Informationen zu den Instrumenten und den Verfah-</text>
+<text top="1146" left="119" width="488" height="15" font="12">ren der Berliner Schulinspektion finden Sie in unserem Handbuch im Internet unter </text>
+<text top="1162" left="119" width="323" height="15" font="12">www.berlin.de/sen/bildung/schulqualitaet/schulinspektion</text>
+<text top="1161" left="442" width="6" height="17" font="3"> </text>
+</page>
+</pdf2xml>
