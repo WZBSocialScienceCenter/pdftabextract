@@ -1,6 +1,8 @@
 # pdftabextract - A set of tools for data mining (OCR-processed) PDFs
 
-July 2016 / Feb. 2017, Markus Konrad <markus.konrad@wzb.eu> / [Berlin Social Science Center](https://www.wzb.eu/en)
+July 2016 / Feb. 2017, Markus Konrad <markus.konrad@wzb.eu> <post@mkonrad.net> / [Berlin Social Science Center](https://www.wzb.eu/en)
+
+**This project is currently not maintained.**
 
 **IMPORTANT INITIAL NOTES**
 
