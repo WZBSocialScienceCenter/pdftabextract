@@ -64,7 +64,7 @@ pdftohtml -c -hidden -xml input.pdf output.xml
 ```
 
 The arguments *input.pdf* and *output.xml* are your input PDF file and the created XML file in pdf2xml format
-respectively. It is important that you specifiy the *-hidden* parameter when you're dealing with OCR-processed
+respectively. It is important that you specify the *-hidden* parameter when you're dealing with OCR-processed
 ("sandwich") PDFs. You can furthermore add the parameters *-f n* and *-l n* to set only a range of pages to be
 converted.
 
