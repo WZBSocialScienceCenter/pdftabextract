@@ -70,7 +70,7 @@ def split_texts_by_positions(texts, positions, direction, alignment='high',
     if alignment not in ('low', 'middle', 'high'):
         raise ValueError("alignment must be  'low' or 'high'")
     
-    if len(positions) == 0:
+    if not positions:
         raise ValueError("positions must be non-empty sequence")
     
     if alignment != 'middle':

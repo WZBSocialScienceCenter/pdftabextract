@@ -305,7 +305,7 @@ class ImageProc:
         
         lines_in_dir = [l for l in self.lines_hough if l[3] == direction]
         
-        if len(lines_in_dir) == 0:  # no lines in that direction
+        if not lines_in_dir:  # no lines in that direction
             return []
         
         lines_ab = self.ab_lines_from_hough_lines(lines_in_dir)

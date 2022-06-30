@@ -22,9 +22,9 @@ def make_grid_from_positions(colpos, rowpos):
     The returned page grid is a list of rows. Each row in turn contains a "grid cell",
     i.e. a rect (see pdftabextract.geom).
     """
-    if len(colpos) == 0:
+    if not colpos:
         raise ValueError("List of column positions is empty.")
-    if len(rowpos) == 0:
+    if not rowpos:
         raise ValueError("List of row positions is empty.")
     
     row_spans = subsequent_pairs(rowpos)
@@ -86,7 +86,7 @@ def fit_texts_into_grid(texts, grid, return_unmatched_texts=False):
                         if isect > 0:  # only "touch" is not enough
                             cell_isects.append(((i, j), isect, rectcenter_dist(t_rect, cell_rect)))
         
-        if len(cell_isects) > 0:
+        if cell_isects:
             # find out the cell with most overlap
             max_isect_val = max([x[1] for x in cell_isects])   # best overlap value
             # could be several "best overlap" cells -> choose the closest

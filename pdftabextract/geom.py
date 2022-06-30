@@ -41,7 +41,7 @@ def vecangle(v1, v2):
     return math.acos(num / denom)
 
 
-def vecrotate(v, theta, about=np.array((0,0))):
+def vecrotate(v, theta, about=np.array((0, 0))):
     """rotate a vector v by angle theta (in radians) about point <about>"""
     cth = math.cos(theta)
     sth = math.sin(theta)
